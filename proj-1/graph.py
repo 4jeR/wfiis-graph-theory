@@ -58,10 +58,12 @@ class Graph:
         for i in range(rows):  
             self.AddNode(Node(i+1, 500 + 355 * math.sin(i) , 400 + 355 * math.cos(i)))
     
-        for i in range(rows):              
+        for i in range(rows):                   
             line = str(f.readline()).split(" ")
             for j in range(cols):
-                if line[j] == '1' or line[j] == '1\n':
+                if i == j:
+                    continue
+                elif line[j] == '1' or line[j] == '1\n':
                     self.nodes[j].neighbours.append(i+1)
                     self.Connect(canvas, i+1, j+1)
 
