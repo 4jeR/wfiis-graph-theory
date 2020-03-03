@@ -6,8 +6,9 @@ from tkinter import W
 from helping_funcs import *
 
 class Graph:
-    def __init__(self, canvas, nodes = []):
+    def __init__(self, canvas, nodes = [], edges = []):
         self.nodes = [n for n in nodes]
+        self.edges = [e for e in edges]
         self.n = len(nodes) if nodes != None else 0
         self.canvas = canvas
     
@@ -23,35 +24,47 @@ class Graph:
     
     #do testow do konsoli
     def PrintGraph(self):
-        i = 0
+        print("Lista sąsiedztwa:")
         for node in self.nodes:
-            node.Print(i)
-            i += 1
-        print("Size of graph: {}.".format(self.n))
+            node.PrintNeighbours()
+        print("Krawedzie:")
+        for edge in self.edges:
+            print(edge.index)
+        
+
         
     #todo
     def Connect(self, canvas, node1_idx, node2_idx, Arrow = False):
         #check for (x,y) for both 2 nodes that are going to be connected
-        for n in self.nodes:
-            if n.index == node1_idx:
-                x1 = n.x
-                y1 = n.y
-
-            elif n.index == node2_idx:
-                x2 = n.x
-                y2 = n.y
-
-        if Arrow:
-            canvas.create_line(x1, y1, x2, y2, arrow=tk.LAST)
+        if node1_idx == node2_idx:
+            print("Cant connect self to self!")
+            return
+        elif node1_idx in self.edges or node2_idx in self.edges:
+            print("Already connected edges!")
+            return
         else:
-            canvas.create_line(x1, y1, x2, y2)
+            for n in self.nodes:
+                if n.index == node1_idx:
+                    x1 = n.x
+                    y1 = n.y
+                    a = n
+                elif n.index == node2_idx:
+                    x2 = n.x
+                    y2 = n.y
+                    b = n
+
+            self.edges.append(Edge(len(self.edges)+1, a, b, Arrow))      
+
             
     # dla kazdego Node woła jego metode Draw
     def Draw(self, canvas):
         for n in self.nodes:
             n.Draw(canvas)
 
+        for e in self.edges:
+            e.Draw(canvas)
 
+        
     def NM_to_NL(self, canvas, filename):
         f,rows,cols = GetFileRowsCols(self, filename)
 
@@ -80,7 +93,7 @@ class Node:
 
 
     #do testow wypisywania na konsole
-    def Print(self):
+    def PrintNeighbours(self):
         print("{}: {}".format(self.index, [n for n in self.neighbours]))
 
     def Move(self, dx, dy):
@@ -95,7 +108,19 @@ class Node:
         y1 = self.y + self.r
         canvas.create_oval(x0, y0, x1, y1)
         canvas.create_text(self.x-5, self.y, anchor=W, font="Arial",text="{}".format(self.index))
-        self.Print()
 
 
+class Edge:
+    count = 0
+    def __init__(self,index, node1, node2, arrow = False):
+        self.index = index
+        self.node1 = node1
+        self.node2 = node2
+        self.arrow = arrow
         
+
+    def Draw(self, canvas):
+        if self.arrow:
+            canvas.create_line(self.node1.x, self.node1.y,self.node2.x, self.node2.y, arrow=tk.LAST)
+        else:
+            canvas.create_line(self.node1.x, self.node1.y,self.node2.x, self.node2.y)
