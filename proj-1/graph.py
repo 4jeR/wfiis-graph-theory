@@ -3,6 +3,8 @@ import math
 import random
 from tkinter import W
 
+from helping_funcs import *
+
 class Graph:
     def __init__(self, canvas, nodes = []):
         self.nodes = [n for n in nodes]
@@ -49,22 +51,19 @@ class Graph:
         for n in self.nodes:
             n.Draw(canvas)
 
-    
-    def NM_to_NL(self, canvas, filename):
-        
 
-        for i in range(12):  
+    def NM_to_NL(self, canvas, filename):
+        f,rows,cols = GetFileRowsCols(self, filename)
+
+        for i in range(rows):  
             self.AddNode(Node(i+1, 500 + 355 * math.sin(i) , 400 + 355 * math.cos(i)))
     
-        f = open(filename, "r")
-
-        for i in range(12):              
+        for i in range(rows):              
             line = str(f.readline()).split(" ")
-            for j in range(12):
+            for j in range(cols):
                 if line[j] == '1' or line[j] == '1\n':
-                    self.nodes[i].neighbours.append(j+1)
+                    self.nodes[j].neighbours.append(i+1)
                     self.Connect(canvas, i+1, j+1)
-
 
 
 
