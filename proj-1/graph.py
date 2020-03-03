@@ -12,17 +12,14 @@ class Graph:
         self.n = len(nodes) if nodes != None else 0
         self.canvas = canvas
     
-    # bez rysowania, 
     def AddNode(self, node):
         self.nodes.append(node)
         self.n += 1 
     
-    # bez rysowania 
     def RemoveNode(self, indx):
         new_nodes = [self.nodes[i] for i in range(len(self.nodes)) if i != indx]
         self.nodes = [n for n in new_nodes]
     
-    #do testow do konsoli
     def PrintGraph(self):
         print("Lista sąsiedztwa:")
         for node in self.nodes:
@@ -56,7 +53,6 @@ class Graph:
             self.edges.append(Edge(len(self.edges)+1, a, b, Arrow))      
 
             
-    # dla kazdego Node woła jego metode Draw
     def Draw(self, canvas):
         for n in self.nodes:
             n.Draw(canvas)
@@ -82,7 +78,6 @@ class Graph:
 
 
 
-# klasa reprezentujaca wierzcholek, 
 class Node:
     def __init__(self, index, x = 0, y = 0, r = 35, neighbours = []):
         self.index = index
@@ -92,7 +87,6 @@ class Node:
         self.neighbours = [nb for nb in neighbours]
 
 
-    #do testow wypisywania na konsole
     def PrintNeighbours(self):
         print("{}: {}".format(self.index, [n for n in self.neighbours]))
 
@@ -100,7 +94,6 @@ class Node:
         self.x += dx
         self.y += dy
 
-    # metoda ktora rysuje obecny wierzcholek na glownym canvasie
     def Draw(self, canvas): #center coordinates, radius
         x0 = self.x - self.r
         y0 = self.y - self.r

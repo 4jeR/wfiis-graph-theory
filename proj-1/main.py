@@ -3,7 +3,6 @@ from graph import *
 
 if __name__ == '__main__':
 
-    # Tworzenie okna, 1200x900
     root = tk.Tk()
     root.title("Grafy - projekt 1")
     canvas = tk.Canvas(root, width=1200, height=900)
@@ -25,10 +24,6 @@ if __name__ == '__main__':
 
 
 
-
-
-    # glowna petla okna
-    # caly kod idzie powyzej tej linijki
     root.mainloop()
 
 
