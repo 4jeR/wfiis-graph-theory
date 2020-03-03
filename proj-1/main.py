@@ -1,5 +1,4 @@
 from graph import *
-import random
 
 
 if __name__ == '__main__':
@@ -11,12 +10,21 @@ if __name__ == '__main__':
     canvas.pack()
 
     v = Graph(canvas)
-    for i in range(10):
-        v.AddNode(Node(i*i + 2, random.randint(100,300) * i, random.randint(100,200) * i))
 
+   
+    v.NM_to_NL(canvas, "neighbour_matrix.txt")     
+    
 
-    v.PrintGraph()    
     v.Draw(canvas)
+
+
+
+    root.update()
+
+
+
+
+
 
 
 
