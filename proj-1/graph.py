@@ -13,29 +13,34 @@ class Graph:
         self.n = len(nodes) if nodes != None else 0
         self.canvas = canvas
     
+    # this does exactly what you think it does
     def AddNode(self, node):
         self.nodes.append(node)
         self.n += 1 
     
+    # this does exactly what you think it does
     def RemoveNode(self, indx):
         new_nodes = [self.nodes[i] for i in range(len(self.nodes)) if i != indx]
         self.nodes = [n for n in new_nodes]
     
+    # for console test printing
     def PrintGraph(self):
         print("Graph has {} nodes and {} edges.".format(Node.count, Edge.count))
         print("Unique connected nodes:")
         for (a,b) in self.connections:
             print("{},{}".format(a.index,b.index))
         
+        for edge in self.edges:
+            print(edge.index)
+        
+        
+    # prints neighbour list to the console
+    def PrintNeighbourList(self):
         print("Neighbour list:")
         for node in self.nodes:
             node.PrintNeighbours()
-        
-        for edge in self.edges:
-            print(edge.index)
 
-
-
+    # connects two [Node] objects together
     def Connect(self, canvas, node1_idx, node2_idx, Arrow = False):
         # check for (x,y) for both 2 nodes that are going to be connected
         for n in self.nodes:
@@ -82,3 +87,25 @@ class Graph:
 
         f.close()
 
+
+    def NL_to_NM(self, canvas, filename):
+        pass
+
+
+
+
+    def IM_to_NL(self, canvas, filename):
+        pass
+    
+    def NL_to_IM(self, canvas, filename):
+        pass
+
+
+
+
+    def NM_to_IM(self, canvas, filename):
+        pass
+
+    def IM_to_NM(self, canvas, filename):
+        pass
+    

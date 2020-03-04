@@ -11,7 +11,8 @@ if __name__ == '__main__':
     v = Graph(canvas)
 
     v.NM_to_NL(canvas, "neighbour_matrix.txt")     
-    v.PrintGraph()
+    # v.PrintGraph()
+    v.PrintNeighbourList()
 
     v.Draw(canvas)
 
