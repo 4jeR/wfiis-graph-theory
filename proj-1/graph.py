@@ -60,12 +60,26 @@ class Graph:
 
             
     def Draw(self, canvas):
+        self.DrawCircleTrace(self)
         for n in self.nodes:
             n.Draw(canvas)
 
         for e in self.edges:
             e.Draw(canvas)
 
+    def DrawCircleTrace(self, canvas):
+        xmin = min([n.x for n in self.nodes])
+        ymin = min([n.y for n in self.nodes])
+        xmax = max([n.x for n in self.nodes])
+        ymax = max([n.y for n in self.nodes])
+
+        self.canvas.create_oval(xmin, ymin, xmax, ymax, dash=(15,20), outline ='red',width=2)
+
+
+        print("MINs: \nx->{},\ny->{}".format(xmin, ymin))
+        print("MAXs: \nx->{},\ny->{}".format(xmax, ymax))
+
+        return
         
     def NM_to_NL(self, canvas, filename):
         f,rows,cols = GetFileRowsCols(self, filename)

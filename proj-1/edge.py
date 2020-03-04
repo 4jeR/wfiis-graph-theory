@@ -13,6 +13,6 @@ class Edge:
 
     def Draw(self, canvas):
         if self.arrow:
-            canvas.create_line(self.node1.x, self.node1.y,self.node2.x, self.node2.y, arrow=tk.LAST)
+            canvas.create_line(self.node1.x, self.node1.y,self.node2.x, self.node2.y, dash=(10,20),arrow=tk.LAST)
         else:
-            canvas.create_line(self.node1.x, self.node1.y,self.node2.x, self.node2.y)
+            canvas.create_line(self.node1.x, self.node1.y,self.node2.x, self.node2.y,dash=(11,2))

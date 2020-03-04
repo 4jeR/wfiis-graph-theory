@@ -25,5 +25,5 @@ class Node:
         y0 = self.y - self.r
         x1 = self.x + self.r
         y1 = self.y + self.r
-        canvas.create_oval(x0, y0, x1, y1)
-        canvas.create_text(self.x-5, self.y, anchor=W, font="Arial",text="{}".format(self.index))
+        canvas.create_oval(x0, y0, x1, y1, width=3, outline='green',fill='yellow')
+        canvas.create_text(self.x-15, self.y, anchor=W,font=("Arial", 16), text=f'{self.index}',fill ='blue')
