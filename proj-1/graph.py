@@ -1,14 +1,15 @@
-import tkinter as tk
 import math
 import random
-from tkinter import W
 
 from helping_funcs import *
+from edge import *
+from node import *
 
 class Graph:
-    def __init__(self, canvas, nodes = [], edges = []):
+    def __init__(self, canvas, nodes = [], edges = [], connections = []):
         self.nodes = [n for n in nodes]
         self.edges = [e for e in edges]
+        self.connections = [(a,b) for (a,b) in connections]
         self.n = len(nodes) if nodes != None else 0
         self.canvas = canvas
     
@@ -21,36 +22,36 @@ class Graph:
         self.nodes = [n for n in new_nodes]
     
     def PrintGraph(self):
-        print("Lista sąsiedztwa:")
+        print("Graph has {} nodes and {} edges.".format(Node.count, Edge.count))
+        print("Unique connected nodes:")
+        for (a,b) in self.connections:
+            print("{},{}".format(a.index,b.index))
+        
+        print("Neighbour list:")
         for node in self.nodes:
             node.PrintNeighbours()
-        print("Krawedzie:")
+        
         for edge in self.edges:
             print(edge.index)
-        
 
-        
-    #todo
+
+
     def Connect(self, canvas, node1_idx, node2_idx, Arrow = False):
-        #check for (x,y) for both 2 nodes that are going to be connected
-        if node1_idx == node2_idx:
-            print("Cant connect self to self!")
-            return
-        elif node1_idx in self.edges or node2_idx in self.edges:
-            print("Already connected edges!")
-            return
-        else:
-            for n in self.nodes:
-                if n.index == node1_idx:
-                    x1 = n.x
-                    y1 = n.y
-                    a = n
-                elif n.index == node2_idx:
-                    x2 = n.x
-                    y2 = n.y
-                    b = n
-
-            self.edges.append(Edge(len(self.edges)+1, a, b, Arrow))      
+        # check for (x,y) for both 2 nodes that are going to be connected
+        for n in self.nodes:
+            if n.index == node1_idx:
+                x1 = n.x
+                y1 = n.y
+                a = n
+            elif n.index == node2_idx:
+                x2 = n.x
+                y2 = n.y
+                b = n
+        
+        # prevent from adding already connected nodes
+        if (a,b) not in self.connections and (b,a) not in self.connections:
+            self.edges.append(Edge(len(self.edges)+1, a, b, Arrow))
+            self.connections.append((a, b))      
 
             
     def Draw(self, canvas):
@@ -65,7 +66,10 @@ class Graph:
         f,rows,cols = GetFileRowsCols(self, filename)
 
         for i in range(rows):  
-            self.AddNode(Node(i+1, 500 + 355 * math.sin(i) , 400 + 355 * math.cos(i)))
+            xnext = 400 - 355 *math.cos(i * 2*math.pi / (rows))
+            ynext = 450 - 355 *math.sin(i * 2*math.pi / (rows))
+
+            self.AddNode(Node(i+1,xnext,ynext))
     
         for i in range(rows):                   
             line = str(f.readline()).split(" ")
@@ -78,42 +82,3 @@ class Graph:
 
         f.close()
 
-class Node:
-    def __init__(self, index, x = 0, y = 0, r = 35, neighbours = []):
-        self.index = index
-        self.x = x
-        self.y = y 
-        self.r = r
-        self.neighbours = [nb for nb in neighbours]
-
-
-    def PrintNeighbours(self):
-        print("{}: {}".format(self.index, [n for n in self.neighbours]))
-
-    def Move(self, dx, dy):
-        self.x += dx
-        self.y += dy
-
-    def Draw(self, canvas): #center coordinates, radius
-        x0 = self.x - self.r
-        y0 = self.y - self.r
-        x1 = self.x + self.r
-        y1 = self.y + self.r
-        canvas.create_oval(x0, y0, x1, y1)
-        canvas.create_text(self.x-5, self.y, anchor=W, font="Arial",text="{}".format(self.index))
-
-
-class Edge:
-    count = 0
-    def __init__(self,index, node1, node2, arrow = False):
-        self.index = index
-        self.node1 = node1
-        self.node2 = node2
-        self.arrow = arrow
-        
-
-    def Draw(self, canvas):
-        if self.arrow:
-            canvas.create_line(self.node1.x, self.node1.y,self.node2.x, self.node2.y, arrow=tk.LAST)
-        else:
-            canvas.create_line(self.node1.x, self.node1.y,self.node2.x, self.node2.y)
