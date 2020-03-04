@@ -61,11 +61,11 @@ class Graph:
             
     def Draw(self, canvas):
         self.DrawCircleTrace(self)
+        for e in self.edges:
+            e.Draw(canvas)
         for n in self.nodes:
             n.Draw(canvas)
 
-        for e in self.edges:
-            e.Draw(canvas)
 
     def DrawCircleTrace(self, canvas):
         xmin = min([n.x for n in self.nodes])
