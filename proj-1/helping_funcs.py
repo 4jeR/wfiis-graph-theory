@@ -1,10 +1,7 @@
 def GetFileRowsCols(self, filename):
-    f = open(filename, "r") 
-    rows = len(f.read().split("\n"))
+    f = open(filename, "r")
+    matrix = f.read()
+    rows = len(matrix.split("\n"))
+    cols = len(matrix.split("\n")[0].split(" "))
     f.seek(0)
-    line = str(f.readline()).split(" ")
-    cols = len(line)
-    f.seek(0)
-    
-    # print("{}x{}".format(rows, cols))
     return f,rows,cols
