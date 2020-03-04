@@ -76,7 +76,7 @@ class Graph:
                     self.nodes[j].neighbours.append(i+1)
                     self.Connect(canvas, i+1, j+1)
 
-
+        f.close()
 
 class Node:
     def __init__(self, index, x = 0, y = 0, r = 35, neighbours = []):
