@@ -15,7 +15,6 @@ class Graph:
     # this does exactly what you think it does
     def AddNode(self, node):
         self.nodes.append(node)
-        self.n += 1 
     
     # this does exactly what you think it does
     def RemoveNode(self, indx):
@@ -42,6 +41,9 @@ class Graph:
     # connects two [Node] objects together
     def Connect(self, canvas, node1_idx, node2_idx, Arrow = False):
         # check for (x,y) for both 2 nodes that are going to be connected
+        if node1_idx == node2_idx:
+            return False
+
         for n in self.nodes:
             if n.index == node1_idx:
                 x1 = n.x
@@ -53,10 +55,11 @@ class Graph:
                 b = n
         
         # prevent from adding already connected nodes
+        
         if (a,b) not in self.connections and (b,a) not in self.connections:
             self.edges.append(Edge(len(self.edges)+1, a, b, Arrow))
             self.connections.append((a, b))      
-
+        return True
             
     def Draw(self, canvas, trace = False):
         if trace:
@@ -128,26 +131,24 @@ class Graph:
 
     def IM_to_NM(self, canvas, filename):
         pass
-
+    
+   
     @staticmethod
     def RandomizeGraphGNL(canvas, n_nodes, l_edges):
-       
-        
+        if l_edges > (n_nodes *(n_nodes-1) / 2):
+            print("Enter correct number of nodes and edges. Returning empty graph.")
+            return Graph(canvas)
+
         result_graph = Graph(canvas)
         for i in range(n_nodes):
             xx = random.randint(40, 1160)
             yy = random.randint(40, 860)
             result_graph.AddNode(Node(i+1,xx,yy,35))
 
-        count = 0
-        while count < l_edges:
-
-        for i in range(l_edges):
+        while result_graph.EdgesCount() < l_edges:
             idx1 = random.randint(1, n_nodes)
             idx2 = random.randint(1, n_nodes)
-    
+            result_graph.Connect(canvas, idx1, idx2)    
 
-            result_graph.Connect(canvas, idx1, idx2)           
-            result_graph.Connect(canvas, idx1, idx2)
         return result_graph
     
