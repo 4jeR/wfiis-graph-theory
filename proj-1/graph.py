@@ -151,4 +151,20 @@ class Graph:
             result_graph.Connect(canvas, idx1, idx2)    
 
         return result_graph
+
+    @staticmethod
+    def RandomizeGraphGNP(canvas, n_nodes, prob):
+        result_graph = Graph(canvas)
+        for i in range(n_nodes):
+            xx = random.randint(40, 1160)
+            yy = random.randint(40, 860)
+            result_graph.AddNode(Node(i+1,xx,yy,35))
+
+        for node in result_graph.nodes:
+            for i in range(n_nodes):
+                rand_prob = random.uniform(0, 1)
+                if rand_prob <= prob:                   
+                    result_graph.Connect(canvas, node.index, i+1)  
+
+        return result_graph
     
