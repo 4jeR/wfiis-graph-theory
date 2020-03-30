@@ -10,7 +10,6 @@ class Graph:
         self.nodes = [n for n in nodes]
         self.edges = [e for e in edges]
         self.connections = [(a,b) for (a,b) in connections]
-        self.n = len(nodes) if nodes != None else 0
         self.canvas = canvas
     
     # this does exactly what you think it does
@@ -59,14 +58,21 @@ class Graph:
             self.connections.append((a, b))      
 
             
-    def Draw(self, canvas):
-        self.DrawCircleTrace(self)
+    def Draw(self, canvas, trace = False):
+        if trace:
+            self.DrawCircleTrace(self)
         for e in self.edges:
             e.Draw(canvas)
         for n in self.nodes:
             n.Draw(canvas)
 
+    def NodesCount(self):
+        return len(self.nodes)
 
+    def EdgesCount(self):
+        return len(self.edges)
+
+        
     def DrawCircleTrace(self, canvas):
         xmin = min([n.x for n in self.nodes])
         ymin = min([n.y for n in self.nodes])
@@ -122,4 +128,26 @@ class Graph:
 
     def IM_to_NM(self, canvas, filename):
         pass
+
+    @staticmethod
+    def RandomizeGraphGNL(canvas, n_nodes, l_edges):
+       
+        
+        result_graph = Graph(canvas)
+        for i in range(n_nodes):
+            xx = random.randint(40, 1160)
+            yy = random.randint(40, 860)
+            result_graph.AddNode(Node(i+1,xx,yy,35))
+
+        count = 0
+        while count < l_edges:
+
+        for i in range(l_edges):
+            idx1 = random.randint(1, n_nodes)
+            idx2 = random.randint(1, n_nodes)
+    
+
+            result_graph.Connect(canvas, idx1, idx2)           
+            result_graph.Connect(canvas, idx1, idx2)
+        return result_graph
     
