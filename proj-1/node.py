@@ -16,6 +16,16 @@ class Node:
     def PrintNeighbours(self):
         print("{}: {}".format(self.index, [n for n in self.neighbours]))
 
+    def PrintNeighboursInVector(self):
+        vect = []
+        for i in range(0,self.count):
+             vect.append(0)
+        
+        for i in range(len(self.neighbours)):
+            vect[self.neighbours[i]-1]=1
+        print(*vect)
+             
+
     def Move(self, dx, dy):
         self.x += dx
         self.y += dy

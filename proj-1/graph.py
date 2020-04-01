@@ -30,6 +30,11 @@ class Graph:
         
         for edge in self.edges:
             print(edge.index)
+    
+    # prints neighbour Matrix to the console
+    def PrintNeighbourMatrix(self):
+        for node in self.nodes:
+            node.PrintNeighboursInVector()
         
         
     # prints neighbour list to the console
@@ -165,7 +170,9 @@ class Graph:
         pass
 
     def IM_to_NM(self, canvas, filename):
-        pass
+        self.LogicFillIM(filename)
+        self.PrintNeighbourMatrix()
+        self.Draw(canvas)
     
    
     @staticmethod
