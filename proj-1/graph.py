@@ -39,7 +39,7 @@ class Graph:
             node.PrintNeighbours()
 
     # connects two [Node] objects together
-    def Connect(self, canvas, node1_idx, node2_idx, Arrow = False):
+    def Connect(self, node1_idx, node2_idx, Arrow = False):
         # check for (x,y) for both 2 nodes that are going to be connected
         if node1_idx == node2_idx:
             return False
@@ -114,11 +114,46 @@ class Graph:
     def NL_to_NM(self, canvas, filename):
         pass
 
+    def LogicFillIM(self,filename):
+        matrix,rows,cols = FileToMatrix(filename) 
+        #put vertexes on the circle
+        for i in range(rows):  
+            xnext = 400 - 255 *math.cos(i * 2*math.pi / (rows))
+            ynext = 350 - 255 *math.sin(i * 2*math.pi / (rows))
 
-
-
+            self.AddNode(Node(i+1,xnext,ynext))
+        #find neighbours
+        for i in range(rows):
+            for j in range(cols):
+                if matrix[i][j] == 1:
+                    for k in range(rows):
+                        if i!=k and matrix[k][j] == 1:
+                            self.nodes[i].neighbours.append(k+1)
+                            break
+                        else:
+                            continue
+                
+        #find edges
+        for j in range(cols):
+            counter = 0
+            for i in range(rows):
+                if matrix[i][j]== 1 and counter == 0:
+                    node1 = i+1
+                    counter+=1
+                elif matrix[i][j]== 1 and counter ==1:
+                    node2 = i+1
+                    counter+=1
+                    break
+            self.Connect(node1,node2)
+        
+                    
+        
     def IM_to_NL(self, canvas, filename):
-        pass
+        self.LogicFillIM(filename)
+        self.PrintNeighbourList()
+        self.Draw(canvas)
+        
+
     
     def NL_to_IM(self, canvas, filename):
         pass

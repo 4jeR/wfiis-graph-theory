@@ -10,3 +10,11 @@ def GetFileRowsCols(self, filename):
     cols = len(matrix.split("\n")[0].split(" "))
     f.seek(0)
     return f,rows,cols
+
+def FileToMatrix(filename):
+    with open(filename, 'r') as f:
+        matrix = [[int(num) for num in line.split(' ')] for line in f]
+    rows = len(matrix)
+    cols = len(matrix[0])
+    return matrix,rows,cols
+    
