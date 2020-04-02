@@ -93,10 +93,12 @@ class Graph:
         self.FillLogicNM(filename)
         self.PrintNeighbourList()
 
-    
+
+
 
     def NL_to_NM(self, filename):
-        pass
+        self.LogicFillNL(filename)
+        self.PrintNeighbourMatrix()
 
     def LogicFillIM(self,filename):
         matrix,rows,cols = FileToMatrix(filename) 
@@ -130,26 +132,34 @@ class Graph:
                     break
             self.Connect(node1,node2)
         
-    def FillLogicNM(self, filename):
-        f,rows,cols = GetFileRowsCols(self, filename)
-
-        for i in range(rows):  
-            xnext = 400 - 355 *math.cos(i * 2*math.pi / (rows))
-            ynext = 450 - 355 *math.sin(i * 2*math.pi / (rows))
+                    
+    def LogicFillNL(self,filename):
+        vert_count = 0
+        with open(filename, 'r') as f:
+            for line in f:
+                vert_count += 1
+        #put vertexes on the circle
+        for i in range(vert_count):  
+            xnext = 400 - 255 *math.cos(i * 2*math.pi / (vert_count))
+            ynext = 350 - 255 *math.sin(i * 2*math.pi / (vert_count))
 
             self.AddNode(Node(self.canvas,i+1,xnext,ynext))
-    
-        for i in range(rows):                   
-            line = str(f.readline()).split(" ")
-            for j in range(cols):
-                if i == j:
-                    continue
-                elif line[j] == '1' or line[j] == '1\n':
-                    self.nodes[j].neighbours.append(i+1)
-                    self.Connect(i+1, j+1)
-
-        f.close()              
+        #find neighbour and connect
+        with open(filename, 'r') as f:
+            line = f.readline()
+            i = 0
+            while line:
+                line= line.rstrip('\n')
+                vect = line.split(" ")
+                for j in range(len(vect)):
+                    self.nodes[i].neighbours.append(vect[j])
+                    self.Connect(i+1,int(vect[j]))
+                line = f.readline()
+                i+=1
         
+        
+        
+
     def IM_to_NL(self, filename):
         self.LogicFillIM(filename)
         self.PrintNeighbourList()
