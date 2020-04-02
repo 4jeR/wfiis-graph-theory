@@ -8,28 +8,17 @@ if __name__ == '__main__':
     canvas = tk.Canvas(root, width=1200, height=900)
     canvas.pack()
 
-    # v = Graph(canvas)
+    v = Graph(canvas)
 
-    # v.NM_to_NL(canvas, "neighbour_matrix.txt")     
-    # v.PrintGraph()
-    # v.PrintNeighbourList()
+    # v.IM_to_NM("incidence_matrix.txt")     
+    # v.IM_to_NL("incidence_matrix.txt")
+    # v.NL_to_NM("neighbour_list.txt")
+    # v.NL_to_IM("neighbour_list.txt")
+    # v.NM_to_IM("neighbour_matrix.txt")
+    # v.NM_to_NL("neighbour_matrix.txt")
 
-    # v.Draw(canvas)
-
-    # v3 = Graph.RandomizeGraphGNP(canvas, 7, 0.12)
-    # v3.Draw(canvas)
-    # v3.PrintGraph()
-    # v2 = Graph.RandomizeGraphGNL(canvas, 5, 7)
-    # v2.Draw(canvas)
-
-
+    
     root.update()
-
-
-
-
-
-
     root.mainloop()
 
 

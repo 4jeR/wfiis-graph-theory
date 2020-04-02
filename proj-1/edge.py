@@ -4,7 +4,8 @@ from tkinter import W
 
 class Edge:
     count = 0
-    def __init__(self,index, node1, node2, arrow = False):
+    def __init__(self, canvas,index, node1, node2, arrow = False):
+        self.canvas = canvas
         self.index = index
         self.node1 = node1
         self.node2 = node2
@@ -13,6 +14,6 @@ class Edge:
 
     def Draw(self, canvas):
         if self.arrow:
-            canvas.create_line(self.node1.x, self.node1.y,self.node2.x, self.node2.y, dash=(10,20),arrow=tk.LAST)
+            self.canvas.create_line(self.node1.x, self.node1.y,self.node2.x, self.node2.y, dash=(10,20),arrow=tk.LAST)
         else:
-            canvas.create_line(self.node1.x, self.node1.y,self.node2.x, self.node2.y,dash=(11,2))
+            self.canvas.create_line(self.node1.x, self.node1.y,self.node2.x, self.node2.y,dash=(11,2))

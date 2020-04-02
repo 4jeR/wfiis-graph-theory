@@ -7,10 +7,10 @@ from node import *
 
 class Graph:
     def __init__(self, canvas, nodes = [], edges = [], connections = []):
+        self.canvas = canvas
         self.nodes = [n for n in nodes]
         self.edges = [e for e in edges]
         self.connections = [(a,b) for (a,b) in connections]
-        self.canvas = canvas
     
     # this does exactly what you think it does
     def AddNode(self, node):
@@ -62,17 +62,17 @@ class Graph:
         # prevent from adding already connected nodes
         
         if (a,b) not in self.connections and (b,a) not in self.connections:
-            self.edges.append(Edge(len(self.edges)+1, a, b, Arrow))
+            self.edges.append(Edge(self.canvas, len(self.edges)+1, a, b, Arrow))
             self.connections.append((a, b))      
         return True
             
-    def Draw(self, canvas, trace = False):
+    def Draw(self, trace = False):
         if trace:
             self.DrawCircleTrace(self)
         for e in self.edges:
-            e.Draw(canvas)
+            e.Draw()
         for n in self.nodes:
-            n.Draw(canvas)
+            n.Draw()
 
     def NodesCount(self):
         return len(self.nodes)
@@ -81,42 +81,21 @@ class Graph:
         return len(self.edges)
 
         
-    def DrawCircleTrace(self, canvas):
+    def DrawCircleTrace(self):
         xmin = min([n.x for n in self.nodes])
         ymin = min([n.y for n in self.nodes])
         xmax = max([n.x for n in self.nodes])
         ymax = max([n.y for n in self.nodes])
 
         self.canvas.create_oval(xmin, ymin, xmax, ymax, dash=(15,20), outline ='red',width=2)
-
-
-        print("MINs: \nx->{},\ny->{}".format(xmin, ymin))
-        print("MAXs: \nx->{},\ny->{}".format(xmax, ymax))
-
-        return
         
-    def NM_to_NL(self, canvas, filename):
-        f,rows,cols = GetFileRowsCols(self, filename)
+    def NM_to_NL(self, filename):
+        self.FillLogicNM(filename)
+        self.PrintNeighbourList()
 
-        for i in range(rows):  
-            xnext = 400 - 355 *math.cos(i * 2*math.pi / (rows))
-            ynext = 450 - 355 *math.sin(i * 2*math.pi / (rows))
-
-            self.AddNode(Node(i+1,xnext,ynext))
     
-        for i in range(rows):                   
-            line = str(f.readline()).split(" ")
-            for j in range(cols):
-                if i == j:
-                    continue
-                elif line[j] == '1' or line[j] == '1\n':
-                    self.nodes[j].neighbours.append(i+1)
-                    self.Connect(canvas, i+1, j+1)
 
-        f.close()
-
-
-    def NL_to_NM(self, canvas, filename):
+    def NL_to_NM(self, filename):
         pass
 
     def LogicFillIM(self,filename):
@@ -126,7 +105,7 @@ class Graph:
             xnext = 400 - 255 *math.cos(i * 2*math.pi / (rows))
             ynext = 350 - 255 *math.sin(i * 2*math.pi / (rows))
 
-            self.AddNode(Node(i+1,xnext,ynext))
+            self.AddNode(Node(self.canvas, i+1,xnext,ynext))
         #find neighbours
         for i in range(rows):
             for j in range(cols):
@@ -151,28 +130,45 @@ class Graph:
                     break
             self.Connect(node1,node2)
         
-                    
+    def FillLogicNM(self, filename):
+        f,rows,cols = GetFileRowsCols(self, filename)
+
+        for i in range(rows):  
+            xnext = 400 - 355 *math.cos(i * 2*math.pi / (rows))
+            ynext = 450 - 355 *math.sin(i * 2*math.pi / (rows))
+
+            self.AddNode(Node(self.canvas,i+1,xnext,ynext))
+    
+        for i in range(rows):                   
+            line = str(f.readline()).split(" ")
+            for j in range(cols):
+                if i == j:
+                    continue
+                elif line[j] == '1' or line[j] == '1\n':
+                    self.nodes[j].neighbours.append(i+1)
+                    self.Connect(i+1, j+1)
+
+        f.close()              
         
-    def IM_to_NL(self, canvas, filename):
+    def IM_to_NL(self, filename):
         self.LogicFillIM(filename)
         self.PrintNeighbourList()
-        self.Draw(canvas)
         
 
     
-    def NL_to_IM(self, canvas, filename):
+    def NL_to_IM(self, filename):
         pass
 
 
 
 
-    def NM_to_IM(self, canvas, filename):
+    def NM_to_IM(self,  filename):
         pass
 
-    def IM_to_NM(self, canvas, filename):
+    def IM_to_NM(self, filename):
         self.LogicFillIM(filename)
         self.PrintNeighbourMatrix()
-        self.Draw(canvas)
+
     
    
     @staticmethod
@@ -185,7 +181,7 @@ class Graph:
         for i in range(n_nodes):
             xx = random.randint(40, 1160)
             yy = random.randint(40, 860)
-            result_graph.AddNode(Node(i+1,xx,yy,35))
+            result_graph.AddNode(Node(canvas,i+1,xx,yy,35))
 
         while result_graph.EdgesCount() < l_edges:
             idx1 = random.randint(1, n_nodes)
@@ -200,13 +196,13 @@ class Graph:
         for i in range(n_nodes):
             xx = random.randint(40, 1160)
             yy = random.randint(40, 860)
-            result_graph.AddNode(Node(i+1,xx,yy,35))
+            result_graph.AddNode(Node(canvas, i+1,xx,yy,35))
 
         for node in result_graph.nodes:
             for i in range(n_nodes):
                 rand_prob = random.uniform(0, 1)
                 if rand_prob <= prob:                   
-                    result_graph.Connect(canvas, node.index, i+1)  
+                    result_graph.Connect(node.index, i+1)  
 
         return result_graph
     
