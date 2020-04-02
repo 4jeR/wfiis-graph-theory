@@ -157,7 +157,25 @@ class Graph:
                 line = f.readline()
                 i+=1
         
-        
+    def FillLogicNM(self, filename):
+        f,rows,cols = GetFileRowsCols(self, filename)
+
+        for i in range(rows):  
+            xnext = 400 - 355 *math.cos(i * 2*math.pi / (rows))
+            ynext = 450 - 355 *math.sin(i * 2*math.pi / (rows))
+
+            self.AddNode(Node(self.canvas,i+1,xnext,ynext))
+    
+        for i in range(rows):                   
+            line = str(f.readline()).split(" ")
+            for j in range(cols):
+                if i == j:
+                    continue
+                elif line[j] == '1' or line[j] == '1\n':
+                    self.nodes[j].neighbours.append(i+1)
+                    self.Connect(i+1, j+1)
+
+        f.close()  
         
 
     def IM_to_NL(self, filename):
