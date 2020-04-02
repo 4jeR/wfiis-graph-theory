@@ -43,6 +43,17 @@ class Graph:
         for node in self.nodes:
             node.PrintNeighbours()
 
+    def PrintIncidenceMatrix(self):
+        Matrix = [[0 for i in range(len(self.edges))] for y in range(len(self.nodes))] 
+        for edge in self.edges:
+            Matrix[edge.node1.index-1][edge.index-1]=1
+            Matrix[edge.node2.index-1][edge.index-1]=1
+        for row in Matrix:
+            for val in row:
+                print(val," ",end='')
+            print()
+        
+
     # connects two [Node] objects together
     def Connect(self, node1_idx, node2_idx, Arrow = False):
         # check for (x,y) for both 2 nodes that are going to be connected
@@ -89,17 +100,6 @@ class Graph:
 
         self.canvas.create_oval(xmin, ymin, xmax, ymax, dash=(15,20), outline ='red',width=2)
         
-    def NM_to_NL(self, filename):
-        self.FillLogicNM(filename)
-        self.PrintNeighbourList()
-
-
-
-
-    def NL_to_NM(self, filename):
-        self.LogicFillNL(filename)
-        self.PrintNeighbourMatrix()
-
     def LogicFillIM(self,filename):
         matrix,rows,cols = FileToMatrix(filename) 
         #put vertexes on the circle
@@ -177,21 +177,25 @@ class Graph:
 
         f.close()  
         
+    def NM_to_NL(self, filename):
+        self.FillLogicNM(filename)
+        self.PrintNeighbourList()
 
+    def NL_to_NM(self, filename):
+        self.LogicFillNL(filename)
+        self.PrintNeighbourMatrix()
+        
     def IM_to_NL(self, filename):
         self.LogicFillIM(filename)
         self.PrintNeighbourList()
         
-
-    
     def NL_to_IM(self, filename):
-        pass
-
-
-
+        self.LogicFillNL(filename)
+        self.PrintIncidenceMatrix()
 
     def NM_to_IM(self,  filename):
-        pass
+        self.FillLogicNM(filename)
+        self.PrintIncidenceMatrix()
 
     def IM_to_NM(self, filename):
         self.LogicFillIM(filename)
