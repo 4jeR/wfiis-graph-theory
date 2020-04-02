@@ -22,7 +22,7 @@ class Node:
              vect.append(0)
         
         for i in range(len(self.neighbours)):
-            vect[self.neighbours[i]-1]=1
+            vect[int(self.neighbours[i])-1]=1
         print(*vect)
              
 

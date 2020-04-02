@@ -117,7 +117,8 @@ class Graph:
 
 
     def NL_to_NM(self, canvas, filename):
-        pass
+        self.LogicFillNL(filename)
+        self.PrintNeighbourMatrix()
 
     def LogicFillIM(self,filename):
         matrix,rows,cols = FileToMatrix(filename) 
@@ -152,7 +153,33 @@ class Graph:
             self.Connect(node1,node2)
         
                     
+    def LogicFillNL(self,filename):
+        vert_count = 0
+        with open(filename, 'r') as f:
+            for line in f:
+                vert_count += 1
+        #put vertexes on the circle
+        for i in range(vert_count):  
+            xnext = 400 - 255 *math.cos(i * 2*math.pi / (vert_count))
+            ynext = 350 - 255 *math.sin(i * 2*math.pi / (vert_count))
+
+            self.AddNode(Node(i+1,xnext,ynext))
+        #find neighbour and connect
+        with open(filename, 'r') as f:
+            line = f.readline()
+            i = 0
+            while line:
+                line= line.rstrip('\n')
+                vect = line.split(" ")
+                for j in range(len(vect)):
+                    self.nodes[i].neighbours.append(vect[j])
+                    self.Connect(i+1,int(vect[j]))
+                line = f.readline()
+                i+=1
         
+        
+        
+
     def IM_to_NL(self, canvas, filename):
         self.LogicFillIM(filename)
         self.PrintNeighbourList()
