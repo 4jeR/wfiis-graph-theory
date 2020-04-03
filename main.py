@@ -8,12 +8,12 @@ def main():
 
     v = Graph(canvas)
     
-    # v.IM_to_NM("incidence_matrix.txt")     
-    # v.IM_to_NL("incidence_matrix.txt")
-    # v.NL_to_NM("neighbour_list.txt")
-    # v.NL_to_IM("neighbour_list.txt")
-    # v.NM_to_IM("neighbour_matrix.txt")
-    # v.NM_to_NL("neighbour_matrix.txt")
+    # v.IM_to_NM("examples/incidence_matrix.txt")     
+    # v.IM_to_NL("examples/incidence_matrix.txt")
+    # v.NL_to_NM("examples/neighbour_list.txt")
+    # v.NL_to_IM("examples/neighbour_list.txt")
+    # v.NM_to_IM("examples/neighbour_matrix.txt")
+    # v.NM_to_NL("examples/neighbour_matrix.txt")
     v.Draw()
 
     
