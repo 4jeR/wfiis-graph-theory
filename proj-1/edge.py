@@ -12,7 +12,7 @@ class Edge:
         self.arrow = arrow
         Edge.count += 1
 
-    def Draw(self, canvas):
+    def Draw(self):
         if self.arrow:
             self.canvas.create_line(self.node1.x, self.node1.y,self.node2.x, self.node2.y, dash=(10,20),arrow=tk.LAST)
         else:

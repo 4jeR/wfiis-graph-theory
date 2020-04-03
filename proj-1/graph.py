@@ -100,14 +100,20 @@ class Graph:
 
         self.canvas.create_oval(xmin, ymin, xmax, ymax, dash=(15,20), outline ='red',width=2)
         
-    def LogicFillIM(self,filename):
+    def FillGraphFromIM(self,filename, inCircle = False):
         matrix,rows,cols = FileToMatrix(filename) 
         #put vertexes on the circle
-        for i in range(rows):  
-            xnext = 400 - 255 *math.cos(i * 2*math.pi / (rows))
-            ynext = 350 - 255 *math.sin(i * 2*math.pi / (rows))
-
-            self.AddNode(Node(self.canvas, i+1,xnext,ynext))
+        if inCircle:
+            for i in range(rows):  
+                xnext = 400 - 255 *math.cos(i * 2*math.pi / (rows))
+                ynext = 350 - 255 *math.sin(i * 2*math.pi / (rows))
+                self.AddNode(Node(self.canvas,i+1,xnext,ynext))
+            self.DrawCircleTrace()
+        else:
+            for i in range(rows):
+                xx = random.randint(40, 1160)
+                yy = random.randint(40, 860)
+                self.AddNode(Node(self.canvas, i+1,xx,yy,35))
         #find neighbours
         for i in range(rows):
             for j in range(cols):
@@ -131,19 +137,29 @@ class Graph:
                     counter+=1
                     break
             self.Connect(node1,node2)
-        
-                    
-    def LogicFillNL(self,filename):
+                
+    def FillGraphFromNL(self,filename, inCircle = False):
         vert_count = 0
         with open(filename, 'r') as f:
             for line in f:
                 vert_count += 1
-        #put vertexes on the circle
-        for i in range(vert_count):  
-            xnext = 400 - 255 *math.cos(i * 2*math.pi / (vert_count))
-            ynext = 350 - 255 *math.sin(i * 2*math.pi / (vert_count))
 
-            self.AddNode(Node(self.canvas,i+1,xnext,ynext))
+        # put nodes
+        if inCircle:
+            for i in range(vert_count):  
+                xnext = 400 - 255 *math.cos(i * 2*math.pi / (vert_count))
+                ynext = 350 - 255 *math.sin(i * 2*math.pi / (vert_count))
+                self.AddNode(Node(self.canvas,i+1,xnext,ynext))
+            self.DrawCircleTrace()
+        else:
+            for i in range(vert_count):
+                xx = random.randint(40, 1160)
+                yy = random.randint(40, 860)
+                self.AddNode(Node(self.canvas, i+1,xx,yy,35))
+
+       
+        
+
         #find neighbour and connect
         with open(filename, 'r') as f:
             line = f.readline()
@@ -157,15 +173,21 @@ class Graph:
                 line = f.readline()
                 i+=1
         
-    def FillLogicNM(self, filename):
+    def FillGraphFromNM(self, filename, inCircle = False):
         f,rows,cols = GetFileRowsCols(self, filename)
 
-        for i in range(rows):  
-            xnext = 400 - 355 *math.cos(i * 2*math.pi / (rows))
-            ynext = 450 - 355 *math.sin(i * 2*math.pi / (rows))
-
-            self.AddNode(Node(self.canvas,i+1,xnext,ynext))
-    
+        if inCircle:
+            for i in range(rows):  
+                xnext = 400 - 255 *math.cos(i * 2*math.pi / (rows))
+                ynext = 350 - 255 *math.sin(i * 2*math.pi / (rows))
+                self.AddNode(Node(self.canvas,i+1,xnext,ynext))
+            self.DrawCircleTrace()
+        else:
+            for i in range(rows):
+                xx = random.randint(40, 1160)
+                yy = random.randint(40, 860)
+                self.AddNode(Node(self.canvas, i+1,xx,yy,35))
+        
         for i in range(rows):                   
             line = str(f.readline()).split(" ")
             for j in range(cols):
@@ -176,33 +198,34 @@ class Graph:
                     self.Connect(i+1, j+1)
 
         f.close()  
-        
-    def NM_to_NL(self, filename):
-        self.FillLogicNM(filename)
+
+    # 1_1  
+    def NM_to_NL(self, filename, inCircle = False):
+        self.FillGraphFromNM(filename, inCircle)
         self.PrintNeighbourList()
 
-    def NL_to_NM(self, filename):
-        self.LogicFillNL(filename)
+    def NL_to_NM(self, filename, inCircle = False):
+        self.FillGraphFromNL(filename, inCircle)
         self.PrintNeighbourMatrix()
         
-    def IM_to_NL(self, filename):
-        self.LogicFillIM(filename)
+    def IM_to_NL(self, filename, inCircle = False):
+        self.FillGraphFromIM(filename, inCircle)
         self.PrintNeighbourList()
         
-    def NL_to_IM(self, filename):
-        self.LogicFillNL(filename)
+    def NL_to_IM(self, filename, inCircle = False):
+        self.FillGraphFromNL(filename, inCircle)
         self.PrintIncidenceMatrix()
 
-    def NM_to_IM(self,  filename):
-        self.FillLogicNM(filename)
+    def NM_to_IM(self, filename, inCircle = False):
+        self.FillGraphFromNM(filename, inCircle)
         self.PrintIncidenceMatrix()
 
-    def IM_to_NM(self, filename):
-        self.LogicFillIM(filename)
+    def IM_to_NM(self, filename, inCircle = False):
+        self.FillGraphFromIM(filename, inCircle)
         self.PrintNeighbourMatrix()
 
     
-   
+    # 1_3a
     @staticmethod
     def RandomizeGraphGNL(canvas, n_nodes, l_edges):
         if l_edges > (n_nodes *(n_nodes-1) / 2):
@@ -222,6 +245,7 @@ class Graph:
 
         return result_graph
 
+    # 1_3b
     @staticmethod
     def RandomizeGraphGNP(canvas, n_nodes, prob):
         result_graph = Graph(canvas)
