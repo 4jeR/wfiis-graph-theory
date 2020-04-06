@@ -19,19 +19,3 @@ def FileToMatrix(filename):
     rows = len(matrix)
     cols = len(matrix[0])
     return matrix, rows, cols
-
-
-# for no-diredted graph Adjacency Matrix == symetric matrix
-def isNoDiredtedAdjacencyMatrix(filename):
-    mat, rows, cols = FileToMatrix(filename)
-    N = rows
-    for i in range(N):
-        for j in range(N):
-            if (mat[i][j] != mat[j][i]):
-                return False
-    return True
-
-
-# def isNeighbourList():
-
-# def isIncidenceMatrix():
