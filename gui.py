@@ -14,6 +14,7 @@ class GUI:
         self.canvas = Canvas(root, width=1200, height=800, bg="white")
         self.addTabs(root)
         self.addProject1Widgets(root)
+        self.addProject2Widgets(root)
 
         self.allTabs.pack(expand=1, fill='both')
         self.canvas.pack(fill=X, padx=10, pady=10)
@@ -34,7 +35,6 @@ class GUI:
         self.allTabs.add(self.tab5, text="Projekt 5")
         self.allTabs.add(self.tab6, text="Projekt 6")
 
-    # add only widgetsfor 1 projects
     def ClearCanvas(self):
         self.canvas.delete("all")
 
@@ -55,6 +55,8 @@ class GUI:
 
         self.canvas.create_oval(xmin, ymin, xmax, ymax,
                                 dash=(15, 20), outline='red', width=2)
+
+    #################### PROJECT 1 ##########################
 
     def selectIM(self, inCircle=False):
         filepath = filedialog.askopenfilename(filetypes=(
@@ -86,6 +88,21 @@ class GUI:
         g.PrintIncidenceMatrix()
         g.PrintNeighbourList()
 
+    def selectRandomGraphNL(self, n, l):
+        g = Graph()
+        if(l > (n * (n-1) / 2)):
+            messagebox.showerror(
+                title="Błąd", message="[selectRandomGraphNL] Złe wartości argumentów")
+        else:
+            g.FillRandomizeGraphGNL(self.canvas, n, l)
+            self.Draw(g)
+
+    def selectRandomGraphNP(self, n, p):
+        print(p)
+        g = Graph()
+        g.FillRandomizeGraphGNP(self.canvas, n, p)
+        self.Draw(g)
+
     def addProject1Widgets(self, root):
         menuProj1 = Frame(self.tab1, width=1200, height=30)
 
@@ -110,19 +127,19 @@ class GUI:
         # 3
         label3 = Label(menuProj1, text='Zadanie 3',  foreground="red")
         labelToValues = Label(
-            menuProj1, text='Podaj n - liczba węzłów oraz l - liczba krawędzi / p - liczba prawdopodobieństwa')
+            menuProj1, text='Podaj n - liczba węzłów oraz l - liczba krawędzi / p - prawdopodobieństwo połączenia')
 
         labelN = Label(menuProj1, text='n: ')
-        N = Spinbox(menuProj1, from_=1, to=100, width=8, state="readonly")
+        N = Spinbox(menuProj1, from_=0, to=200, width=8, state="readonly")
 
         labelLP = Label(menuProj1, text='l/p: ')
-        LP = Spinbox(menuProj1, from_=1, to=100, width=8, state="readonly")
+        LP = Spinbox(menuProj1, from_=0, to=100, width=8, state="readonly")
 
-        # buttonRandomGraphNL = Button(
-        #     menuProj1, text="Generuj graf - losowy G(n,l)", command=self.selectRandomGraphNL)
+        buttonRandomGraphNL = Button(
+            menuProj1, text="Generuj graf - losowy G(n,l)", command=lambda: self.selectRandomGraphNL(int(N.get()), int(LP.get())))
 
-        # buttonRandomGraphNP = Button(
-        #     menuProj1, text="Generuj graf - losowy G(n,p)", command=self.selectRandomGraphNP)
+        buttonRandomGraphNP = Button(
+            menuProj1, text="Generuj graf - losowy G(n,p)", command=lambda: self.selectRandomGraphNP(int(N.get()), float(int(LP.get()))/100.0))
 
         label1.grid(column=1, row=0)
 
@@ -130,23 +147,28 @@ class GUI:
         buttonNL.grid(column=1, row=1, sticky="nsew")
         buttonNM.grid(column=2, row=1, sticky="nsew")
 
-        label2.grid(column=1, row=4)
+        label2.grid(column=1, row=2)
 
-        buttonCircleGraphNL.grid(column=0, row=5, sticky="nsew")
-        buttonCircleGraphIM.grid(column=1, row=5, sticky="nsew")
-        buttonCircleGraphNM.grid(column=2, row=5, sticky="nsew")
+        buttonCircleGraphNL.grid(column=0, row=3, sticky="nsew")
+        buttonCircleGraphIM.grid(column=1, row=3, sticky="nsew")
+        buttonCircleGraphNM.grid(column=2, row=3, sticky="nsew")
 
-        label3.grid(column=1, row=6)
+        label3.grid(column=1, row=4)
 
-        labelToValues.grid(column=0, row=7, sticky="nsew")
+        labelToValues.grid(column=0, row=5, sticky="nsew")
 
-        labelN.grid(column=0, row=8, sticky="nse")
-        N.grid(column=1, row=8, sticky="nsew")
+        labelN.grid(column=0, row=6, sticky="nse")
+        N.grid(column=1, row=6, sticky="nsew")
 
-        labelLP.grid(column=0, row=9, sticky="nse")
-        LP.grid(column=1, row=9, sticky="nsew")
+        labelLP.grid(column=0, row=7, sticky="nse")
+        LP.grid(column=1, row=7, sticky="nsew")
 
-        # buttonRandomGraphNL.grid(column=2, row=10, sticky="nsew")
-        # buttonRandomGraphNP.grid(column=1, row=10, sticky="nsew")
+        buttonRandomGraphNL.grid(column=1, row=8, sticky="nsew")
+        buttonRandomGraphNP.grid(column=2, row=8, sticky="nsew")
 
         menuProj1.pack(fill=Y)
+
+    ################### POJECT 2 #########################
+
+    def addProject2Widgets(self, root):
+        print()

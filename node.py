@@ -5,7 +5,7 @@ from tkinter import W
 class Node:
     count = 0
 
-    def __init__(self, index, x=0, y=0, r=35, neighbours=[]):
+    def __init__(self, index, x=0, y=0, r=20, neighbours=[]):
         self.index = index
         self.x = x
         self.y = y

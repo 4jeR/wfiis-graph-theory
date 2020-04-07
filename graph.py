@@ -8,6 +8,7 @@ from node import *
 
 class Graph:
     def __init__(self, nodes=[], edges=[], connections=[]):
+        print("____________________________")
         Node.count = 0
         self.nodes = [n for n in nodes]
         self.edges = [e for e in edges]
@@ -35,17 +36,20 @@ class Graph:
 
     # prints neighbour Matrix to the console
     def PrintNeighbourMatrix(self):
+        print("\nMacierz sasiedztwa:")
         for node in self.nodes:
             node.PrintNeighboursInVector()
 
     # prints neighbour list to the console
 
     def PrintNeighbourList(self):
+        print("\nLista sasiedztwa:")
         for node in self.nodes:
             node.PrintNeighbours()
 
     # prints incidence Matrix to the console
     def PrintIncidenceMatrix(self):
+        print("\nMacierz incydencji:")
         Matrix = [[0 for i in range(len(self.edges))]
                   for y in range(len(self.nodes))]
         for edge in self.edges:
@@ -86,6 +90,7 @@ class Graph:
     def EdgesCount(self):
         return len(self.edges)
 
+    # 1_1a
     def FillGraphFromIM(self, filename, canvas, inCircle=False):
         matrix, rows, cols = FileToMatrix(filename)
         # put vertexes on the circle
@@ -96,9 +101,9 @@ class Graph:
                 self.AddNode(Node(i+1, xnext, ynext))
         else:
             for i in range(rows):
-                xx = random.randint(30, canvas.winfo_width())
-                yy = random.randint(30, canvas.winfo_height())
-                self.AddNode(Node(i+1, xx, yy, 35))
+                xx = random.randint(30, canvas.winfo_width() - 30)
+                yy = random.randint(30, canvas.winfo_height() - 30)
+                self.AddNode(Node(i+1, xx, yy, 20))
         # find neighbours
         for i in range(rows):
             for j in range(cols):
@@ -123,6 +128,7 @@ class Graph:
                     break
             self.Connect(node1, node2)
 
+    # 1_1b
     def FillGraphFromNL(self, filename, canvas, inCircle=False):
         vert_count = 0
         with open(filename, 'r') as f:
@@ -137,9 +143,9 @@ class Graph:
                 self.AddNode(Node(i+1, xnext, ynext))
         else:
             for i in range(vert_count):
-                xx = random.randint(30, canvas.winfo_width())
-                yy = random.randint(30, canvas.winfo_height())
-                self.AddNode(Node(i+1, xx, yy, 35))
+                xx = random.randint(30, canvas.winfo_width() - 30)
+                yy = random.randint(30, canvas.winfo_height() - 30)
+                self.AddNode(Node(i+1, xx, yy, 20))
 
         # find neighbour and connect
         with open(filename, 'r') as f:
@@ -154,6 +160,7 @@ class Graph:
                 line = f.readline()
                 i += 1
 
+    # 1_1c
     def FillGraphFromNM(self, filename, canvas, inCircle=False):
         f, rows, cols = GetFileRowsCols(self, filename)
 
@@ -164,9 +171,9 @@ class Graph:
                 self.AddNode(Node(i+1, xnext, ynext))
         else:
             for i in range(rows):
-                xx = random.randint(30, canvas.winfo_width())
-                yy = random.randint(30, canvas.winfo_height())
-                self.AddNode(Node(i+1, xx, yy, 35))
+                xx = random.randint(30, canvas.winfo_width() - 30)
+                yy = random.randint(30, canvas.winfo_height() - 30)
+                self.AddNode(Node(i+1, xx, yy, 20))
 
         for i in range(rows):
             line = str(f.readline()).split(" ")
@@ -182,9 +189,9 @@ class Graph:
     # 1_3a
     def FillRandomizeGraphGNL(self, canvas, n_nodes, l_edges):
         for i in range(n_nodes):
-            xx = random.randint(40, canvas.winfo_width()/2.0)
-            yy = random.randint(40, canvas.winfo_width()/2.0)
-            self.AddNode(Node(i+1, xx, yy, 35))
+            xx = random.randint(30, canvas.winfo_width() - 30)
+            yy = random.randint(30, canvas.winfo_height() - 30)
+            self.AddNode(Node(i+1, xx, yy, 20))
 
         while self.EdgesCount() < l_edges:
             idx1 = random.randint(1, n_nodes)
@@ -193,10 +200,11 @@ class Graph:
 
     # 1_3b
     def FillRandomizeGraphGNP(self, canvas, n_nodes, prob):
+
         for i in range(n_nodes):
-            xx = random.randint(40, canvas.winfo_width()/2.0)
-            yy = random.randint(40, canvas.winfo_width()/2.0)
-            self.AddNode(Node(canvas, i+1, xx, yy, 35))
+            xx = random.randint(30, canvas.winfo_width() - 30)
+            yy = random.randint(30, canvas.winfo_height() - 30)
+            self.AddNode(Node(canvas, i+1, xx, yy, 20))
 
         for node in self.nodes:
             for i in range(n_nodes):
