@@ -200,11 +200,10 @@ class Graph:
 
     # 1_3b
     def FillRandomizeGraphGNP(self, canvas, n_nodes, prob):
-
         for i in range(n_nodes):
             xx = random.randint(30, canvas.winfo_width() - 30)
             yy = random.randint(30, canvas.winfo_height() - 30)
-            self.AddNode(Node(canvas, i+1, xx, yy, 20))
+            self.AddNode(Node(i+1, xx, yy, 20))
 
         for node in self.nodes:
             for i in range(n_nodes):

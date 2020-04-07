@@ -14,7 +14,7 @@ class GUI:
         self.canvas = Canvas(root, width=1200, height=800, bg="white")
         self.addTabs(root)
         self.addProject1Widgets(root)
-        self.addProject2Widgets(root)
+        # self.addProject2Widgets(root)
 
         self.allTabs.pack(expand=1, fill='both')
         self.canvas.pack(fill=X, padx=10, pady=10)
@@ -168,7 +168,7 @@ class GUI:
 
         menuProj1.pack(fill=Y)
 
-    ################### POJECT 2 #########################
+    #################### POJECT 2 #########################
 
     def addProject2Widgets(self, root):
         print()
