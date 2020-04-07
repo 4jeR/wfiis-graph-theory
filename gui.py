@@ -14,7 +14,7 @@ class GUI:
         self.canvas = Canvas(root, width=1200, height=800, bg="white")
         self.addTabs(root)
         self.addProject1Widgets(root)
-        # self.addProject2Widgets(root)
+        self.addProject2Widgets(root)
 
         self.allTabs.pack(expand=1, fill='both')
         self.canvas.pack(fill=X, padx=10, pady=10)
@@ -98,7 +98,6 @@ class GUI:
             self.Draw(g)
 
     def selectRandomGraphNP(self, n, p):
-        print(p)
         g = Graph()
         g.FillRandomizeGraphGNP(self.canvas, n, p)
         self.Draw(g)
@@ -127,7 +126,7 @@ class GUI:
         # 3
         label3 = Label(menuProj1, text='Zadanie 3',  foreground="red")
         labelToValues = Label(
-            menuProj1, text='Podaj n - liczba węzłów oraz l - liczba krawędzi / p - prawdopodobieństwo połączenia')
+            menuProj1, text='Podaj n - liczba węzłów oraz l - liczba krawędzi / p - prawdopodobieństwo połączenia (wart. %)')
 
         labelN = Label(menuProj1, text='n: ')
         N = Spinbox(menuProj1, from_=0, to=200, width=8, state="readonly")
@@ -143,15 +142,18 @@ class GUI:
 
         label1.grid(column=1, row=0)
 
-        buttonIM.grid(column=0, row=1, sticky="nsew")
-        buttonNL.grid(column=1, row=1, sticky="nsew")
-        buttonNM.grid(column=2, row=1, sticky="nsew")
+        buttonIM.grid(column=0, row=1, sticky="nsew", padx=10, pady=5)
+        buttonNL.grid(column=1, row=1, sticky="nsew", padx=10, pady=5)
+        buttonNM.grid(column=2, row=1, sticky="nsew", padx=10, pady=5)
 
         label2.grid(column=1, row=2)
 
-        buttonCircleGraphNL.grid(column=0, row=3, sticky="nsew")
-        buttonCircleGraphIM.grid(column=1, row=3, sticky="nsew")
-        buttonCircleGraphNM.grid(column=2, row=3, sticky="nsew")
+        buttonCircleGraphNL.grid(
+            column=0, row=3, sticky="nsew", padx=10, pady=5)
+        buttonCircleGraphIM.grid(
+            column=1, row=3, sticky="nsew", padx=10, pady=5)
+        buttonCircleGraphNM.grid(
+            column=2, row=3, sticky="nsew", padx=10, pady=5)
 
         label3.grid(column=1, row=4)
 
@@ -163,12 +165,256 @@ class GUI:
         labelLP.grid(column=0, row=7, sticky="nse")
         LP.grid(column=1, row=7, sticky="nsew")
 
-        buttonRandomGraphNL.grid(column=1, row=8, sticky="nsew")
-        buttonRandomGraphNP.grid(column=2, row=8, sticky="nsew")
+        buttonRandomGraphNL.grid(
+            column=1, row=8, sticky="nsew", padx=10, pady=5)
+        buttonRandomGraphNP.grid(
+            column=2, row=8, sticky="nsew", padx=10, pady=5)
 
         menuProj1.pack(fill=Y)
 
     #################### POJECT 2 #########################
 
+    def selectLogicalSeq(self):
+        # filepath first letters should by LS == Logical Sequence
+        filepath = filedialog.askopenfilename(filetypes=(
+            ("Text files", "LS_*.txt"), ("all files", "*.*")))
+        g = Graph()
+
+        ######################
+        # TO DO
+        # in class Graph
+        #
+        # NEW_FUNCTION(filepath, canvas ......)
+        # filepath -> name of path with example sequence; "LS_*.txt"
+        # self.canvas -> current canvas.winfo_width()/canvas.winfo_height()
+        #
+        # NEW_FUNCTION should
+        #   return boolean
+        #   fill graph
+        #
+        ######################
+
+        # if (g.NEW_FUNCTION(filepath, self.canvas ...)):
+        #   self.Drwa(g)
+        # else:
+        #   messagebox.showerror(
+        #        title="Błąd", message="Podana sekwencja nie jest ciągiem graficznym!")
+
+    def selectRandomGraphLogicalSeq(self, num):
+        # filepath first letters should by RLS == Random Logical Sequence
+        filepath = filedialog.askopenfilename(filetypes=(
+            ("Text files", "RLS_*.txt"), ("all files", "*.*")))
+        g = Graph()
+
+        ######################
+        # TO DO
+        #
+        # in class Graph
+        #
+        # NEW_FUNCTION(filepath, canvas, num ......)
+        # filepath -> name of path with example sequence; "LS_*.txt"
+        # self.canvas -> current canvas.winfo_width()/canvas.winfo_height()
+        # num -> number of Randomization
+        #
+        # NEW_FUNCTION should
+        #   return boolean
+        #   change connection num-times
+        #   fill graph
+        #
+        ######################
+
+        # if (g.NEW_FUNCTION(filepath, self.canvas, num ...)):
+        #   self.Drwa(g)
+        # else:
+        #   messagebox.showerror(
+        #        title="Błąd", message="Podana sekwencja nie jest ciągiem graficznym!")
+
+    def selectFindConnectedComponent(self):
+        # filepath first letters should by FCC == Find Connected Component
+        filepath = filedialog.askopenfilename(filetypes=(
+            ("Text files", "FCC_*.txt"), ("all files", "*.*")))
+        g = Graph()
+
+        ######################
+        # TO DO
+        #
+        # in class Graph
+        #
+        # NEW_FUNCTION(filepath, canvas ......)
+        # filepath -> name of path with example sequence; "FCC_*.txt"
+        # self.canvas -> current canvas.winfo_width()/canvas.winfo_height()
+        #
+        # NEW_FUNCTION should
+        #   return string
+        #   e.g.
+        #      "1) 1 2 3 4 5 6 7 11
+        #       2) 8 9 10
+        #       Najwieksza skladowa ma numer 1."
+        #
+        #   set diffrent colors for components (e. g. color of edge)
+        #   fill graph
+        #
+        ######################
+
+        # info = g.NEW_FUNCTION(filepath, self.canvas, num ...)     #info is string type
+        # self.Drwa(g)
+        # messagebox.showinfo(
+        #        title="Informacja", message=info)
+
+    def selectEulerGraph(self, num):
+        g = Graph()
+
+        ######################
+        # TO DO
+        #
+        # in class Graph
+        #
+        # NEW_FUNCTION(canvas, num ......)
+        # self.canvas -> current canvas.winfo_width()/canvas.winfo_height()
+        # num -> number of nodes
+        #
+        # NEW_FUNCTION should
+        #   return string
+        #      e.g.
+        #       "[1 - 2 - 3 - 1 - 4 - 2 - 5 - 1 - 7 - 4 - 3 - 6 - 2 - 8 - 1]"
+        #   if num = 0 -> draw numbers od nodes
+        #   fill graph
+        #
+        ######################
+
+        # info = g.NEW_FUNCTION(self.canvas, num ...)
+        # self.Draw(g)
+        # messagebox.showinfo(title="Informacja", message=info)
+
+    def selectKReguralGraph(self, n, k):
+        g = Graph()
+
+        ######################
+        # TO DO
+        #
+        # in class Graph
+        #
+        # NEW_FUNCTION(canvas, n , k ......)
+        # self.canvas -> current canvas.winfo_width()/canvas.winfo_height()
+        # n -> number of nodes
+        # k -> number of degree
+        #
+        # NEW_FUNCTION should
+        #   return boolean
+        #   fill graph
+        #
+        ######################
+
+        # if (g.NEW_FUNCTION(self.canvas, n, k ...)):
+        #   self.Drwa(g)
+        # else:
+        #   messagebox.showerror(
+        #        title="Błąd", message="Podane wartości nie pozwalają na stworzenie grafu k-regularnego!")
+
+    def selectCheckHamiltonGraph(self, tof):
+        g = Graph()
+        if(tof):
+            filepath = filedialog.askopenfilename(filetypes=(
+                ("Text files", "HG_*.txt"), ("all files", "*.*")))
+        else:
+            filepath = ""
+
+        ######################
+        # TO DO
+        #
+        # in class Graph
+        #
+        # NEW_FUNCTION(tof, filepath ......)
+        # tof -> boolean; if True check from file ; if False genetare random sequence and check
+        # filepath -> name of path with example sequence; "HG_*.txt" or empty string
+        #
+        # NEW_FUNCTION should
+        #   return info
+        #   e.g.
+        #       1) if graph is hamilton's graph
+        #          "Podany graf: [sekwencja logiczna OR macierz sąsiedztwa OR ...]
+        #           Jest grafem hamiltonowskim
+        #           Cykl Hamiltona :[1 - 2 - 3 - 7 - 4 - 6 - 8 - 5 - 1]"
+        #
+        #       2) if graph is not hamilton's graph
+        #          "Podany graf: [sekwencja logiczna OR macierz sąsiedztwa OR ...]
+        #           Nie jest grafem hamiltonowskim"
+        #
+        ######################
+
+        # info = g.NEW_FUNCTION(tof, filepath ..)
+        # messagebox.showinfo(
+        #        title="Informacja", message=info)
+
     def addProject2Widgets(self, root):
-        print()
+        menuProj2 = Frame(self.tab2, width=1200, height=30)
+        # 1
+        label1 = Label(menuProj2, text='Zadanie 1',
+                       foreground="red")
+        button1 = Button(
+            menuProj2, text="Generuj graf - z ciągu graficznego", command=self.selectLogicalSeq)
+
+        # 2
+        label2 = Label(menuProj2, text='Zadanie 2', foreground="red")
+        label2a = Label(menuProj2, text='Liczba żadanych randomizacji')
+        spinbox2a = Spinbox(menuProj2, from_=0, to=100,
+                            width=8, state="readonly")
+        button2 = Button(
+            menuProj2, text="Generuj graf - randomizuj zadane wierzchołki", command=lambda: self.selectRandomGraphLogicalSeq(int(spinbox2a.get())))
+
+        # 3
+        label3 = Label(menuProj2, text='Zadanie 3', foreground="red")
+        button3 = Button(
+            menuProj2, text="Generuj graf - znajdź największą wspólną składową grafu", command=self.selectFindConnectedComponent)
+
+        # 4
+        label4 = Label(menuProj2, text='Zadanie 4', foreground="red")
+        label4a = Label(
+            menuProj2, text='Liczba wierzchołków (dla n=0 losowa ilość)')
+        spinbox4a = Spinbox(menuProj2, from_=0, to=100,
+                            width=8, state="readonly")
+        button4 = Button(
+            menuProj2, text="Generuj graf - graf eulerowski z cyklem Eulera", command=lambda: self.selectEulerGraph(int(spinbox4a.get())))
+
+        # 5
+        label5 = Label(menuProj2, text='Zadanie 5', foreground="red")
+        label5a = Label(
+            menuProj2, text='Podaj jako 1. liczbe wierzchołków oraz 2. stopień wierzchołków')
+        spinbox5b = Spinbox(menuProj2, from_=0, to=100,
+                            width=8, state="readonly")
+        spinbox5c = Spinbox(menuProj2, from_=0, to=100,
+                            width=8, state="readonly")
+        button5 = Button(
+            menuProj2, text="Generuj graf - losowy k-reguralny", command=lambda: self.selectKReguralGraph(int(spinbox5b.get()), int(spinbox5c.get())))
+
+        # 6
+        label6 = Label(menuProj2, text='Zadanie 6', foreground="red")
+        button6a = Button(
+            menuProj2, text="Sprawdź, czy graf jest hamiltonowski - z pliku", command=lambda: self.selectCheckHamiltonGraph(True))
+        button6b = Button(
+            menuProj2, text="Sprawdź, czy graf jest hamiltonowski - losowy", command=lambda: self.selectCheckHamiltonGraph(False))
+
+        label1.grid(column=0, row=0)
+        button1.grid(column=0, row=1, sticky="nsew", padx=10, pady=5)
+        label2.grid(column=0, row=2)
+        label2a.grid(column=0, row=3)
+        spinbox2a.grid(column=0, row=4, sticky="nsew", padx=10, pady=5)
+        button2.grid(column=0, row=5, sticky="nsew", padx=10, pady=5)
+
+        label3.grid(column=1, row=0)
+        button3.grid(column=1, row=1, sticky="nsew", padx=10, pady=5)
+        label4.grid(column=1, row=2)
+        label4a.grid(column=1, row=3, padx=10, pady=5)
+        spinbox4a.grid(column=1, row=4, sticky="nsew", padx=10, pady=5)
+        button4.grid(column=1, row=5, sticky="nsew", padx=10, pady=5)
+
+        label5.grid(column=2, row=0)
+        label5a.grid(column=2, row=1)
+        spinbox5b.grid(column=2, row=2, sticky="nsew", padx=10, pady=5)
+        spinbox5c.grid(column=2, row=3, sticky="nsew", padx=10, pady=5)
+        button5.grid(column=2, row=4, sticky="nsew", padx=10, pady=5)
+        label6.grid(column=2, row=5)
+        button6a.grid(column=2, row=6, sticky="nsew", padx=10, pady=5)
+        button6b.grid(column=2, row=7, sticky="nsew", padx=10, pady=5)
+
+        menuProj2.pack(fill=Y)
