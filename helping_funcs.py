@@ -23,6 +23,6 @@ def FileToMatrix(filename):
 
 def RandomizeIndex(a, b, bad_idx, seq):
     res = random.randint(a, b)
-    while not (res != bad_idx or seq[res] >= 0):
+    while not (res != bad_idx and seq[res-1] > 0):
         res = random.randint(a, b)
     return res

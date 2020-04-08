@@ -38,3 +38,6 @@ class Node:
                            outline='green', fill='yellow')
         canvas.create_text(self.x-15, self.y, anchor=W,
                            font=("Arial", 16), text=f'{self.index}', fill='blue')
+
+    def Degree(self):
+        return len(self.neighbours)

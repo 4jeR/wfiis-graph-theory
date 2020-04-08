@@ -77,7 +77,11 @@ class Graph:
             self.edges.append(
                 Edge(len(self.edges)+1, a, b, Arrow))
             self.connections.append((a, b))
-        return True
+            a.neighbours.append(b)
+            b.neighbours.append(a)
+            return True
+        else:
+            return False
 
     def NodesCount(self):
         return len(self.nodes)
@@ -207,59 +211,32 @@ class Graph:
 
     def FillGraphFromLogicSequence(self, filename, canvas, line =1, inCircle=False):
         seq, pls = self.ParseLogicSequence(filename, line)
-        seq_length = int(len(seq))
-    
+        
         if pls:
-
-            # nodes
+            # construct nodes
             if inCircle:
-                print("incircle")
-                for i in range(seq_length):
-                    xnext = 600 - 255 * math.cos(i * 2*math.pi / (seq_length))
-                    ynext = 400 - 255 * math.sin(i * 2*math.pi / (seq_length))
+                for i in range(len(seq)):
+                    xnext = 600 - 255 * math.cos(i * 2*math.pi / (len(seq)))
+                    ynext = 400 - 255 * math.sin(i * 2*math.pi / (len(seq)))
                     self.AddNode(Node(i+1, xnext, ynext))
             else:
-                print("rand")
-
-                for i in range(seq_length):
+                for i in range(len(seq)):
                     xx = random.randint(100, 1100)
                     yy = random.randint(150, 650)
                     self.AddNode(Node(i+1, xx, yy, 35))
 
-           
-            # IDX 
-            # 0 1 2 3 4 5 ...     11
-            # 4 4 3 2 2 2 2 2 2 2 1
-            #   V idx = 1
-            # 0 3 2 1 1 2 2 2 2 2 1
-            # 0 3 2 2 2 2 2 2 1 1 1 - sorted
-            #     V idx = 2
-            # 0 0 1 1 1 2 2 2 2 1 1
-            # 0 0 2 2 2 2 1 1 1 1 1  - sorted
-            #       V idx = 3
-            # 0 0 0 1 1 2 1 1 1 1 1
-            # 0 0 0 2 1 1 1 1 1 1 1  - sorted
-            #         V idx = 4
-            # 0 0 0 0 0 0 1 1 1 1 1
-            # 0 0 0 0 0 0 1 1 1 1 1  - sorted
-            #           V idx = 5
-            # 0 0 0 0 0 0 1 1 1 1 1
-            # 0 0 0 0 0 0 1 1 1 1 1  - sorted
-
-            for idx in range(1, seq_length+1):
-                for k in range(1, seq[idx-1]+1):
-                    if seq[idx-1] > 0 and seq[idx+k-1] > 0:
-                        print("idx: {}, k: {}".format(idx, k))
-                        print("seqidx: {}, seqk: {}".format(seq[idx-1], seq[k-1+idx]))
-                        self.Connect(idx, idx + k)
-                        seq[idx-1] -= 1
-                        seq[idx-1+k] -= 1
-
-                seq.sort(reverse=True)
-        
+            # make connections based on sequence
+            idx = 1
+            while sum(seq) > 0:
+                for i in range(1, seq[idx-1]+1):
+                    self.Connect(idx, idx + i)
+                    seq[idx-1] -= 1
+                    seq[idx+i-1] -= 1
+                idx += 1
 
         else:
-            pass    
+            print("Couldn't construct graph from this sequence.")
+
                     
                
                 
@@ -274,9 +251,9 @@ class Graph:
         for i in range(line):
             seq = list(map(int, f.readline().split(" ")))
         
+        seq_result = seq.copy()
         seq.sort(reverse=True)
 
-        seq_result = seq.copy()
 
 
         
