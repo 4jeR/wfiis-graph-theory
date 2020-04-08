@@ -240,11 +240,11 @@ class GUI:
         #
         # in class Graph
         #
-        # NEW_FUNCTION(filepath, canvas ......)
+        # FillComponents(filepath, canvas ......)
         # filepath -> name of path with example sequence; "FCC_*.txt"
         # self.canvas -> current canvas.winfo_width()/canvas.winfo_height()
         #
-        # NEW_FUNCTION should
+        # FillComponents should
         #   return string
         #   e.g.
         #      "1) 1 2 3 4 5 6 7 11
@@ -256,10 +256,10 @@ class GUI:
         #
         ######################
 
-        # info = g.NEW_FUNCTION(filepath, self.canvas, num ...)     #info is string type
-        # self.Drwa(g)
-        # messagebox.showinfo(
-        #        title="Informacja", message=info)
+        info = g.FillComponents(filepath, self.canvas)     #info is string type
+        self.Drwa(g)
+        messagebox.showinfo(
+               title="Informacja", message=info)
 
     def selectEulerGraph(self, num):
         g = Graph()

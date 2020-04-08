@@ -82,7 +82,11 @@ class Graph:
             self.edges.append(
                 Edge(len(self.edges)+1, a, b, Arrow))
             self.connections.append((a, b))
-        return True
+            a.neighbours.append(b)
+            b.neighbours.append(a)
+            return True
+        else:
+            return False
 
     def NodesCount(self):
         return len(self.nodes)
@@ -210,3 +214,40 @@ class Graph:
                 rand_prob = random.uniform(0, 1)
                 if rand_prob <= prob:
                     self.Connect(node.index, i+1)
+
+
+    # 2_3
+    def Components_R(self, nr, n, comp):
+        for nb in n.neighbours:
+            if comp[nb.index] == -1:
+                comp[nb.index] = nr
+                self.Components_R(nr, nb, comp)
+                    
+                
+    def FillComponents(self, filename, canvas, inCircle=True):
+        self.FillGraphFromNM(filename, canvas, inCircle)
+        nr = 0
+        comp = []
+        for i in range(len(self.nodes)):
+            comp.append(-1)
+        for n in self.nodes:
+            if comp[n.index-1] == -1:
+                nr += 1
+                comp[n.index-1] = nr
+                self.Components_R(nr, n, comp)
+        print(len(comp))
+        ComponentsList = "1) " + (str)(self.nodes[0].index) + " "
+        
+        for i in range(2, len(comp)):
+            if comp[i-1] == comp[i]:
+                ComponentsList += (str)(self.nodes[i-1].index) + " "
+            else:
+                ComponentsList += (str)(comp[i]) + " "
+                ComponentsList += (str)(self.nodes[i-1].index) + " "
+                
+        if comp[len(comp)-2] == comp[len(comp)-1]:
+            ComponentsList += (str)(self.nodes[len(comp)-1].index)
+        else:
+            ComponentsList += (str)(comp[len(comp)-1]) + (str)(self.nodes[len(comp)-1].index)
+        
+        return ComponentsList
