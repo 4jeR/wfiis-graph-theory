@@ -225,35 +225,7 @@ class Graph:
                 if rand_prob <= prob:
                     self.Connect(node.index, i+1)
     
-    def EdgesRandomization(self,count):
-        i = 0 
-        while i < count:
-            Samples = random.sample(self.edges,2)
-            if AreUnique(Samples):
-                a = Samples[0].node1.index
-                b = Samples[0].node2.index
-                c = Samples[1].node1.index
-                d = Samples[1].node2.index
-                if self.Connect(a,c):
-                    if(self.Connect(d,b)):
-                        self.DisConnect(Samples[0])
-                        self.DisConnect(Samples[1])
-                        i+=1
-                    else:
-                        self.DisConnect(Samples[0])
-                        i+=1
-                elif self.Connect(b,c):
-                    if(self.Connect(d,a)):
-                        self.DisConnect(Samples[0])
-                        self.DisConnect(Samples[1])
-                        i+=1
-                    else:
-                        self.DisConnect(Samples[0])
-                        i+=1
-                else:
-                    i+=1
-
-
+    
 
 
     ########## PROJECT 2 PARTS ##########
@@ -282,9 +254,11 @@ class Graph:
                     seq[idx-1] -= 1
                     seq[idx+i-1] -= 1
                 idx += 1
+            return True
 
         else:
             print("Couldn't construct graph from this sequence.")
+            return False
 
                     
                
@@ -319,3 +293,35 @@ class Graph:
             seq.sort(reverse=True)
 
         
+    def EdgesRandomization(self,count):
+        if Node.count*(Node.count-1)/2 == Edge.count:
+            return False
+        else:
+            i = 0 
+            while i < count:
+                Samples = random.sample(self.edges,2)
+                if AreUnique(Samples):
+                    a = Samples[0].node1.index
+                    b = Samples[0].node2.index
+                    c = Samples[1].node1.index
+                    d = Samples[1].node2.index
+                    if self.Connect(a,c):
+                        if(self.Connect(d,b)):
+                            self.DisConnect(Samples[0])
+                            self.DisConnect(Samples[1])
+                            i+=1
+                        else:
+                            self.DisConnect(Samples[0])
+                            i+=1
+                    elif self.Connect(b,c):
+                        if(self.Connect(d,a)):
+                            self.DisConnect(Samples[0])
+                            self.DisConnect(Samples[1])
+                            i+=1
+                        else:
+                            self.DisConnect(Samples[0])
+                            i+=1
+                    else:
+                        i+=1
+            return True
+

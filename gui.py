@@ -205,29 +205,18 @@ class GUI:
         filepath = filedialog.askopenfilename(filetypes=(
             ("Text files", "RLS_*.txt"), ("all files", "*.*")))
         g = Graph()
+        if(g.FillGraphFromLogicSequence(filepath,self.canvas)):
+            if(g.EdgesRandomization(num)):
+                self.Draw(g)
+            else:
+                messagebox.showerror(
+                title="Błąd", message="This Graph cannot be randomized")
+        else:
+            messagebox.showerror(
+               title="Błąd", message="Podana sekwencja nie jest ciągiem graficznym!")
 
-        ######################
-        # TO DO
-        #
-        # in class Graph
-        #
-        # NEW_FUNCTION(filepath, canvas, num ......)
-        # filepath -> name of path with example sequence; "LS_*.txt"
-        # self.canvas -> current canvas.winfo_width()/canvas.winfo_height()
-        # num -> number of Randomization
-        #
-        # NEW_FUNCTION should
-        #   return boolean
-        #   change connection num-times
-        #   fill graph
-        #
-        ######################
 
-        # if (g.NEW_FUNCTION(filepath, self.canvas, num ...)):
-        #   self.Drwa(g)
-        # else:
-        #   messagebox.showerror(
-        #        title="Błąd", message="Podana sekwencja nie jest ciągiem graficznym!")
+       
 
     def selectFindConnectedComponent(self):
         # filepath first letters should by FCC == Find Connected Component
