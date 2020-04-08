@@ -1,5 +1,4 @@
 import math
-import random
 
 from helping_funcs import *
 from edge import *
@@ -257,3 +256,67 @@ class Graph:
 
 
 
+
+    ########## PROJECT 2 PARTS ##########
+
+    def FillGraphFromLogicSequence(self, filename, canvas, line =1, inCircle=False):
+        seq, pls = self.ParseLogicSequence(filename, line)
+        
+        if pls:
+            # construct nodes
+            if inCircle:
+                for i in range(len(seq)):
+                    xnext = 600 - 255 * math.cos(i * 2*math.pi / (len(seq)))
+                    ynext = 400 - 255 * math.sin(i * 2*math.pi / (len(seq)))
+                    self.AddNode(Node(i+1, xnext, ynext))
+            else:
+                for i in range(len(seq)):
+                    xx = random.randint(100, 1100)
+                    yy = random.randint(150, 650)
+                    self.AddNode(Node(i+1, xx, yy, 35))
+
+            # make connections based on sequence
+            idx = 1
+            while sum(seq) > 0:
+                for i in range(1, seq[idx-1]+1):
+                    self.Connect(idx, idx + i)
+                    seq[idx-1] -= 1
+                    seq[idx+i-1] -= 1
+                idx += 1
+
+        else:
+            print("Couldn't construct graph from this sequence.")
+
+                    
+               
+                
+                    
+
+
+
+
+    def ParseLogicSequence(self, filename, line = 1):
+        f = open(filename,"r")
+        seq = list()
+        for i in range(line):
+            seq = list(map(int, f.readline().split(" ")))
+        
+        seq_result = seq.copy()
+        seq.sort(reverse=True)
+
+
+
+        
+        while(True):
+            if int(True) not in seq:
+                f.close()
+                return seq_result, True
+            if seq[0] < 0 or seq[0] >= len(seq) or sum(1 for el in seq if el < 0) > 0:
+                f.close()
+                return seq_result, False
+            for i in range(1, seq[0] + 1):
+                seq[i] -= 1
+            seq[0] = 0
+            seq.sort(reverse=True)
+
+        
