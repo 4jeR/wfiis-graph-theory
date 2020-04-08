@@ -77,12 +77,14 @@ class Graph:
 
         # prevent from adding already connected nodes
 
-        if (a, b) not in self.connections and (b, a) not in self.connections:
+        if a.index != b.index and (a, b) not in self.connections and (b, a) not in self.connections:
             self.edges.append(
                 Edge(len(self.edges)+1, a, b, Arrow))
             self.connections.append((a, b))
-            a.neighbours.append(b)
-            b.neighbours.append(a)
+            if b.index not in a.neighbours:
+                a.neighbours.append(b.index)
+            if a.index not in b.neighbours:
+                b.neighbours.append(a.index)
             return True
         else:
             return False
@@ -166,7 +168,6 @@ class Graph:
                 line = line.rstrip('\n')
                 vect = line.split(" ")
                 for j in range(len(vect)):
-                    self.nodes[i].neighbours.append(vect[j])
                     self.Connect(i+1, int(vect[j]))
                 line = f.readline()
                 i += 1
@@ -192,7 +193,6 @@ class Graph:
                 if i == j:
                     continue
                 elif line[j] == '1' or line[j] == '1\n':
-                    self.nodes[j].neighbours.append(i+1)
                     self.Connect(i+1, j+1)
 
         f.close()
