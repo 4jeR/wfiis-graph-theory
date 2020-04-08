@@ -257,7 +257,7 @@ class GUI:
         ######################
 
         info = g.FillComponents(filepath, self.canvas)     #info is string type
-        self.Drwa(g)
+        self.Draw(g)
         messagebox.showinfo(
                title="Informacja", message=info)
 

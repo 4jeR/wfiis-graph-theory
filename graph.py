@@ -218,10 +218,11 @@ class Graph:
 
     # 2_3
     def Components_R(self, nr, n, comp):
-        for nb in n.neighbours:
-            if comp[nb.index] == -1:
-                comp[nb.index] = nr
-                self.Components_R(nr, nb, comp)
+        pass
+        # for nb in n.neighbours:
+        #     if comp[nb.index] == -1:
+        #         comp[nb.index] = nr
+        #         self.Components_R(nr, nb, comp)
                     
                 
     def FillComponents(self, filename, canvas, inCircle=True):
@@ -234,6 +235,7 @@ class Graph:
             if comp[n.index-1] == -1:
                 nr += 1
                 comp[n.index-1] = nr
+                print(n.neighbours)
                 self.Components_R(nr, n, comp)
         print(len(comp))
         ComponentsList = "1) " + (str)(self.nodes[0].index) + " "
