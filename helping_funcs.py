@@ -2,6 +2,7 @@
 #  ----------------|-------------------------------------------
 # neighbour_matrix | rows,cols = node count
 # incidence_matrix | rows,cols = node count, connections count
+import random
 
 
 def GetFileRowsCols(self, filename):
@@ -19,3 +20,9 @@ def FileToMatrix(filename):
     rows = len(matrix)
     cols = len(matrix[0])
     return matrix, rows, cols
+
+def RandomizeIndex(a, b, bad_idx, seq):
+    res = random.randint(a, b)
+    while not (res != bad_idx or seq[res] >= 0):
+        res = random.randint(a, b)
+    return res

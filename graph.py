@@ -1,5 +1,4 @@
 import math
-import random
 
 from helping_funcs import *
 from edge import *
@@ -203,3 +202,94 @@ class Graph:
                 rand_prob = random.uniform(0, 1)
                 if rand_prob <= prob:
                     self.Connect(node.index, i+1)
+
+    ########## PROJECT 2 PARTS ##########
+
+    def FillGraphFromLogicSequence(self, filename, canvas, line =1, inCircle=False):
+        seq, pls = self.ParseLogicSequence(filename, line)
+        seq_length = int(len(seq))
+    
+        if pls:
+
+            # nodes
+            if inCircle:
+                print("incircle")
+                for i in range(seq_length):
+                    xnext = 600 - 255 * math.cos(i * 2*math.pi / (seq_length))
+                    ynext = 400 - 255 * math.sin(i * 2*math.pi / (seq_length))
+                    self.AddNode(Node(i+1, xnext, ynext))
+            else:
+                print("rand")
+
+                for i in range(seq_length):
+                    xx = random.randint(100, 1100)
+                    yy = random.randint(150, 650)
+                    self.AddNode(Node(i+1, xx, yy, 35))
+
+           
+            # IDX 
+            # 0 1 2 3 4 5 ...     11
+            # 4 4 3 2 2 2 2 2 2 2 1
+            #   V idx = 1
+            # 0 3 2 1 1 2 2 2 2 2 1
+            # 0 3 2 2 2 2 2 2 1 1 1 - sorted
+            #     V idx = 2
+            # 0 0 1 1 1 2 2 2 2 1 1
+            # 0 0 2 2 2 2 1 1 1 1 1  - sorted
+            #       V idx = 3
+            # 0 0 0 1 1 2 1 1 1 1 1
+            # 0 0 0 2 1 1 1 1 1 1 1  - sorted
+            #         V idx = 4
+            # 0 0 0 0 0 0 1 1 1 1 1
+            # 0 0 0 0 0 0 1 1 1 1 1  - sorted
+            #           V idx = 5
+            # 0 0 0 0 0 0 1 1 1 1 1
+            # 0 0 0 0 0 0 1 1 1 1 1  - sorted
+
+            for idx in range(1, seq_length+1):
+                for k in range(1, seq[idx-1]+1):
+                    if seq[idx-1] > 0 and seq[idx+k-1] > 0:
+                        print("idx: {}, k: {}".format(idx, k))
+                        print("seqidx: {}, seqk: {}".format(seq[idx-1], seq[k-1+idx]))
+                        self.Connect(idx, idx + k)
+                        seq[idx-1] -= 1
+                        seq[idx-1+k] -= 1
+
+                seq.sort(reverse=True)
+        
+
+        else:
+            pass    
+                    
+               
+                
+                    
+
+
+
+
+    def ParseLogicSequence(self, filename, line = 1):
+        f = open(filename,"r")
+        seq = list()
+        for i in range(line):
+            seq = list(map(int, f.readline().split(" ")))
+        
+        seq.sort(reverse=True)
+
+        seq_result = seq.copy()
+
+
+        
+        while(True):
+            if int(True) not in seq:
+                f.close()
+                return seq_result, True
+            if seq[0] < 0 or seq[0] >= len(seq) or sum(1 for el in seq if el < 0) > 0:
+                f.close()
+                return seq_result, False
+            for i in range(1, seq[0] + 1):
+                seq[i] -= 1
+            seq[0] = 0
+            seq.sort(reverse=True)
+
+        
