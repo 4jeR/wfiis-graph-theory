@@ -7,7 +7,6 @@ from node import *
 
 class Graph:
     def __init__(self, nodes=[], edges=[], connections=[]):
-        print("____________________________")
         Node.count = 0
         Edge.count = 0
         self.nodes = [n for n in nodes]
