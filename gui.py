@@ -256,7 +256,7 @@ class GUI:
         #
         ######################
 
-        info = g.FillComponents(filepath, self.canvas)     #info is string type
+        info = g.FillComponents(filepath, self.canvas, True)     #info is string type
         self.Draw(g)
         messagebox.showinfo(
                title="Informacja", message=info)

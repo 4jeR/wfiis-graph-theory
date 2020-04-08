@@ -78,12 +78,14 @@ class Graph:
 
         # prevent from adding already connected nodes
 
-        if (a, b) not in self.connections and (b, a) not in self.connections:
+        if a.index != b.index and (a, b) not in self.connections and (b, a) not in self.connections:
             self.edges.append(
                 Edge(len(self.edges)+1, a, b, Arrow))
             self.connections.append((a, b))
-            a.neighbours.append(b)
-            b.neighbours.append(a)
+            if b.index not in a.neighbours:
+                a.neighbours.append(b.index)
+            if a.index not in b.neighbours:
+                b.neighbours.append(a.index)
             return True
         else:
             return False
@@ -159,7 +161,6 @@ class Graph:
                 line = line.rstrip('\n')
                 vect = line.split(" ")
                 for j in range(len(vect)):
-                    self.nodes[i].neighbours.append(vect[j])
                     self.Connect(i+1, int(vect[j]))
                 line = f.readline()
                 i += 1
@@ -185,7 +186,6 @@ class Graph:
                 if i == j:
                     continue
                 elif line[j] == '1' or line[j] == '1\n':
-                    self.nodes[j].neighbours.append(i+1)
                     self.Connect(i+1, j+1)
 
         f.close()
@@ -217,14 +217,31 @@ class Graph:
 
 
     # 2_3
-    def Components_R(self, nr, n, comp):
-        pass
-        # for nb in n.neighbours:
-        #     if comp[nb.index] == -1:
-        #         comp[nb.index] = nr
-        #         self.Components_R(nr, nb, comp)
-                    
+    def CommonComponentsToString(self, comp):
+        ComponentsList = ""
+        for i in range(0, len(comp)):
+            print(comp[i])
+            if (comp[i] != 0):
+                ComponentsList += "\n"       
+                nr = comp[i]
+                ComponentsList += "" + (str)(nr) + ") "
+                for i in range(len(comp)):
+                    if comp[i] == nr:
+                        ComponentsList += (str)(self.nodes[i].index) + " "
+                        comp[i] = 0
+
+        tab = ComponentsList.split("\n")
+        longest_string = max(tab, key=len)
+        return ComponentsList + "\nLongest Commont Component has numer " + longest_string[0]
                 
+    def Components_R(self, nr, n, comp):
+        for nb in n.neighbours:
+            if comp[nb-1] == -1:
+                comp[nb-1] = nr
+                self.Components_R(nr, NodeFromIndex(self, nb), comp)
+            else:
+                continue
+                    
     def FillComponents(self, filename, canvas, inCircle=True):
         self.FillGraphFromNM(filename, canvas, inCircle)
         nr = 0
@@ -235,21 +252,5 @@ class Graph:
             if comp[n.index-1] == -1:
                 nr += 1
                 comp[n.index-1] = nr
-                print(n.neighbours)
                 self.Components_R(nr, n, comp)
-        print(len(comp))
-        ComponentsList = "1) " + (str)(self.nodes[0].index) + " "
-        
-        for i in range(2, len(comp)):
-            if comp[i-1] == comp[i]:
-                ComponentsList += (str)(self.nodes[i-1].index) + " "
-            else:
-                ComponentsList += (str)(comp[i]) + " "
-                ComponentsList += (str)(self.nodes[i-1].index) + " "
-                
-        if comp[len(comp)-2] == comp[len(comp)-1]:
-            ComponentsList += (str)(self.nodes[len(comp)-1].index)
-        else:
-            ComponentsList += (str)(comp[len(comp)-1]) + (str)(self.nodes[len(comp)-1].index)
-        
-        return ComponentsList
+        return self.CommonComponentsToString(comp)

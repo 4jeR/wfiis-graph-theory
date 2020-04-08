@@ -19,3 +19,11 @@ def FileToMatrix(filename):
     rows = len(matrix)
     cols = len(matrix[0])
     return matrix, rows, cols
+
+def NodeFromIndex(graph, idx):
+    for n in graph.nodes:
+        if n.index == idx:
+            return n
+        else:
+            continue
+        
