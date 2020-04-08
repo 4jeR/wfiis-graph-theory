@@ -256,7 +256,7 @@ class GUI:
         #
         ######################
 
-        # info = g.NEW_FUNCTION(filepath, self.canvas, num ...)     #info is string type
+        # info = g.NEW_FUNCTION(filepath, self.canvas)     #info is string type
         # self.Drwa(g)
         # messagebox.showinfo(
         #        title="Informacja", message=info)

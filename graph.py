@@ -210,3 +210,7 @@ class Graph:
                 rand_prob = random.uniform(0, 1)
                 if rand_prob <= prob:
                     self.Connect(node.index, i+1)
+
+    # 2_5
+    def FillKReguralGraph(self, canvas, n_nodes, degree, inCircle=True):
+        print()
