@@ -58,32 +58,35 @@ class GUI:
 
     #################### PROJECT 1 ##########################
 
-    def selectIM(self, inCircle=False):
+    def selectIM(self):
         filepath = filedialog.askopenfilename(filetypes=(
             ("Text files", "IM_*.txt"), ("all files", "*.*")))
+        isChecked = bool(self.checkP1.get())
         g = Graph()
-        g.FillGraphFromIM(filepath, self.canvas, inCircle)
-        self.Draw(g, inCircle)
+        g.FillGraphFromIM(filepath, self.canvas, isChecked)
+        self.Draw(g, isChecked)
 
         g.PrintNeighbourList()
         g.PrintNeighbourMatrix()
 
-    def selectNL(self, inCircle=False):
+    def selectNL(self):
         filepath = filedialog.askopenfilename(filetypes=(
             ("Text files", "NL_*.txt"), ("all files", "*.*")))
+        isChecked = bool(self.checkP1.get())
         g = Graph()
-        g.FillGraphFromNL(filepath, self.canvas, inCircle)
-        self.Draw(g, inCircle)
+        g.FillGraphFromNL(filepath, self.canvas, isChecked)
+        self.Draw(g, isChecked)
 
         g.PrintIncidenceMatrix()
         g.PrintNeighbourMatrix()
 
-    def selectNM(self, inCircle=False):
+    def selectNM(self):
         filepath = filedialog.askopenfilename(filetypes=(
             ("Text files", "NM_*.txt"), ("all files", "*.*")))
+        isChecked = bool(self.checkP1.get())
         g = Graph()
-        g.FillGraphFromNM(filepath, self.canvas, inCircle)
-        self.Draw(g, inCircle)
+        g.FillGraphFromNM(filepath, self.canvas, isChecked)
+        self.Draw(g, isChecked)
 
         g.PrintIncidenceMatrix()
         g.PrintNeighbourList()
@@ -105,8 +108,14 @@ class GUI:
     def addProject1Widgets(self, root):
         menuProj1 = Frame(self.tab1, width=1200, height=30)
 
+        # check if generate graph in circle
+        self.checkP1 = IntVar()
+        checkInCircle = Checkbutton(
+            menuProj1, text="Generuj graf kołowy", variable=self.checkP1)
+
         # 1
-        label1 = Label(menuProj1, text='Zadanie 1', foreground="red")
+        label1 = Label(menuProj1, text='Zadanie 1 / Zadanie 2',
+                       foreground="red")
         buttonIM = Button(
             menuProj1, text="Generuj graf - macierz incydencji", command=self.selectIM)
         buttonNL = Button(
@@ -114,19 +123,25 @@ class GUI:
         buttonNM = Button(
             menuProj1, text="Generuj graf - macierz sąsiedztwa", command=self.selectNM)
 
-        # 2
-        label2 = Label(menuProj1, text='Zadanie 2', foreground="red")
-        buttonCircleGraphNM = Button(
-            menuProj1, text="Graf Macierz sąsiedztwa - równomiernie rozłożone wierzchołki", command=lambda: self.selectNM(True))
-        buttonCircleGraphIM = Button(
-            menuProj1, text="Graf Macierz incydencji - równomiernie rozłożone wierzchołki", command=lambda: self.selectIM(True))
-        buttonCircleGraphNL = Button(
-            menuProj1, text="Graf Lista sąsiedztw - równomiernie rozłożone wierzchołki", command=lambda: self.selectNL(True))
+        # # 2
+        # label2 = Label(menuProj1, text='Zadanie 2', foreground="red")
+        # buttonCircleGraphNM = Button(
+        #     menuProj1, text="Graf Macierz sąsiedztwa - równomiernie rozłożone wierzchołki", command=lambda: self.selectNM(True))
+        # buttonCircleGraphIM = Button(
+        #     menuProj1, text="Graf Macierz incydencji - równomiernie rozłożone wierzchołki", command=lambda: self.selectIM(True))
+        # buttonCircleGraphNL = Button(
+        #     menuProj1, text="Graf Lista sąsiedztw - równomiernie rozłożone wierzchołki", command=lambda: self.selectNL(True))
 
         # 3
         label3 = Label(menuProj1, text='Zadanie 3',  foreground="red")
         labelToValues = Label(
-            menuProj1, text='Podaj n - liczba węzłów oraz l - liczba krawędzi / p - prawdopodobieństwo połączenia (wart. %)')
+            menuProj1, text='Podaj: ')
+        labelToValuesA = Label(
+            menuProj1, text='n - liczba węzłów oraz')
+        labelToValuesB = Label(
+            menuProj1, text='l - liczba krawędzi')
+        labelToValuesC = Label(
+            menuProj1, text='p - prawdopodobieństwo połączenia (wart. %)')
 
         labelN = Label(menuProj1, text='n: ')
         N = Spinbox(menuProj1, from_=0, to=200, width=8, state="readonly")
@@ -140,35 +155,30 @@ class GUI:
         buttonRandomGraphNP = Button(
             menuProj1, text="Generuj graf - losowy G(n,p)", command=lambda: self.selectRandomGraphNP(int(N.get()), float(int(LP.get()))/100.0))
 
-        label1.grid(column=1, row=0)
+        label1.grid(column=0, row=0, padx=10, pady=5)
+        checkInCircle.grid(column=3, row=0, padx=10, pady=5)
 
         buttonIM.grid(column=0, row=1, sticky="nsew", padx=10, pady=5)
         buttonNL.grid(column=1, row=1, sticky="nsew", padx=10, pady=5)
         buttonNM.grid(column=2, row=1, sticky="nsew", padx=10, pady=5)
 
-        label2.grid(column=1, row=2)
+        label3.grid(column=0, row=2, padx=10, pady=5)
 
-        buttonCircleGraphNL.grid(
-            column=0, row=3, sticky="nsew", padx=10, pady=5)
-        buttonCircleGraphIM.grid(
-            column=1, row=3, sticky="nsew", padx=10, pady=5)
-        buttonCircleGraphNM.grid(
-            column=2, row=3, sticky="nsew", padx=10, pady=5)
+        labelToValues.grid(column=0, row=3, sticky="nsew")
+        labelToValuesA.grid(column=0, row=4, sticky="nsew")
+        labelToValuesB.grid(column=0, row=5, sticky="nsew")
+        labelToValuesC.grid(column=0, row=6, sticky="nsew")
 
-        label3.grid(column=1, row=4)
+        labelN.grid(column=1, row=3, sticky="nse", padx=10, pady=5)
+        N.grid(column=2, row=3, sticky="nsew", padx=10, pady=5)
 
-        labelToValues.grid(column=0, row=5, sticky="nsew")
-
-        labelN.grid(column=0, row=6, sticky="nse")
-        N.grid(column=1, row=6, sticky="nsew")
-
-        labelLP.grid(column=0, row=7, sticky="nse")
-        LP.grid(column=1, row=7, sticky="nsew")
+        labelLP.grid(column=1, row=4, sticky="nse", padx=10, pady=5)
+        LP.grid(column=2, row=4, sticky="nsew", padx=10, pady=5)
 
         buttonRandomGraphNL.grid(
-            column=1, row=8, sticky="nsew", padx=10, pady=5)
+            column=2, row=5, sticky="nsew", padx=10, pady=5)
         buttonRandomGraphNP.grid(
-            column=2, row=8, sticky="nsew", padx=10, pady=5)
+            column=2, row=6, sticky="nsew", padx=10, pady=5)
 
         menuProj1.pack(fill=Y)
 
@@ -205,29 +215,15 @@ class GUI:
         filepath = filedialog.askopenfilename(filetypes=(
             ("Text files", "RLS_*.txt"), ("all files", "*.*")))
         g = Graph()
-
-        ######################
-        # TO DO
-        #
-        # in class Graph
-        #
-        # NEW_FUNCTION(filepath, canvas, num ......)
-        # filepath -> name of path with example sequence; "LS_*.txt"
-        # self.canvas -> current canvas.winfo_width()/canvas.winfo_height()
-        # num -> number of Randomization
-        #
-        # NEW_FUNCTION should
-        #   return boolean
-        #   change connection num-times
-        #   fill graph
-        #
-        ######################
-
-        # if (g.NEW_FUNCTION(filepath, self.canvas, num ...)):
-        #   self.Drwa(g)
-        # else:
-        #   messagebox.showerror(
-        #        title="Błąd", message="Podana sekwencja nie jest ciągiem graficznym!")
+        if(g.FillGraphFromLogicSequence(filepath, self.canvas)):
+            if(g.EdgesRandomization(num)):
+                self.Draw(g)
+            else:
+                messagebox.showerror(
+                    title="Błąd", message="This Graph cannot be randomized")
+        else:
+            messagebox.showerror(
+                title="Błąd", message="Podana sekwencja nie jest ciągiem graficznym!")
 
     def selectFindConnectedComponent(self):
         # filepath first letters should by FCC == Find Connected Component

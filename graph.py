@@ -210,7 +210,6 @@ class Graph:
             self.Connect(idx1, idx2)
 
     # 1_3b
-
     def FillRandomizeGraphGNP(self, canvas, n_nodes, prob):
         for i in range(n_nodes):
             xx = random.randint(30, canvas.winfo_width() - 30)
@@ -222,35 +221,6 @@ class Graph:
                 rand_prob = random.uniform(0, 1)
                 if rand_prob <= prob:
                     self.Connect(node.index, i+1)
-
-    def EdgesRandomization(self, count):
-        i = 0
-        while i < count:
-            Samples = random.sample(self.edges, 2)
-            if AreUnique(Samples):
-                a = Samples[0].node1.index
-                b = Samples[0].node2.index
-                c = Samples[1].node1.index
-                d = Samples[1].node2.index
-                if self.Connect(a, c):
-                    if(self.Connect(d, b)):
-                        self.DisConnect(Samples[0])
-                        self.DisConnect(Samples[1])
-                        i += 1
-                    else:
-                        self.DisConnect(Samples[0])
-                        i += 1
-                elif self.Connect(b, c):
-                    if(self.Connect(d, a)):
-                        self.DisConnect(Samples[0])
-                        self.DisConnect(Samples[1])
-                        i += 1
-                    else:
-                        self.DisConnect(Samples[0])
-                        i += 1
-                else:
-                    i += 1
-
 
     ########## PROJECT 2 PARTS ##########
 
@@ -278,9 +248,11 @@ class Graph:
                     seq[idx-1] -= 1
                     seq[idx+i-1] -= 1
                 idx += 1
+            return True
 
         else:
             print("Couldn't construct graph from this sequence.")
+            return False
 
     def ParseLogicSequence(self, filename, line=1):
         f = open(filename, "r")
@@ -302,6 +274,37 @@ class Graph:
             seq[0] = 0
             seq.sort(reverse=True)
 
-    # 2_5
+    def EdgesRandomization(self, count):
+        if Node.count*(Node.count-1)/2 == Edge.count:
+            return False
+        else:
+            i = 0
+            while i < count:
+                Samples = random.sample(self.edges, 2)
+                if AreUnique(Samples):
+                    a = Samples[0].node1.index
+                    b = Samples[0].node2.index
+                    c = Samples[1].node1.index
+                    d = Samples[1].node2.index
+                    if self.Connect(a, c):
+                        if(self.Connect(d, b)):
+                            self.DisConnect(Samples[0])
+                            self.DisConnect(Samples[1])
+                            i += 1
+                        else:
+                            self.DisConnect(Samples[0])
+                            i += 1
+                    elif self.Connect(b, c):
+                        if(self.Connect(d, a)):
+                            self.DisConnect(Samples[0])
+                            self.DisConnect(Samples[1])
+                            i += 1
+                        else:
+                            self.DisConnect(Samples[0])
+                            i += 1
+                    else:
+                        i += 1
+            return True
+
     def FillKReguralGraph(self, canvas, n_nodes, degree, inCircle=True):
         print()
