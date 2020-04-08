@@ -10,6 +10,7 @@ class Graph:
     def __init__(self, nodes=[], edges=[], connections=[]):
         print("____________________________")
         Node.count = 0
+        Edge.count = 0
         self.nodes = [n for n in nodes]
         self.edges = [e for e in edges]
         self.connections = [(a, b) for (a, b) in connections]
@@ -82,7 +83,19 @@ class Graph:
             self.edges.append(
                 Edge(len(self.edges)+1, a, b, Arrow))
             self.connections.append((a, b))
-        return True
+            a.neighbours.append(b)
+            b.neighbours.append(a)
+            return True
+        else:
+            return False
+    
+    def DisConnect(self,edge):
+        try:            
+            self.edges.remove(edge)
+            self.connections.remove((edge.node1,edge.node2))
+            Edge.count-=1
+        except:
+            print("Graph doesn't have the Edge")
 
     def NodesCount(self):
         return len(self.nodes)
@@ -198,6 +211,9 @@ class Graph:
             idx2 = random.randint(1, n_nodes)
             self.Connect(idx1, idx2)
 
+
+                
+
     # 1_3b
     def FillRandomizeGraphGNP(self, canvas, n_nodes, prob):
         for i in range(n_nodes):
@@ -210,3 +226,34 @@ class Graph:
                 rand_prob = random.uniform(0, 1)
                 if rand_prob <= prob:
                     self.Connect(node.index, i+1)
+    
+    def EdgesRandomization(self,count):
+        i = 0 
+        while i < count:
+            Samples = random.sample(self.edges,2)
+            if AreUnique(Samples):
+                a = Samples[0].node1.index
+                b = Samples[0].node2.index
+                c = Samples[1].node1.index
+                d = Samples[1].node2.index
+                if self.Connect(a,c):
+                    if(self.Connect(d,b)):
+                        self.DisConnect(Samples[0])
+                        self.DisConnect(Samples[1])
+                        i+=1
+                    else:
+                        self.DisConnect(Samples[0])
+                        i+=1
+                elif self.Connect(b,c):
+                    if(self.Connect(d,a)):
+                        self.DisConnect(Samples[0])
+                        self.DisConnect(Samples[1])
+                        i+=1
+                    else:
+                        self.DisConnect(Samples[0])
+                        i+=1
+                else:
+                    i+=1
+
+
+
