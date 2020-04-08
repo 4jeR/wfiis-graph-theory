@@ -1,5 +1,4 @@
 import math
-import random
 
 from helping_funcs import *
 from edge import *
@@ -8,8 +7,8 @@ from node import *
 
 class Graph:
     def __init__(self, nodes=[], edges=[], connections=[]):
-        print("____________________________")
         Node.count = 0
+        Edge.count = 0
         self.nodes = [n for n in nodes]
         self.edges = [e for e in edges]
         self.connections = [(a, b) for (a, b) in connections]
@@ -78,11 +77,25 @@ class Graph:
 
         # prevent from adding already connected nodes
 
-        if (a, b) not in self.connections and (b, a) not in self.connections:
+        if a.index != b.index and (a, b) not in self.connections and (b, a) not in self.connections:
             self.edges.append(
                 Edge(len(self.edges)+1, a, b, Arrow))
             self.connections.append((a, b))
-        return True
+            if b.index not in a.neighbours:
+                a.neighbours.append(b.index)
+            if a.index not in b.neighbours:
+                b.neighbours.append(a.index)
+            return True
+        else:
+            return False
+
+    def DisConnect(self, edge):
+        try:
+            self.edges.remove(edge)
+            self.connections.remove((edge.node1, edge.node2))
+            Edge.count -= 1
+        except:
+            print("Graph doesn't have the Edge")
 
     def NodesCount(self):
         return len(self.nodes)
@@ -155,7 +168,6 @@ class Graph:
                 line = line.rstrip('\n')
                 vect = line.split(" ")
                 for j in range(len(vect)):
-                    self.nodes[i].neighbours.append(vect[j])
                     self.Connect(i+1, int(vect[j]))
                 line = f.readline()
                 i += 1
@@ -181,7 +193,6 @@ class Graph:
                 if i == j:
                     continue
                 elif line[j] == '1' or line[j] == '1\n':
-                    self.nodes[j].neighbours.append(i+1)
                     self.Connect(i+1, j+1)
 
         f.close()
@@ -199,6 +210,7 @@ class Graph:
             self.Connect(idx1, idx2)
 
     # 1_3b
+
     def FillRandomizeGraphGNP(self, canvas, n_nodes, prob):
         for i in range(n_nodes):
             xx = random.randint(30, canvas.winfo_width() - 30)
@@ -210,6 +222,85 @@ class Graph:
                 rand_prob = random.uniform(0, 1)
                 if rand_prob <= prob:
                     self.Connect(node.index, i+1)
+
+    def EdgesRandomization(self, count):
+        i = 0
+        while i < count:
+            Samples = random.sample(self.edges, 2)
+            if AreUnique(Samples):
+                a = Samples[0].node1.index
+                b = Samples[0].node2.index
+                c = Samples[1].node1.index
+                d = Samples[1].node2.index
+                if self.Connect(a, c):
+                    if(self.Connect(d, b)):
+                        self.DisConnect(Samples[0])
+                        self.DisConnect(Samples[1])
+                        i += 1
+                    else:
+                        self.DisConnect(Samples[0])
+                        i += 1
+                elif self.Connect(b, c):
+                    if(self.Connect(d, a)):
+                        self.DisConnect(Samples[0])
+                        self.DisConnect(Samples[1])
+                        i += 1
+                    else:
+                        self.DisConnect(Samples[0])
+                        i += 1
+                else:
+                    i += 1
+
+
+    ########## PROJECT 2 PARTS ##########
+
+    def FillGraphFromLogicSequence(self, filename, canvas, line=1, inCircle=False):
+        seq, pls = self.ParseLogicSequence(filename, line)
+
+        if pls:
+            # construct nodes
+            if inCircle:
+                for i in range(len(seq)):
+                    xnext = 600 - 255 * math.cos(i * 2*math.pi / (len(seq)))
+                    ynext = 400 - 255 * math.sin(i * 2*math.pi / (len(seq)))
+                    self.AddNode(Node(i+1, xnext, ynext))
+            else:
+                for i in range(len(seq)):
+                    xx = random.randint(100, 1100)
+                    yy = random.randint(150, 650)
+                    self.AddNode(Node(i+1, xx, yy, 35))
+
+            # make connections based on sequence
+            idx = 1
+            while sum(seq) > 0:
+                for i in range(1, seq[idx-1]+1):
+                    self.Connect(idx, idx + i)
+                    seq[idx-1] -= 1
+                    seq[idx+i-1] -= 1
+                idx += 1
+
+        else:
+            print("Couldn't construct graph from this sequence.")
+
+    def ParseLogicSequence(self, filename, line=1):
+        f = open(filename, "r")
+        seq = list()
+        for i in range(line):
+            seq = list(map(int, f.readline().split(" ")))
+
+        seq_result = seq.copy()
+        seq.sort(reverse=True)
+        while(True):
+            if int(True) not in seq:
+                f.close()
+                return seq_result, True
+            if seq[0] < 0 or seq[0] >= len(seq) or sum(1 for el in seq if el < 0) > 0:
+                f.close()
+                return seq_result, False
+            for i in range(1, seq[0] + 1):
+                seq[i] -= 1
+            seq[0] = 0
+            seq.sort(reverse=True)
 
     # 2_5
     def FillKReguralGraph(self, canvas, n_nodes, degree, inCircle=True):

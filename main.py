@@ -5,7 +5,8 @@ from gui import *
 
 def main():
     root = Tk()
-    GUI(root)
+    gui = GUI(root)
+    
 
     root.update()
     root.mainloop()
