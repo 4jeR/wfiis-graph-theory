@@ -265,28 +265,12 @@ class GUI:
 
     def selectKReguralGraph(self, n, k):
         g = Graph()
-
-        ######################
-        # TO DO
-        #
-        # in class Graph
-        #
-        # NEW_FUNCTION(canvas, n , k ......)
-        # self.canvas -> current canvas.winfo_width()/canvas.winfo_height()
-        # n -> number of nodes
-        # k -> number of degree
-        #
-        # NEW_FUNCTION should
-        #   return boolean
-        #   fill graph
-        #
-        ######################
-
-        # if (g.NEW_FUNCTION(self.canvas, n, k ...)):
-        #   self.Drwa(g)
-        # else:
-        #   messagebox.showerror(
-        #        title="Błąd", message="Podane wartości nie pozwalają na stworzenie grafu k-regularnego!")
+        isChecked = bool(self.checkP2.get())
+        if (g.FillKReguralGraph(self.canvas, n, k, isChecked)):
+            self.Draw(g)
+        else:
+            messagebox.showerror(
+                title="Błąd", message="Podane wartości nie pozwalają na stworzenie grafu {}-regularnego!".format(k))
 
     def selectCheckHamiltonGraph(self, tof):
         g = Graph()

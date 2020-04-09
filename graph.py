@@ -3,6 +3,7 @@ import math
 from helping_funcs import *
 from edge import *
 from node import *
+from collections import *
 
 
 class Graph:
@@ -243,13 +244,13 @@ class Graph:
             # construct nodes
             if inCircle:
                 for i in range(len(seq)):
-                    xnext = 600 - 255 * math.cos(i * 2*math.pi / (len(seq)))
-                    ynext = 400 - 255 * math.sin(i * 2*math.pi / (len(seq)))
+                    xnext = canvas.winfo_width()/2.0 - 255 * math.cos(i * 2*math.pi / (len(seq)))
+                    ynext = canvas.winfo_height()/2.0 - 255 * math.sin(i * 2*math.pi / (len(seq)))
                     self.AddNode(Node(i+1, xnext, ynext))
             else:
                 for i in range(len(seq)):
-                    xx = random.randint(100, 1100)
-                    yy = random.randint(150, 650)
+                    xx = random.randint(30, canvas.winfo_width() - 30)
+                    yy = random.randint(30, canvas.winfo_height() - 30)
                     self.AddNode(Node(i+1, xx, yy, 35))
 
             # make connections based on sequence
@@ -275,7 +276,7 @@ class Graph:
         seq_result = seq.copy()
         seq.sort(reverse=True)
         while(True):
-            if int(True) not in seq:
+            if sum(seq) <= 0:
                 f.close()
                 return seq_result, True
             if seq[0] < 0 or seq[0] >= len(seq) or sum(1 for el in seq if el < 0) > 0:
@@ -318,10 +319,28 @@ class Graph:
                         i += 1
             return True
 
-    def FillKReguralGraph(self, canvas, n_nodes, degree, inCircle=True):
-        print()
+    # 2_5
+    def FillKReguralGraph(self, canvas, n_nodes, degree, inCircle=False):
+        if (n_nodes * degree) % 2 != 0:
+            return False
 
+        if not 0 <= degree < n_nodes:
+            return False
+
+        # add new file
+        # f = open("examples/k-regGraph.txt", "w")
+        seq = [degree for d in range(n_nodes)]
+        filename = "examples/k-regGraph.txt"
+        with open(filename, "w") as f:
+            f.write(' '.join([str(x) for x in seq]))
+        f.close()
+
+        if (self.FillGraphFromLogicSequence(filename, canvas)):
+            return True
+        else:
+            return False
     # 2_3
+
     def CommonComponentsToStringAndDraw(self, canvas, comp):
         ComponentsList = ""
         for i in range(0, len(comp)):
