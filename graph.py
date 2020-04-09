@@ -335,7 +335,7 @@ class Graph:
             f.write(' '.join([str(x) for x in seq]))
         f.close()
 
-        if (self.FillGraphFromLogicSequence(filename, canvas)):
+        if (self.FillGraphFromLogicSequence(filename, canvas, 1, inCircle)):
             return True
         else:
             return False
