@@ -217,21 +217,23 @@ class Graph:
 
 
     # 2_3
-    def CommonComponentsToString(self, comp):
+    def CommonComponentsToStringAndDraw(self, canvas, comp):
         ComponentsList = ""
         for i in range(0, len(comp)):
-            print(comp[i])
             if (comp[i] != 0):
                 ComponentsList += "\n"       
                 nr = comp[i]
                 ComponentsList += "" + (str)(nr) + ") "
+                randomColor="#"+("%06x"%random.randint(500000,16777215))
                 for i in range(len(comp)):
                     if comp[i] == nr:
+                        self.nodes[i].Draw(canvas, randomColor)
                         ComponentsList += (str)(self.nodes[i].index) + " "
                         comp[i] = 0
-
         tab = ComponentsList.split("\n")
         longest_string = max(tab, key=len)
+        for e in self.edges:
+            e.Draw(canvas)
         return ComponentsList + "\nLongest Commont Component has numer " + longest_string[0]
                 
     def Components_R(self, nr, n, comp):
@@ -242,7 +244,7 @@ class Graph:
             else:
                 continue
                     
-    def FillComponents(self, filename, canvas, inCircle=True):
+    def FillComponentsAndDraw(self, filename, canvas, inCircle=True):
         self.FillGraphFromNM(filename, canvas, inCircle)
         nr = 0
         comp = []
@@ -253,4 +255,4 @@ class Graph:
                 nr += 1
                 comp[n.index-1] = nr
                 self.Components_R(nr, n, comp)
-        return self.CommonComponentsToString(comp)
+        return self.CommonComponentsToStringAndDraw(canvas, comp)

@@ -38,14 +38,14 @@ class GUI:
     def ClearCanvas(self):
         self.canvas.delete("all")
 
-    def Draw(self, graph, inCircle=False):
+    def Draw(self, graph, inCircle=False, color = "#000fff"):
         self.ClearCanvas()
         if inCircle:
             self.DrawCircleTrace(graph)
         for e in graph.edges:
             e.Draw(self.canvas)
         for n in graph.nodes:
-            n.Draw(self.canvas)
+            n.Draw(self.canvas, color)
 
     def DrawCircleTrace(self, graph):
         xmin = min([n.x for n in graph.nodes])
@@ -234,30 +234,8 @@ class GUI:
         filepath = filedialog.askopenfilename(filetypes=(
             ("Text files", "FCC_*.txt"), ("all files", "*.*")))
         g = Graph()
-
-        ######################
-        # TO DO
-        #
-        # in class Graph
-        #
-        # FillComponents(filepath, canvas ......)
-        # filepath -> name of path with example sequence; "FCC_*.txt"
-        # self.canvas -> current canvas.winfo_width()/canvas.winfo_height()
-        #
-        # FillComponents should
-        #   return string
-        #   e.g.
-        #      "1) 1 2 3 4 5 6 7 11
-        #       2) 8 9 10
-        #       Najwieksza skladowa ma numer 1."
-        #
-        #   set diffrent colors for components (e. g. color of edge)
-        #   fill graph
-        #
-        ######################
-
+        self.ClearCanvas()
         info = g.FillComponents(filepath, self.canvas, True)     #info is string type
-        self.Draw(g)
         messagebox.showinfo(
                title="Informacja", message=info)
 

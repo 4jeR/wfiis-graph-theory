@@ -1,5 +1,7 @@
+import random
 import tkinter as tk
 from tkinter import W
+
 
 
 class Node:
@@ -29,12 +31,12 @@ class Node:
         self.x += dx
         self.y += dy
 
-    def Draw(self, canvas):  # center coordinates, radius
+    def Draw(self, canvas, color = "#000fff"):  # center coordinates, radius
         x0 = self.x - self.r
         y0 = self.y - self.r
         x1 = self.x + self.r
         y1 = self.y + self.r
         canvas.create_oval(x0, y0, x1, y1, width=3,
-                           outline='green', fill='yellow')
+                           outline='green', fill=color)
         canvas.create_text(self.x-15, self.y, anchor=W,
-                           font=("Arial", 16), text=f'{self.index}', fill='blue')
+                           font=("Arial", 16), text=f'{self.index}', fill='black')
