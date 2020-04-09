@@ -192,19 +192,19 @@ class GUI:
             ("Text files", "LS_*.txt"), ("all files", "*.*")))
         g = Graph()
         isChecked = bool(self.checkP2.get())
-        
+
         if g.FillFromLogicSequence(filepath, self.canvas, inCircle=isChecked):
             self.Draw(g, isChecked)
         else:
-          messagebox.showerror(
-               title="Błąd", message="Podana sekwencja nie jest ciągiem graficznym!")
+            messagebox.showerror(
+                title="Błąd", message="Podana sekwencja nie jest ciągiem graficznym!")
 
     def selectRandomGraphLogicalSeq(self, num):
         # filepath first letters should by RLS == Random Logical Sequence
         filepath = filedialog.askopenfilename(filetypes=(
             ("Text files", "RLS_*.txt"), ("all files", "*.*")))
         g = Graph()
-        if(g.FillGraphFromLogicSequence(filepath, self.canvas)):
+        if(g.FillFromLogicSequence(filepath, self.canvas)):
             if(g.EdgesRandomization(num)):
                 self.Draw(g)
             else:
@@ -252,28 +252,12 @@ class GUI:
 
     def selectKReguralGraph(self, n, k):
         g = Graph()
-
-        ######################
-        # TO DO
-        #
-        # in class Graph
-        #
-        # NEW_FUNCTION(canvas, n , k ......)
-        # self.canvas -> current canvas.winfo_width()/canvas.winfo_height()
-        # n -> number of nodes
-        # k -> number of degree
-        #
-        # NEW_FUNCTION should
-        #   return boolean
-        #   fill graph
-        #
-        ######################
-
-        # if (g.NEW_FUNCTION(self.canvas, n, k ...)):
-        #   self.Drwa(g)
-        # else:
-        #   messagebox.showerror(
-        #        title="Błąd", message="Podane wartości nie pozwalają na stworzenie grafu k-regularnego!")
+        isChecked = bool(self.checkP2.get())
+        if (g.FillKReguralGraph(self.canvas, n, k, isChecked)):
+            self.Draw(g)
+        else:
+            messagebox.showerror(
+                title="Błąd", message="Podane wartości nie pozwalają na stworzenie grafu {}-regularnego!".format(k))
 
     def selectCheckHamiltonGraph(self, tof):
         g = Graph()
@@ -322,7 +306,7 @@ class GUI:
         label1 = Label(menuProj2, text='Zadanie 1',
                        foreground="red")
         button1 = Button(
-            menuProj2, text="Generuj graf - z ciągu graficznego", command=lambda:self.selectLogicSeq())
+            menuProj2, text="Generuj graf - z ciągu graficznego", command=lambda: self.selectLogicSeq())
 
         # 2
         label2 = Label(menuProj2, text='Zadanie 2', foreground="red")
