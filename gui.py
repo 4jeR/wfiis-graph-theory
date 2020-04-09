@@ -186,31 +186,18 @@ class GUI:
 
     #################### POJECT 2 #########################
 
-    def selectLogicalSeq(self):
+    def selectLogicSeq(self):
         # filepath first letters should by LS == Logical Sequence
         filepath = filedialog.askopenfilename(filetypes=(
             ("Text files", "LS_*.txt"), ("all files", "*.*")))
         g = Graph()
-
-        ######################
-        # TO DO
-        # in class Graph
-        #
-        # NEW_FUNCTION(filepath, canvas ......)
-        # filepath -> name of path with example sequence; "LS_*.txt"
-        # self.canvas -> current canvas.winfo_width()/canvas.winfo_height()
-        #
-        # NEW_FUNCTION should
-        #   return boolean
-        #   fill graph
-        #
-        ######################
-
-        # if (g.NEW_FUNCTION(filepath, self.canvas ...)):
-        #   self.Drwa(g)
-        # else:
-        #   messagebox.showerror(
-        #        title="Błąd", message="Podana sekwencja nie jest ciągiem graficznym!")
+        isChecked = bool(self.checkP2.get())
+        
+        if g.FillFromLogicSequence(filepath, self.canvas, inCircle=isChecked):
+            self.Draw(g, isChecked)
+        else:
+          messagebox.showerror(
+               title="Błąd", message="Podana sekwencja nie jest ciągiem graficznym!")
 
     def selectRandomGraphLogicalSeq(self, num):
         # filepath first letters should by RLS == Random Logical Sequence
@@ -335,7 +322,7 @@ class GUI:
         label1 = Label(menuProj2, text='Zadanie 1',
                        foreground="red")
         button1 = Button(
-            menuProj2, text="Generuj graf - z ciągu graficznego", command=self.selectLogicalSeq)
+            menuProj2, text="Generuj graf - z ciągu graficznego", command=lambda:self.selectLogicSeq())
 
         # 2
         label2 = Label(menuProj2, text='Zadanie 2', foreground="red")

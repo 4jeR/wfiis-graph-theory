@@ -236,7 +236,7 @@ class Graph:
 
     ########## PROJECT 2 PARTS ##########
 
-    def FillGraphFromLogicSequence(self, filename, canvas, line=1, inCircle=False):
+    def FillFromLogicSequence(self, filename, canvas, line=1, inCircle=False):
         seq, pls = self.ParseLogicSequence(filename, line)
 
         if pls:
@@ -250,7 +250,7 @@ class Graph:
                 for i in range(len(seq)):
                     xx = random.randint(100, 1100)
                     yy = random.randint(150, 650)
-                    self.AddNode(Node(i+1, xx, yy, 35))
+                    self.AddNode(Node(i+1, xx, yy, 20))
 
             # make connections based on sequence
             idx = 1
@@ -261,7 +261,6 @@ class Graph:
                     seq[idx+i-1] -= 1
                 idx += 1
             return True
-
         else:
             print("Couldn't construct graph from this sequence.")
             return False
@@ -275,7 +274,7 @@ class Graph:
         seq_result = seq.copy()
         seq.sort(reverse=True)
         while(True):
-            if int(True) not in seq:
+            if sum(seq) <= 0:
                 f.close()
                 return seq_result, True
             if seq[0] < 0 or seq[0] >= len(seq) or sum(1 for el in seq if el < 0) > 0:
