@@ -88,6 +88,7 @@ class Graph:
             return True
         else:
             return False
+<<<<<<< HEAD
 
     def DisConnect(self, edge):
         try:
@@ -96,6 +97,8 @@ class Graph:
             Edge.count -= 1
         except:
             print("Graph doesn't have the Edge")
+=======
+>>>>>>> PROJECT_2-3
 
     def NodesCount(self):
         return len(self.nodes)
@@ -222,6 +225,7 @@ class Graph:
                 if rand_prob <= prob:
                     self.Connect(node.index, i+1)
 
+<<<<<<< HEAD
     ########## PROJECT 2 PARTS ##########
 
     def FillGraphFromLogicSequence(self, filename, canvas, line=1, inCircle=False):
@@ -308,3 +312,46 @@ class Graph:
 
     def FillKReguralGraph(self, canvas, n_nodes, degree, inCircle=True):
         print()
+=======
+
+    # 2_3
+    def CommonComponentsToStringAndDraw(self, canvas, comp):
+        ComponentsList = ""
+        for i in range(0, len(comp)):
+            if (comp[i] != 0):
+                ComponentsList += "\n"       
+                nr = comp[i]
+                ComponentsList += "" + (str)(nr) + ") "
+                randomColor="#"+("%06x"%random.randint(500000,16777215))
+                for i in range(len(comp)):
+                    if comp[i] == nr:
+                        self.nodes[i].Draw(canvas, randomColor)
+                        ComponentsList += (str)(self.nodes[i].index) + " "
+                        comp[i] = 0
+        tab = ComponentsList.split("\n")
+        longest_string = max(tab, key=len)
+        for e in self.edges:
+            e.Draw(canvas)
+        return ComponentsList + "\nLongest Commont Component has numer " + longest_string[0]
+                
+    def Components_R(self, nr, n, comp):
+        for nb in n.neighbours:
+            if comp[nb-1] == -1:
+                comp[nb-1] = nr
+                self.Components_R(nr, NodeFromIndex(self, nb), comp)
+            else:
+                continue
+                    
+    def FillComponentsAndDraw(self, filename, canvas, inCircle=True):
+        self.FillGraphFromNM(filename, canvas, inCircle)
+        nr = 0
+        comp = []
+        for i in range(len(self.nodes)):
+            comp.append(-1)
+        for n in self.nodes:
+            if comp[n.index-1] == -1:
+                nr += 1
+                comp[n.index-1] = nr
+                self.Components_R(nr, n, comp)
+        return self.CommonComponentsToStringAndDraw(canvas, comp)
+>>>>>>> PROJECT_2-3

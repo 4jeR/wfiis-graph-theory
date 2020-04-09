@@ -38,14 +38,14 @@ class GUI:
     def ClearCanvas(self):
         self.canvas.delete("all")
 
-    def Draw(self, graph, inCircle=False):
+    def Draw(self, graph, inCircle=False, color = "#000fff"):
         self.ClearCanvas()
         if inCircle:
             self.DrawCircleTrace(graph)
         for e in graph.edges:
             e.Draw(self.canvas)
         for n in graph.nodes:
-            n.Draw(self.canvas)
+            n.Draw(self.canvas, color)
 
     def DrawCircleTrace(self, graph):
         xmin = min([n.x for n in graph.nodes])
@@ -230,6 +230,7 @@ class GUI:
         filepath = filedialog.askopenfilename(filetypes=(
             ("Text files", "FCC_*.txt"), ("all files", "*.*")))
         g = Graph()
+<<<<<<< HEAD
 
         ######################
         # TO DO
@@ -256,6 +257,12 @@ class GUI:
         # self.Drwa(g)
         # messagebox.showinfo(
         #        title="Informacja", message=info)
+=======
+        self.ClearCanvas()
+        info = g.FillComponents(filepath, self.canvas, True)     #info is string type
+        messagebox.showinfo(
+               title="Informacja", message=info)
+>>>>>>> PROJECT_2-3
 
     def selectEulerGraph(self, num):
         g = Graph()
