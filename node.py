@@ -3,7 +3,6 @@ import tkinter as tk
 from tkinter import W
 
 
-
 class Node:
     count = 0
 
@@ -31,7 +30,7 @@ class Node:
         self.x += dx
         self.y += dy
 
-    def Draw(self, canvas, color = "#000fff"):  # center coordinates, radius
+    def Draw(self, canvas, color='#aaa'):  # center coordinates, radius
         x0 = self.x - self.r
         y0 = self.y - self.r
         x1 = self.x + self.r
@@ -39,11 +38,7 @@ class Node:
         canvas.create_oval(x0, y0, x1, y1, width=3,
                            outline='green', fill=color)
         canvas.create_text(self.x-15, self.y, anchor=W,
-<<<<<<< HEAD
-                           font=("Arial", 16), text=f'{self.index}', fill='blue')
+                           font=("Arial", 16), text=f'{self.index}', fill='black')
 
     def Degree(self):
         return len(self.neighbours)
-=======
-                           font=("Arial", 16), text=f'{self.index}', fill='black')
->>>>>>> PROJECT_2-3

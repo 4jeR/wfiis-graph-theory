@@ -38,7 +38,7 @@ class GUI:
     def ClearCanvas(self):
         self.canvas.delete("all")
 
-    def Draw(self, graph, inCircle=False, color = "#000fff"):
+    def Draw(self, graph, inCircle=False, color="#aaa"):
         self.ClearCanvas()
         if inCircle:
             self.DrawCircleTrace(graph)
@@ -93,17 +93,19 @@ class GUI:
 
     def selectRandomGraphNL(self, n, l):
         g = Graph()
+        isChecked = bool(self.checkP1.get())
         if(l > (n * (n-1) / 2)):
             messagebox.showerror(
                 title="Błąd", message="[selectRandomGraphNL] Złe wartości argumentów")
         else:
-            g.FillRandomizeGraphGNL(self.canvas, n, l)
-            self.Draw(g)
+            g.FillRandomizeGraphGNL(self.canvas, n, l, isChecked)
+            self.Draw(g, isChecked)
 
     def selectRandomGraphNP(self, n, p):
         g = Graph()
-        g.FillRandomizeGraphGNP(self.canvas, n, p)
-        self.Draw(g)
+        isChecked = bool(self.checkP1.get())
+        g.FillRandomizeGraphGNP(self.canvas, n, p, isChecked)
+        self.Draw(g, isChecked)
 
     def addProject1Widgets(self, root):
         menuProj1 = Frame(self.tab1, width=1200, height=30)
@@ -230,39 +232,11 @@ class GUI:
         filepath = filedialog.askopenfilename(filetypes=(
             ("Text files", "FCC_*.txt"), ("all files", "*.*")))
         g = Graph()
-<<<<<<< HEAD
-
-        ######################
-        # TO DO
-        #
-        # in class Graph
-        #
-        # NEW_FUNCTION(filepath, canvas ......)
-        # filepath -> name of path with example sequence; "FCC_*.txt"
-        # self.canvas -> current canvas.winfo_width()/canvas.winfo_height()
-        #
-        # NEW_FUNCTION should
-        #   return string
-        #   e.g.
-        #      "1) 1 2 3 4 5 6 7 11
-        #       2) 8 9 10
-        #       Najwieksza skladowa ma numer 1."
-        #
-        #   set diffrent colors for components (e. g. color of edge)
-        #   fill graph
-        #
-        ######################
-
-        # info = g.NEW_FUNCTION(filepath, self.canvas)     #info is string type
-        # self.Drwa(g)
-        # messagebox.showinfo(
-        #        title="Informacja", message=info)
-=======
         self.ClearCanvas()
-        info = g.FillComponents(filepath, self.canvas, True)     #info is string type
+        info = g.FillComponentsAndDraw(
+            filepath, self.canvas, True)  # info is string type
         messagebox.showinfo(
-               title="Informacja", message=info)
->>>>>>> PROJECT_2-3
+            title="Informacja", message=info)
 
     def selectEulerGraph(self, num):
         g = Graph()
@@ -351,6 +325,12 @@ class GUI:
 
     def addProject2Widgets(self, root):
         menuProj2 = Frame(self.tab2, width=1200, height=30)
+
+        # check if generate graph in circle
+        self.checkP2 = IntVar()
+        checkInCircle2 = Checkbutton(
+            menuProj2, text="Generuj graf kołowy", variable=self.checkP2)
+
         # 1
         label1 = Label(menuProj2, text='Zadanie 1',
                        foreground="red")
@@ -398,6 +378,7 @@ class GUI:
             menuProj2, text="Sprawdź, czy graf jest hamiltonowski - losowy", command=lambda: self.selectCheckHamiltonGraph(False))
 
         label1.grid(column=0, row=0)
+        checkInCircle2.grid(column=3, row=0)
         button1.grid(column=0, row=1, sticky="nsew", padx=10, pady=5)
         label2.grid(column=0, row=2)
         label2a.grid(column=0, row=3)
