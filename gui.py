@@ -206,7 +206,7 @@ class GUI:
         g = Graph()
         if(g.FillFromLogicSequence(filepath, self.canvas)):
             if(g.EdgesRandomization(num)):
-                self.Draw(g)
+                self.Draw(g, False)
             else:
                 messagebox.showerror(
                     title="Błąd", message="This Graph cannot be randomized")

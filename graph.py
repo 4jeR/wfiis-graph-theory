@@ -117,7 +117,7 @@ class Graph:
             for i in range(rows):
                 xx = random.randint(30, canvas.winfo_width() - 30)
                 yy = random.randint(30, canvas.winfo_height() - 30)
-                self.AddNode(Node(i+1, xx, yy, 20))
+                self.AddNode(Node(i+1, xx, yy))
         # find neighbours
         for i in range(rows):
             for j in range(cols):
@@ -159,7 +159,7 @@ class Graph:
             for i in range(vert_count):
                 xx = random.randint(30, canvas.winfo_width() - 30)
                 yy = random.randint(30, canvas.winfo_height() - 30)
-                self.AddNode(Node(i+1, xx, yy, 20))
+                self.AddNode(Node(i+1, xx, yy))
 
         # find neighbour and connect
         with open(filename, 'r') as f:
@@ -186,7 +186,7 @@ class Graph:
             for i in range(rows):
                 xx = random.randint(30, canvas.winfo_width() - 30)
                 yy = random.randint(30, canvas.winfo_height() - 30)
-                self.AddNode(Node(i+1, xx, yy, 20))
+                self.AddNode(Node(i+1, xx, yy))
 
         for i in range(rows):
             line = str(f.readline()).split(" ")
@@ -209,7 +209,7 @@ class Graph:
             for i in range(n_nodes):
                 xx = random.randint(30, canvas.winfo_width() - 30)
                 yy = random.randint(30, canvas.winfo_height() - 30)
-                self.AddNode(Node(i+1, xx, yy, 20))
+                self.AddNode(Node(i+1, xx, yy))
 
         while self.EdgesCount() < l_edges:
             idx1 = random.randint(1, n_nodes)
@@ -227,7 +227,7 @@ class Graph:
             for i in range(n_nodes):
                 xx = random.randint(30, canvas.winfo_width() - 30)
                 yy = random.randint(30, canvas.winfo_height() - 30)
-                self.AddNode(Node(i+1, xx, yy, 20))
+                self.AddNode(Node(i+1, xx, yy))
 
         for node in self.nodes:
             for i in range(n_nodes):
@@ -251,7 +251,7 @@ class Graph:
                 for i in range(len(seq)):
                     xx = random.randint(30, canvas.winfo_width() - 30)
                     yy = random.randint(30, canvas.winfo_height() - 30)
-                    self.AddNode(Node(i+1, xx, yy, 35))
+                    self.AddNode(Node(i+1, xx, yy))
 
             # make connections based on sequence
             idx = 1
