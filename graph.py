@@ -35,21 +35,21 @@ class Graph:
             print(edge.index)
 
     # prints neighbour Matrix to the console
-    def PrintNeighbourMatrix(self):
-        print("\nMacierz sasiedztwa:")
+    def PrintAdjacencyMatrix(self):
+        print("\nAdjacency Matrix:")
         for node in self.nodes:
             node.PrintNeighboursInVector()
 
     # prints neighbour list to the console
 
-    def PrintNeighbourList(self):
-        print("\nLista sasiedztwa:")
+    def PrintAdjacencyList(self):
+        print("\nAdjacency list:")
         for node in self.nodes:
             node.PrintNeighbours()
 
     # prints incidence Matrix to the console
     def PrintIncidenceMatrix(self):
-        print("\nMacierz incydencji:")
+        print("\nIncident matrix:")
         Matrix = [[0 for i in range(len(self.edges))]
                   for y in range(len(self.nodes))]
         for edge in self.edges:
@@ -90,13 +90,13 @@ class Graph:
         else:
             return False
 
-    def DisConnect(self, edge):
+    def Disconnect(self, edge):
         try:
             self.edges.remove(edge)
             self.connections.remove((edge.node1, edge.node2))
             Edge.count -= 1
         except:
-            print("Graph doesn't have the Edge")
+            print("[Disconnect] Graph doesn't have the Edge.")
 
     def NodesCount(self):
         return len(self.nodes)
@@ -143,7 +143,7 @@ class Graph:
             self.Connect(node1, node2)
 
     # 1_1b
-    def FillGraphFromNL(self, filename, canvas, inCircle=False):
+    def FillGraphFromAL(self, filename, canvas, inCircle=False):
         vert_count = 0
         with open(filename, 'r') as f:
             for line in f:
@@ -174,7 +174,7 @@ class Graph:
                 i += 1
 
     # 1_1c
-    def FillGraphFromNM(self, filename, canvas, inCircle=False):
+    def FillGraphFromAM(self, filename, canvas, inCircle=False):
         f, rows, cols = GetFileRowsCols(self, filename)
 
         if inCircle:
@@ -237,8 +237,8 @@ class Graph:
 
     ########## PROJECT 2 PARTS ##########
 
-    def FillFromLogicSequence(self, filename, canvas, line=1, inCircle=False):
-        seq, pls = self.ParseLogicSequence(filename, line)
+    def FillFromGraphicSequence(self, filename, canvas, line=1, inCircle=False):
+        seq, pls = self.ParseGraphicSequence(filename, line)
 
         if pls:
             # construct nodes
@@ -263,10 +263,10 @@ class Graph:
                 idx += 1
             return True
         else:
-            print("Couldn't construct graph from this sequence.")
+            print("[FillFromGraphicSequence] Couldn't construct graph from this sequence.")
             return False
 
-    def ParseLogicSequence(self, filename, line=1):
+    def ParseGraphicSequence(self, filename, line=1):
         f = open(filename, "r")
         seq = list()
         for i in range(line):
@@ -300,19 +300,19 @@ class Graph:
                     d = Samples[1].node2.index
                     if self.Connect(a, c):
                         if(self.Connect(d, b)):
-                            self.DisConnect(Samples[0])
-                            self.DisConnect(Samples[1])
+                            self.Disconnect(Samples[0])
+                            self.Disconnect(Samples[1])
                             i += 1
                         else:
-                            self.DisConnect(Samples[0])
+                            self.Disconnect(Samples[0])
                             i += 1
                     elif self.Connect(b, c):
                         if(self.Connect(d, a)):
-                            self.DisConnect(Samples[0])
-                            self.DisConnect(Samples[1])
+                            self.Disconnect(Samples[0])
+                            self.Disconnect(Samples[1])
                             i += 1
                         else:
-                            self.DisConnect(Samples[0])
+                            self.Disconnect(Samples[0])
                             i += 1
                     else:
                         i += 1
@@ -334,7 +334,7 @@ class Graph:
             f.write(' '.join([str(x) for x in seq]))
         f.close()
 
-        if (self.FillFromLogicSequence(filename, canvas, 1, inCircle)):
+        if (self.FillFromGraphicSequence(filename, canvas, 1, inCircle)):
             return True
         else:
             return False
@@ -357,7 +357,7 @@ class Graph:
         longest_string = max(tab, key=len)
         for e in self.edges:
             e.Draw(canvas)
-        return ComponentsList + "\nLongest Commont Component has numer " + longest_string[0]
+        return ComponentsList + "\nThe longest common component has numer " + longest_string[0]
 
     def Components_R(self, nr, n, comp):
         for nb in n.neighbours:
@@ -368,7 +368,7 @@ class Graph:
                 continue
 
     def FillComponentsAndDraw(self, filename, canvas, inCircle=True):
-        self.FillGraphFromNM(filename, canvas, inCircle)
+        self.FillGraphFromAM(filename, canvas, inCircle)
         nr = 0
         comp = []
         for i in range(len(self.nodes)):
