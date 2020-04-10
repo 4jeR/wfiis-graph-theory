@@ -230,7 +230,6 @@ class GUI:
         filepath = filedialog.askopenfilename(filetypes=(
             ("Text files", "FCC_*.txt"), ("all files", "*.*")))
         g = Graph()
-<<<<<<< HEAD
 
         ######################
         # TO DO
@@ -257,12 +256,10 @@ class GUI:
         # self.Drwa(g)
         # messagebox.showinfo(
         #        title="Informacja", message=info)
-=======
         self.ClearCanvas()
         info = g.FillComponents(filepath, self.canvas, True)     #info is string type
         messagebox.showinfo(
                title="Informacja", message=info)
->>>>>>> PROJECT_2-3
 
     def selectEulerGraph(self, num):
         g = Graph()

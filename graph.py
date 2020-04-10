@@ -88,7 +88,6 @@ class Graph:
             return True
         else:
             return False
-<<<<<<< HEAD
 
     def DisConnect(self, edge):
         try:
@@ -97,8 +96,6 @@ class Graph:
             Edge.count -= 1
         except:
             print("Graph doesn't have the Edge")
-=======
->>>>>>> PROJECT_2-3
 
     def NodesCount(self):
         return len(self.nodes)
@@ -225,7 +222,6 @@ class Graph:
                 if rand_prob <= prob:
                     self.Connect(node.index, i+1)
 
-<<<<<<< HEAD
     ########## PROJECT 2 PARTS ##########
 
     def FillGraphFromLogicSequence(self, filename, canvas, line=1, inCircle=False):
@@ -312,7 +308,6 @@ class Graph:
 
     def FillKReguralGraph(self, canvas, n_nodes, degree, inCircle=True):
         print()
-=======
 
     # 2_3
     def CommonComponentsToStringAndDraw(self, canvas, comp):
@@ -354,4 +349,3 @@ class Graph:
                 comp[n.index-1] = nr
                 self.Components_R(nr, n, comp)
         return self.CommonComponentsToStringAndDraw(canvas, comp)
->>>>>>> PROJECT_2-3

@@ -39,11 +39,8 @@ class Node:
         canvas.create_oval(x0, y0, x1, y1, width=3,
                            outline='green', fill=color)
         canvas.create_text(self.x-15, self.y, anchor=W,
-<<<<<<< HEAD
                            font=("Arial", 16), text=f'{self.index}', fill='blue')
 
     def Degree(self):
         return len(self.neighbours)
-=======
                            font=("Arial", 16), text=f'{self.index}', fill='black')
->>>>>>> PROJECT_2-3
