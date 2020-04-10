@@ -3,6 +3,7 @@ import math
 from helping_funcs import *
 from edge import *
 from node import *
+from collections import *
 
 
 class Graph:
@@ -34,21 +35,21 @@ class Graph:
             print(edge.index)
 
     # prints neighbour Matrix to the console
-    def PrintNeighbourMatrix(self):
-        print("\nMacierz sasiedztwa:")
+    def PrintAdjacencyMatrix(self):
+        print("\nAdjacency Matrix:")
         for node in self.nodes:
             node.PrintNeighboursInVector()
 
     # prints neighbour list to the console
 
-    def PrintNeighbourList(self):
-        print("\nLista sasiedztwa:")
+    def PrintAdjacencyList(self):
+        print("\nAdjacency list:")
         for node in self.nodes:
             node.PrintNeighbours()
 
     # prints incidence Matrix to the console
     def PrintIncidenceMatrix(self):
-        print("\nMacierz incydencji:")
+        print("\nIncident matrix:")
         Matrix = [[0 for i in range(len(self.edges))]
                   for y in range(len(self.nodes))]
         for edge in self.edges:
@@ -89,13 +90,13 @@ class Graph:
         else:
             return False
 
-    def DisConnect(self, edge):
+    def Disconnect(self, edge):
         try:
             self.edges.remove(edge)
             self.connections.remove((edge.node1, edge.node2))
             Edge.count -= 1
         except:
-            print("Graph doesn't have the Edge")
+            print("[Disconnect] Graph doesn't have the Edge.")
 
     def NodesCount(self):
         return len(self.nodes)
@@ -116,7 +117,7 @@ class Graph:
             for i in range(rows):
                 xx = random.randint(30, canvas.winfo_width() - 30)
                 yy = random.randint(30, canvas.winfo_height() - 30)
-                self.AddNode(Node(i+1, xx, yy, 20))
+                self.AddNode(Node(i+1, xx, yy))
         # find neighbours
         for i in range(rows):
             for j in range(cols):
@@ -142,7 +143,7 @@ class Graph:
             self.Connect(node1, node2)
 
     # 1_1b
-    def FillGraphFromNL(self, filename, canvas, inCircle=False):
+    def FillGraphFromAL(self, filename, canvas, inCircle=False):
         vert_count = 0
         with open(filename, 'r') as f:
             for line in f:
@@ -158,7 +159,7 @@ class Graph:
             for i in range(vert_count):
                 xx = random.randint(30, canvas.winfo_width() - 30)
                 yy = random.randint(30, canvas.winfo_height() - 30)
-                self.AddNode(Node(i+1, xx, yy, 20))
+                self.AddNode(Node(i+1, xx, yy))
 
         # find neighbour and connect
         with open(filename, 'r') as f:
@@ -173,7 +174,7 @@ class Graph:
                 i += 1
 
     # 1_1c
-    def FillGraphFromNM(self, filename, canvas, inCircle=False):
+    def FillGraphFromAM(self, filename, canvas, inCircle=False):
         f, rows, cols = GetFileRowsCols(self, filename)
 
         if inCircle:
@@ -185,7 +186,7 @@ class Graph:
             for i in range(rows):
                 xx = random.randint(30, canvas.winfo_width() - 30)
                 yy = random.randint(30, canvas.winfo_height() - 30)
-                self.AddNode(Node(i+1, xx, yy, 20))
+                self.AddNode(Node(i+1, xx, yy))
 
         for i in range(rows):
             line = str(f.readline()).split(" ")
@@ -198,11 +199,17 @@ class Graph:
         f.close()
 
     # 1_3a
-    def FillRandomizeGraphGNL(self, canvas, n_nodes, l_edges):
-        for i in range(n_nodes):
-            xx = random.randint(30, canvas.winfo_width() - 30)
-            yy = random.randint(30, canvas.winfo_height() - 30)
-            self.AddNode(Node(i+1, xx, yy, 20))
+    def FillRandomizeGraphGNL(self, canvas, n_nodes, l_edges,  inCircle=False):
+        if inCircle:
+            for i in range(n_nodes):
+                xnext = canvas.winfo_width()/2.0 - 255 * math.cos(i * 2*math.pi / (n_nodes))
+                ynext = canvas.winfo_height()/2.0 - 255 * math.sin(i * 2*math.pi / (n_nodes))
+                self.AddNode(Node(i+1, xnext, ynext))
+        else:
+            for i in range(n_nodes):
+                xx = random.randint(30, canvas.winfo_width() - 30)
+                yy = random.randint(30, canvas.winfo_height() - 30)
+                self.AddNode(Node(i+1, xx, yy))
 
         while self.EdgesCount() < l_edges:
             idx1 = random.randint(1, n_nodes)
@@ -210,11 +217,17 @@ class Graph:
             self.Connect(idx1, idx2)
 
     # 1_3b
-    def FillRandomizeGraphGNP(self, canvas, n_nodes, prob):
-        for i in range(n_nodes):
-            xx = random.randint(30, canvas.winfo_width() - 30)
-            yy = random.randint(30, canvas.winfo_height() - 30)
-            self.AddNode(Node(i+1, xx, yy, 20))
+    def FillRandomizeGraphGNP(self, canvas, n_nodes, prob,  inCircle=False):
+        if inCircle:
+            for i in range(n_nodes):
+                xnext = canvas.winfo_width()/2.0 - 255 * math.cos(i * 2*math.pi / (n_nodes))
+                ynext = canvas.winfo_height()/2.0 - 255 * math.sin(i * 2*math.pi / (n_nodes))
+                self.AddNode(Node(i+1, xnext, ynext))
+        else:
+            for i in range(n_nodes):
+                xx = random.randint(30, canvas.winfo_width() - 30)
+                yy = random.randint(30, canvas.winfo_height() - 30)
+                self.AddNode(Node(i+1, xx, yy))
 
         for node in self.nodes:
             for i in range(n_nodes):
@@ -224,21 +237,21 @@ class Graph:
 
     ########## PROJECT 2 PARTS ##########
 
-    def FillGraphFromLogicSequence(self, filename, canvas, line=1, inCircle=False):
-        seq, pls = self.ParseLogicSequence(filename, line)
+    def FillFromGraphicSequence(self, filename, canvas, line=1, inCircle=False):
+        seq, pls = self.ParseGraphicSequence(filename, line)
 
         if pls:
             # construct nodes
             if inCircle:
                 for i in range(len(seq)):
-                    xnext = 600 - 255 * math.cos(i * 2*math.pi / (len(seq)))
-                    ynext = 400 - 255 * math.sin(i * 2*math.pi / (len(seq)))
+                    xnext = canvas.winfo_width()/2.0 - 255 * math.cos(i * 2*math.pi / (len(seq)))
+                    ynext = canvas.winfo_height()/2.0 - 255 * math.sin(i * 2*math.pi / (len(seq)))
                     self.AddNode(Node(i+1, xnext, ynext))
             else:
                 for i in range(len(seq)):
-                    xx = random.randint(100, 1100)
-                    yy = random.randint(150, 650)
-                    self.AddNode(Node(i+1, xx, yy, 35))
+                    xx = random.randint(30, canvas.winfo_width() - 30)
+                    yy = random.randint(30, canvas.winfo_height() - 30)
+                    self.AddNode(Node(i+1, xx, yy))
 
             # make connections based on sequence
             idx = 1
@@ -249,12 +262,11 @@ class Graph:
                     seq[idx+i-1] -= 1
                 idx += 1
             return True
-
         else:
-            print("Couldn't construct graph from this sequence.")
+            print("[FillFromGraphicSequence] Couldn't construct graph from this sequence.")
             return False
 
-    def ParseLogicSequence(self, filename, line=1):
+    def ParseGraphicSequence(self, filename, line=1):
         f = open(filename, "r")
         seq = list()
         for i in range(line):
@@ -263,7 +275,7 @@ class Graph:
         seq_result = seq.copy()
         seq.sort(reverse=True)
         while(True):
-            if int(True) not in seq:
+            if sum(seq) <= 0:
                 f.close()
                 return seq_result, True
             if seq[0] < 0 or seq[0] >= len(seq) or sum(1 for el in seq if el < 0) > 0:
@@ -288,36 +300,54 @@ class Graph:
                     d = Samples[1].node2.index
                     if self.Connect(a, c):
                         if(self.Connect(d, b)):
-                            self.DisConnect(Samples[0])
-                            self.DisConnect(Samples[1])
+                            self.Disconnect(Samples[0])
+                            self.Disconnect(Samples[1])
                             i += 1
                         else:
-                            self.DisConnect(Samples[0])
+                            self.Disconnect(Samples[0])
                             i += 1
                     elif self.Connect(b, c):
                         if(self.Connect(d, a)):
-                            self.DisConnect(Samples[0])
-                            self.DisConnect(Samples[1])
+                            self.Disconnect(Samples[0])
+                            self.Disconnect(Samples[1])
                             i += 1
                         else:
-                            self.DisConnect(Samples[0])
+                            self.Disconnect(Samples[0])
                             i += 1
                     else:
                         i += 1
             return True
 
-    def FillKReguralGraph(self, canvas, n_nodes, degree, inCircle=True):
-        print()
+    # 2_5
+    def FillKReguralGraph(self, canvas, n_nodes, degree, inCircle=False):
+        if (n_nodes * degree) % 2 != 0:
+            return False
 
+        if not 0 <= degree < n_nodes:
+            return False
+
+        # add new file
+        # f = open("examples/k-regGraph.txt", "w")
+        seq = [degree for d in range(n_nodes)]
+        filename = "examples/k-regGraph.txt"
+        with open(filename, "w") as f:
+            f.write(' '.join([str(x) for x in seq]))
+        f.close()
+
+        if (self.FillFromGraphicSequence(filename, canvas, 1, inCircle)):
+            return True
+        else:
+            return False
     # 2_3
+
     def CommonComponentsToStringAndDraw(self, canvas, comp):
         ComponentsList = ""
         for i in range(0, len(comp)):
             if (comp[i] != 0):
-                ComponentsList += "\n"       
+                ComponentsList += "\n"
                 nr = comp[i]
                 ComponentsList += "" + (str)(nr) + ") "
-                randomColor="#"+("%06x"%random.randint(500000,16777215))
+                randomColor = "#"+("%06x" % random.randint(500000, 16777215))
                 for i in range(len(comp)):
                     if comp[i] == nr:
                         self.nodes[i].Draw(canvas, randomColor)
@@ -327,8 +357,8 @@ class Graph:
         longest_string = max(tab, key=len)
         for e in self.edges:
             e.Draw(canvas)
-        return ComponentsList + "\nLongest Commont Component has numer " + longest_string[0]
-                
+        return ComponentsList + "\nThe longest common component has numer " + longest_string[0]
+
     def Components_R(self, nr, n, comp):
         for nb in n.neighbours:
             if comp[nb-1] == -1:
@@ -336,9 +366,9 @@ class Graph:
                 self.Components_R(nr, NodeFromIndex(self, nb), comp)
             else:
                 continue
-                    
+
     def FillComponentsAndDraw(self, filename, canvas, inCircle=True):
-        self.FillGraphFromNM(filename, canvas, inCircle)
+        self.FillGraphFromAM(filename, canvas, inCircle)
         nr = 0
         comp = []
         for i in range(len(self.nodes)):
