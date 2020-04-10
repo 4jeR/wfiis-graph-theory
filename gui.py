@@ -299,20 +299,20 @@ class GUI:
         label1 = Label(menuProj2, text='Task 1',
                        foreground="red")
         button1 = Button(
-            menuProj2, text="Generate graph - from graphic sequence.", command=lambda: self.SelectGraphicSeq())
+            menuProj2, text="Generate graph - from graphic sequence", command=lambda: self.SelectGraphicSeq())
 
         # 2
         label2 = Label(menuProj2, text='Task 2', foreground="red")
-        label2a = Label(menuProj2, text='Liczba żadanych randomizacji')
+        label2a = Label(menuProj2, text='How many randomizations')
         spinbox2a = Spinbox(menuProj2, from_=0, to=100,
                             width=8, state="readonly")
         button2 = Button(
-            menuProj2, text="Generate graph - randomize connections.", command=lambda: self.SelectRandomGraphGraphicSeq(int(spinbox2a.get())))
+            menuProj2, text="Generate graph - randomize connections", command=lambda: self.SelectRandomGraphGraphicSeq(int(spinbox2a.get())))
 
         # 3
         label3 = Label(menuProj2, text='Task 3', foreground="red")
         button3 = Button(
-            menuProj2, text="Generate graph - find the longest common component.", command=self.SelectFindConnectedComponent)
+            menuProj2, text="Generate graph - find the longest common component", command=self.SelectFindConnectedComponent)
 
         # 4
         label4 = Label(menuProj2, text='Task 4', foreground="red")
@@ -339,7 +339,7 @@ class GUI:
         button6a = Button(
             menuProj2, text="Check if graph is Hamiltonian - from file", command=lambda:self.SelectCheckHamiltonGraph(True))
         button6b = Button(
-            menuProj2, text="Check if graph is Hamiltonian - random graph.", command=lambda:self.SelectCheckHamiltonGraph(False))
+            menuProj2, text="Check if graph is Hamiltonian - random graph", command=lambda:self.SelectCheckHamiltonGraph(False))
 
         label1.grid(column=0, row=0)
         checkInCircle2.grid(column=3, row=0)
