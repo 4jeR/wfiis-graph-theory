@@ -321,7 +321,7 @@ class GUI:
         spinbox4a = Spinbox(menuProj2, from_=0, to=100,
                             width=8, state="readonly")
         button4 = Button(
-            menuProj2, text="Generate graph - Euleran graph", command=lambda:self.selectEuleranGraph(int(spinbox4a.get())))
+            menuProj2, text="Generate graph - Euleran graph", command=lambda:self.SelectEuleranGraph(int(spinbox4a.get())))
 
         # 5
         label5 = Label(menuProj2, text='Task 5', foreground="red")
