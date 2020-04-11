@@ -63,7 +63,8 @@ class Graph:
     # connects two [Node] objects together
     def Connect(self, node1_idx, node2_idx, Arrow=False):
         # check for (x,y) for both 2 nodes that are going to be connected
-        if node1_idx == node2_idx:
+        
+        if node1_idx == node2_idx or node1_dx >= self.NodesCount() or node2_idx >= self.NodesCount():
             return False
 
         for n in self.nodes:
