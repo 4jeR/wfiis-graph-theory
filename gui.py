@@ -217,30 +217,18 @@ class GUI:
         messagebox.showinfo(
             title="Informacja", message=info)
 
-    def SelectEuleranGraph(self, num):
+    def SelectEuleranGraph(self, num_of_nodes=0):
+        """
+        Invokes function that generates random Euler Graph and then finds Euler Circuit of that graph.
+
+        :param num_of_nodes: Number of nodes of a graph to be randomly generated.
+        :return: None
+        """
         g = Graph()
-
-        ######################
-        # TO DO
-        #
-        # in class Graph
-        #
-        # NEW_FUNCTION(canvas, num ......)
-        # self.canvas -> current canvas.winfo_width()/canvas.winfo_height()
-        # num -> number of nodes
-        #
-        # NEW_FUNCTION should
-        #   return string
-        #      e.g.
-        #       "[1 - 2 - 3 - 1 - 4 - 2 - 5 - 1 - 7 - 4 - 3 - 6 - 2 - 8 - 1]"
-        #   if num = 0 -> draw numbers od nodes
-        #   fill graph
-        #
-        ######################
-
-        # info = g.NEW_FUNCTION(self.canvas, num ...)
-        # self.Draw(g)
-        # messagebox.showinfo(title="Informacja", message=info)
+        is_checked = bool(self.checkP2.get())
+        euler_circuit = g.getEulersCycleFromRandomEulerGraph(self.canvas, num_of_nodes, in_circle=is_checked)
+        self.Draw(g, inCircle=is_checked)
+        messagebox.showinfo(title="Informacja", message="Znaleziony cykl Eulera : {}".format(euler_circuit))
 
     def SelectKReguralGraph(self, n, k):
         g = Graph()

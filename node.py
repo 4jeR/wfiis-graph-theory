@@ -14,6 +14,9 @@ class Node:
         self.neighbours = [nb for nb in neighbours]
         Node.count += 1
 
+    def removeNeighbour(self, neighbour):
+        self.neighbours.remove(neighbour)
+
     def PrintNeighbours(self):
         print("{}: {}".format(self.index, [n for n in self.neighbours]))
 
