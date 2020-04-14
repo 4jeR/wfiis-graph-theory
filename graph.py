@@ -389,7 +389,7 @@ class Graph:
                 self.Components_R(nr, n, comp)
         return self.CommonComponentsToStringAndDraw(canvas, comp)
 
-    def getCommonComponents(self):
+    def GetCommonComponents(self):
         """
         Gets common components of current graph.
         :return: List of common componets of the graph.
@@ -403,9 +403,9 @@ class Graph:
                 nr += 1
                 comp[n.index-1] = nr
                 self.Components_R(nr, n, comp)
-        return self.generateCommonComponents(comp)
+        return self.GenerateCommonComponents(comp)
 
-    def generateCommonComponents(self, comp):
+    def GenerateCommonComponents(self, comp):
         """
         Creates list of a common components of currently generated graph.
         :param comp: Found components.
@@ -423,7 +423,7 @@ class Graph:
                         comp[i] = 0
         return ComponentsList.split("\n")
 
-    def disconnectByIndexes(self, node1_i, node2_i):
+    def DisconnectByIndexes(self, node1_i, node2_i):
         """
         Removes edge that at the first end has node with index node1_i and at second edge has node with index node2_i.
         :return: None
@@ -432,7 +432,7 @@ class Graph:
             if (edge.node1.index == node1_i and edge.node2.index == node2_i) or (edge.node1.index == node2_i and edge.node2.index == node1_i):
                 self.Disconnect(edge) 
 
-    def checkIfConnectionIsABridge(self, node1_i, node2_i):
+    def CheckIfConnectionIsABridge(self, node1_i, node2_i):
         """
         Check if edge connecting node with index node1_i and node with index node2_i is a bridge, that is, checks if number 
         of common connected components after removing the edge increases.
@@ -441,11 +441,11 @@ class Graph:
 
         is_bridge = False;
 
-        num_of_commmon_components_before_disconecting = len(self.getCommonComponents())
+        num_of_commmon_components_before_disconecting = len(self.GetCommonComponents())
 
-        self.disconnectByIndexes(node1_i, node2_i)
+        self.DisconnectByIndexes(node1_i, node2_i)
 
-        num_of_commmon_components_after_disconecting = len(self.getCommonComponents())
+        num_of_commmon_components_after_disconecting = len(self.GetCommonComponents())
 
         if num_of_commmon_components_after_disconecting > num_of_commmon_components_before_disconecting:
             is_bridge = True
@@ -453,7 +453,7 @@ class Graph:
 
         return is_bridge
 
-    def resetGraph(self):
+    def ResetGraph(self):
         """
         Sets graph data to origin form.
         :return: Nothing.
@@ -462,7 +462,7 @@ class Graph:
         self.edges = []
         self.connections = []
 
-    def isEulerGraph(self):
+    def IsEulerGraph(self):
         """
         Checks if this Graph is euler graph, that is, if every node degree is even number.
         :return: True of False.
@@ -473,7 +473,7 @@ class Graph:
                 return False
         return True
 
-    def findEulerCycle(self):
+    def FindEulerCycle(self):
         """
         If current graph is Eulers graph, Euler Cycle of the graph is found.
 
@@ -481,7 +481,7 @@ class Graph:
                  [1 - 2 - 3 - 1 - 4 - 2 - 5 - 1 - 7 - 4 - 3 - 6 - 2 - 8 - 1], where numbers are the nodes labels.
         """
 
-        if self.isEulerGraph():
+        if self.IsEulerGraph():
             nodes_copy = [n for n in self.nodes]
             edges_copy = [e for e in self.edges]
             connections_copy = [(a, b) for (a, b) in self.connections]
@@ -497,9 +497,9 @@ class Graph:
 
             while len(self.connections) != 0:
                 for i, neighbour in enumerate(current_node.neighbours):
-                    if (not self.checkIfConnectionIsABridge(neighbour, current_node.index)) or (i == (len(current_node.neighbours) - 1)):
+                    if (not self.CheckIfConnectionIsABridge(neighbour, current_node.index)) or (i == (len(current_node.neighbours) - 1)):
                         euler_cycle.append(neighbour)
-                        self.disconnectByIndexes(neighbour, current_node.index)
+                        self.DisconnectByIndexes(neighbour, current_node.index)
                         current_node = self.nodes[neighbour - 1]
                         break
 
@@ -517,7 +517,7 @@ class Graph:
 
 
     # 2_4
-    def getEulersCycleFromRandomEulerGraph(self, canvas, num_of_nodes=0, in_circle=False):
+    def GetEulersCycleFromRandomEulerGraph(self, canvas, num_of_nodes=0, in_circle=False):
         """
         Generates random Euler Graph, then finds Eulers Cycle of the graph.
 
@@ -532,12 +532,18 @@ class Graph:
             num_of_nodes = random.randint(5, 15)
 
         while True:
-            self.resetGraph()
+            self.ResetGraph()
             self.FillRandomizeGraphGNP(canvas, num_of_nodes, 0.5, inCircle=in_circle)
-            if self.isEulerGraph():
+            if self.IsEulerGraph():
                 break
 
-        return self.findEulerCycle()
+        return self.FindEulerCycle()
+
+
+        def checkIfIsHamiltonGraph(self, canvas, filepath, in_circle=False):
+
+            if filepath == None:
+                self.FillRandomizeGraphGNP(canvas, 0, 0.5, inCircle=in_circle)
 
 
 

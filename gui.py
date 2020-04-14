@@ -226,9 +226,9 @@ class GUI:
         """
         g = Graph()
         is_checked = bool(self.checkP2.get())
-        euler_circuit = g.getEulersCycleFromRandomEulerGraph(self.canvas, num_of_nodes, in_circle=is_checked)
+        euler_circuit = g.GetEulersCycleFromRandomEulerGraph(self.canvas, num_of_nodes, in_circle=is_checked)
         self.Draw(g, inCircle=is_checked)
-        messagebox.showinfo(title="Informacja", message="Znaleziony cykl Eulera : {}".format(euler_circuit))
+        messagebox.showinfo(title="Informacja", message="[SelectEuleranGraph] Found Euler Cycle : {}".format(euler_circuit))
 
     def SelectKReguralGraph(self, n, k):
         g = Graph()
@@ -246,8 +246,9 @@ class GUI:
             filepath = filedialog.askopenfilename(filetypes=(
                 ("Text files", "HG_*.txt"), ("all files", "*.*")))
         else:
-            filepath = ""
-
+            filepath = None
+        is_checked = bool(self.checkP2.get())    
+        g.CheckIfIsHamiltonGraph(self.canvas, filepath, in_circle=is_checked)
         ######################
         # TO DO
         #
