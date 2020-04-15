@@ -59,7 +59,7 @@ class GUI:
     #################### PROJECT 1 ##########################
 
     def SelectIM(self):
-        filepath = filedialog.askopenfilename(filetypes=(
+        filepath = filedialog.askopenfilename(initialdir = 'examples',filetypes=(
             ("Text files", "IM_*.txt"), ("all files", "*.*")))
         isChecked = bool(self.checkP1.get())
         g = Graph()
@@ -70,7 +70,7 @@ class GUI:
         g.PrintAdjacencyMatrix()
 
     def SelectAL(self):
-        filepath = filedialog.askopenfilename(filetypes=(
+        filepath = filedialog.askopenfilename(initialdir = 'examples',filetypes=(
             ("Text files", "AL_*.txt"), ("all files", "*.*")))
         isChecked = bool(self.checkP1.get())
         g = Graph()
@@ -81,7 +81,7 @@ class GUI:
         g.PrintAdjacencyMatrix()
 
     def SelectAM(self):
-        filepath = filedialog.askopenfilename(filetypes=(
+        filepath = filedialog.askopenfilename(initialdir = 'examples',filetypes=(
             ("Text files", "AM_*.txt"), ("all files", "*.*")))
         isChecked = bool(self.checkP1.get())
         g = Graph()
@@ -180,8 +180,10 @@ class GUI:
 
     def SelectGraphicSeq(self):
         # filepath first letters should by LS == Logical Sequence
-        filepath = filedialog.askopenfilename(filetypes=(
-            ("Text files", "LS_*.txt"), ("all files", "*.*")))
+        filepath = filedialog.askopenfilename(initialdir = 'examples',filetypes=(
+            ("Text files", "GS*.txt"), ("all files", "*.*")))
+
+    
         g = Graph()
         isChecked = bool(self.checkP2.get())
 
@@ -192,8 +194,8 @@ class GUI:
                 title="Błąd", message="[SelectGraphicSeq] Given sequence is not graphic sequence.")
 
     def SelectRandomGraphGraphicSeq(self, num):
-        filepath = filedialog.askopenfilename(filetypes=(
-            ("Text files", "LS_*.txt"), ("all files", "*.*")))
+        filepath = filedialog.askopenfilename(initialdir = 'examples', filetypes=(
+            ("Text files", "GS*.txt"), ("all files", "*.*")))
         g = Graph()
         isChecked = bool(self.checkP2.get())
         if(g.FillFromGraphicSequence(filepath, self.canvas,inCircle=isChecked)):
@@ -208,7 +210,7 @@ class GUI:
 
     def SelectFindConnectedComponent(self):
         # filepath first letters should by FCC == Find Connected Component
-        filepath = filedialog.askopenfilename(filetypes=(
+        filepath = filedialog.askopenfilename(initialdir = 'examples', filetypes=(
             ("Text files", "FCC_*.txt"), ("all files", "*.*")))
         g = Graph()
         self.ClearCanvas()
@@ -243,7 +245,7 @@ class GUI:
     def SelectCheckHamiltonGraph(self, tof):
         g = Graph()
         if(tof):
-            filepath = filedialog.askopenfilename(filetypes=(
+            filepath = filedialog.askopenfilename(initialdir = 'examples',filetypes=(
                 ("Text files", "HG_*.txt"), ("all files", "*.*")))
         else:
             filepath = None

@@ -1,7 +1,7 @@
 import math
 import copy
 
-
+from operator import itemgetter
 from helping_funcs import *
 from edge import *
 from node import *
@@ -10,11 +10,10 @@ from collections import *
 
 class Graph:
     def __init__(self, nodes=[], edges=[], connections=[]):
-        Node.count = 0
-        Edge.count = 0
         self.nodes = [n for n in nodes]
         self.edges = [e for e in edges]
         self.connections = [(a, b) for (a, b) in connections]
+
 
     # this does exactly what you think it does
     def AddNode(self, node):
@@ -75,16 +74,11 @@ class Graph:
 
         for n in self.nodes:
             if n.index == node1_idx:
-                x1 = n.x
-                y1 = n.y
                 a = n
             elif n.index == node2_idx:
-                x2 = n.x
-                y2 = n.y
                 b = n
 
         # prevent from adding already connected nodes
-
         if a.index != b.index and (a, b) not in self.connections and (b, a) not in self.connections:
             self.edges.append(
                 Edge(len(self.edges)+1, a, b, Arrow))
@@ -263,13 +257,27 @@ class Graph:
                     self.AddNode(Node(i+1, xx, yy))
 
             # make connections based on sequence
+            seq_copy = seq.copy()
+            
+            # seq_copy.sort(reverse=True)
             idx = 1
-            while sum(seq) > 0:
-                for i in range(1, seq[idx-1]+1):
-                    self.Connect(idx, idx + i)
-                    seq[idx-1] -= 1
-                    seq[idx+i-1] -= 1
+            while sum(seq_copy.values()) > 0:
+                print("suma = {}, idx = {}".format(sum(seq_copy.values()), idx))
+                list_idx = [idx]
+                while seq_copy[idx-1] > 0:
+                    rand_idx = RandomizeIndex(idx, len(seq_copy), list_idx, seq_copy)
+                    list_idx.append(rand_idx)
+                    if self.Connect(idx, rand_idx):
+                        seq_copy[idx-1] -= 1
+                        seq_copy[rand_idx-1] -= 1
                 idx += 1
+                if idx + 1 >= len(seq_copy):
+                    if True not in seq_copy:
+                        break
+                    else:
+                        seq_copy = seq.copy()
+                        idx = 1
+                
             return True
         else:
             print("[FillFromGraphicSequence] Couldn't construct graph from this sequence.")
@@ -281,8 +289,11 @@ class Graph:
         for i in range(line):
             seq = list(map(int, f.readline().split(" ")))
 
-        seq_result = seq.copy()
         seq.sort(reverse=True)
+        seq_result = dict(enumerate(seq.copy()))
+        print(seq_result)
+
+
         while(True):
             if sum(seq) <= 0:
                 f.close()
@@ -335,10 +346,8 @@ class Graph:
         if not 0 <= degree < n_nodes:
             return False
 
-        # add new file
-        # f = open("examples/k-regGraph.txt", "w")
         seq = [degree for d in range(n_nodes)]
-        filename = "examples/k-regGraph.txt"
+        filename = "examples/GS_ex3.txt"
         with open(filename, "w") as f:
             f.write(' '.join([str(x) for x in seq]))
         f.close()
