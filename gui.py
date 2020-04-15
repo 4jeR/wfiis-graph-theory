@@ -214,10 +214,11 @@ class GUI:
             ("Text files", "FCC_*.txt"), ("all files", "*.*")))
         g = Graph()
         self.ClearCanvas()
-        info = g.FillComponentsAndDraw(
-            filepath, self.canvas, True)  # info is string type
+        info = g.FillComponents(
+            filepath, self.canvas, True) # info is string type
+        self.Draw(g, True)
         messagebox.showinfo(
-            title="Informacja", message=info)
+            title="Informacja", message = info)
 
     def SelectEuleranGraph(self, num_of_nodes=0):
         """

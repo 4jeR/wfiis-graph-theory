@@ -356,9 +356,9 @@ class Graph:
             return True
         else:
             return False
+    
     # 2_3
-
-    def CommonComponentsToStringAndDraw(self, canvas, comp):
+    def CommonComponentsToString(self, canvas, comp):
         ComponentsList = ""
         for i in range(0, len(comp)):
             if (comp[i] != 0):
@@ -368,13 +368,12 @@ class Graph:
                 randomColor = "#"+("%06x" % random.randint(500000, 16777215))
                 for i in range(len(comp)):
                     if comp[i] == nr:
-                        self.nodes[i].Draw(canvas, randomColor)
+                        self.nodes[i].color = randomColor
                         ComponentsList += (str)(self.nodes[i].index) + " "
                         comp[i] = 0
         tab = ComponentsList.split("\n")
         longest_string = max(tab, key=len)
-        for e in self.edges:
-            e.Draw(canvas)
+
         return ComponentsList + "\nThe longest common component has numer " + longest_string[0]
 
     def Components_R(self, nr, n, comp):
@@ -385,7 +384,7 @@ class Graph:
             else:
                 continue
 
-    def FillComponentsAndDraw(self, filename, canvas, inCircle=True):
+    def FillComponents(self, filename, canvas, inCircle=True):
         self.FillGraphFromAM(filename, canvas, inCircle)
         nr = 0
         comp = []
@@ -396,7 +395,7 @@ class Graph:
                 nr += 1
                 comp[n.index-1] = nr
                 self.Components_R(nr, n, comp)
-        return self.CommonComponentsToStringAndDraw(canvas, comp)
+        return self.CommonComponentsToString(canvas, comp)
 
     def GetCommonComponents(self):
         """
