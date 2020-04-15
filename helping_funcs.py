@@ -28,11 +28,11 @@ def AreUnique(Samples):
            (Samples[0].node2 != Samples[1].node2))
 
 
-def RandomizeIndex(a, b, bad_idx, seq):
-    res = random.randint(a, b)
-    while not (res != bad_idx and seq[res-1] > 0):
-        res = random.randint(a, b)
-    return res
+def RandomizeIndex(a, b, bad_idx_list, seq):
+    ok_idx = random.randint(a, b)
+    while ok_idx in bad_idx_list or seq[ok_idx-1] <= 0:
+        ok_idx = random.randint(a, b) 
+    return ok_idx
 
 
 def NodeFromIndex(graph, idx):
