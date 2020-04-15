@@ -59,7 +59,7 @@ class GUI:
     #################### PROJECT 1 ##########################
 
     def SelectIM(self):
-        filepath = filedialog.askopenfilename(initialdir = 'examples',filetypes=(
+        filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
             ("Text files", "IM_*.txt"), ("all files", "*.*")))
         isChecked = bool(self.checkP1.get())
         g = Graph()
@@ -70,7 +70,7 @@ class GUI:
         g.PrintAdjacencyMatrix()
 
     def SelectAL(self):
-        filepath = filedialog.askopenfilename(initialdir = 'examples',filetypes=(
+        filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
             ("Text files", "AL_*.txt"), ("all files", "*.*")))
         isChecked = bool(self.checkP1.get())
         g = Graph()
@@ -81,7 +81,7 @@ class GUI:
         g.PrintAdjacencyMatrix()
 
     def SelectAM(self):
-        filepath = filedialog.askopenfilename(initialdir = 'examples',filetypes=(
+        filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
             ("Text files", "AM_*.txt"), ("all files", "*.*")))
         isChecked = bool(self.checkP1.get())
         g = Graph()
@@ -125,7 +125,6 @@ class GUI:
         buttonNM = Button(
             menuProj1, text="Generate graph - adjacency matrix", command=self.SelectAM)
 
-       
         # 3
         label3 = Label(menuProj1, text='Task 3',  foreground="red")
         labelToValues = Label(
@@ -144,10 +143,10 @@ class GUI:
         LP = Spinbox(menuProj1, from_=0, to=100, width=8, state="readonly")
 
         buttonRandomGraphNL = Button(
-            menuProj1, text="Generate graph - random G(n,l)", command=lambda:self.SelectRandomGraphNL(int(N.get()), int(LP.get())))
+            menuProj1, text="Generate graph - random G(n,l)", command=lambda: self.SelectRandomGraphNL(int(N.get()), int(LP.get())))
 
         buttonRandomGraphNP = Button(
-            menuProj1, text="Generate graph - random G(n,p)", command=lambda:self.SelectRandomGraphNP(int(N.get()), float(int(LP.get()))/100.0))
+            menuProj1, text="Generate graph - random G(n,p)", command=lambda: self.SelectRandomGraphNP(int(N.get()), float(int(LP.get()))/100.0))
 
         label1.grid(column=0, row=0, padx=10, pady=5)
         checkInCircle.grid(column=3, row=0, padx=10, pady=5)
@@ -180,10 +179,9 @@ class GUI:
 
     def SelectGraphicSeq(self):
         # filepath first letters should by LS == Logical Sequence
-        filepath = filedialog.askopenfilename(initialdir = 'examples',filetypes=(
+        filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
             ("Text files", "GS*.txt"), ("all files", "*.*")))
 
-    
         g = Graph()
         isChecked = bool(self.checkP2.get())
 
@@ -194,11 +192,11 @@ class GUI:
                 title="Błąd", message="[SelectGraphicSeq] Given sequence is not graphic sequence.")
 
     def SelectRandomGraphGraphicSeq(self, num):
-        filepath = filedialog.askopenfilename(initialdir = 'examples', filetypes=(
+        filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
             ("Text files", "GS*.txt"), ("all files", "*.*")))
         g = Graph()
         isChecked = bool(self.checkP2.get())
-        if(g.FillFromGraphicSequence(filepath, self.canvas,inCircle=isChecked)):
+        if(g.FillFromGraphicSequence(filepath, self.canvas, inCircle=isChecked)):
             if(g.EdgesRandomization(num)):
                 self.Draw(g, isChecked)
             else:
@@ -210,15 +208,16 @@ class GUI:
 
     def SelectFindConnectedComponent(self):
         # filepath first letters should by FCC == Find Connected Component
-        filepath = filedialog.askopenfilename(initialdir = 'examples', filetypes=(
+        filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
             ("Text files", "FCC_*.txt"), ("all files", "*.*")))
+        isChecked = bool(self.checkP2.get())
         g = Graph()
         self.ClearCanvas()
         info = g.FillComponents(
-            filepath, self.canvas, True) # info is string type
-        self.Draw(g, True)
+            filepath, self.canvas, isChecked)  # info is string type
+        self.Draw(g, isChecked)
         messagebox.showinfo(
-            title="Informacja", message = info)
+            title="Informacja", message=info)
 
     def SelectEuleranGraph(self, num_of_nodes=0):
         """
@@ -229,9 +228,11 @@ class GUI:
         """
         g = Graph()
         is_checked = bool(self.checkP2.get())
-        euler_circuit = g.GetEulersCycleFromRandomEulerGraph(self.canvas, num_of_nodes, in_circle=is_checked)
+        euler_circuit = g.GetEulersCycleFromRandomEulerGraph(
+            self.canvas, num_of_nodes, in_circle=is_checked)
         self.Draw(g, inCircle=is_checked)
-        messagebox.showinfo(title="Informacja", message="[SelectEuleranGraph] Found Euler Cycle : {}".format(euler_circuit))
+        messagebox.showinfo(
+            title="Informacja", message="[SelectEuleranGraph] Found Euler Cycle : {}".format(euler_circuit))
 
     def SelectKReguralGraph(self, n, k):
         g = Graph()
@@ -246,11 +247,11 @@ class GUI:
     def SelectCheckHamiltonGraph(self, tof):
         g = Graph()
         if(tof):
-            filepath = filedialog.askopenfilename(initialdir = 'examples',filetypes=(
+            filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
                 ("Text files", "HG_*.txt"), ("all files", "*.*")))
         else:
             filepath = None
-        is_checked = bool(self.checkP2.get())    
+        is_checked = bool(self.checkP2.get())
         g.CheckIfIsHamiltonGraph(self.canvas, filepath, in_circle=is_checked)
         ######################
         # TO DO
@@ -313,7 +314,7 @@ class GUI:
         spinbox4a = Spinbox(menuProj2, from_=0, to=100,
                             width=8, state="readonly")
         button4 = Button(
-            menuProj2, text="Generate graph - Euleran graph", command=lambda:self.SelectEuleranGraph(int(spinbox4a.get())))
+            menuProj2, text="Generate graph - Euleran graph", command=lambda: self.SelectEuleranGraph(int(spinbox4a.get())))
 
         # 5
         label5 = Label(menuProj2, text='Task 5', foreground="red")
@@ -324,14 +325,14 @@ class GUI:
         spinbox5c = Spinbox(menuProj2, from_=0, to=100,
                             width=8, state="readonly")
         button5 = Button(
-            menuProj2, text="Generate graph - random k-regular", command=lambda:self.SelectKReguralGraph(int(spinbox5b.get()), int(spinbox5c.get())))
+            menuProj2, text="Generate graph - random k-regular", command=lambda: self.SelectKReguralGraph(int(spinbox5b.get()), int(spinbox5c.get())))
 
         # 6
         label6 = Label(menuProj2, text='Task 6', foreground="red")
         button6a = Button(
-            menuProj2, text="Check if graph is Hamiltonian - from file", command=lambda:self.SelectCheckHamiltonGraph(True))
+            menuProj2, text="Check if graph is Hamiltonian - from file", command=lambda: self.SelectCheckHamiltonGraph(True))
         button6b = Button(
-            menuProj2, text="Check if graph is Hamiltonian - random graph", command=lambda:self.SelectCheckHamiltonGraph(False))
+            menuProj2, text="Check if graph is Hamiltonian - random graph", command=lambda: self.SelectCheckHamiltonGraph(False))
 
         label1.grid(column=0, row=0)
         checkInCircle2.grid(column=3, row=0)
