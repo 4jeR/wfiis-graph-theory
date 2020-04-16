@@ -146,6 +146,8 @@ class Graph:
                     counter += 1
                     break
             self.Connect(node1, node2)
+            
+        return True
 
     # 1_1b
     def FillGraphFromAL(self, filename, canvas, inCircle=False):
@@ -202,6 +204,7 @@ class Graph:
                     self.Connect(i+1, j+1)
 
         f.close()
+        return True
 
     # 1_3a
     def FillRandomizeGraphGNL(self, canvas, n_nodes, l_edges,  inCircle=False):
@@ -309,36 +312,25 @@ class Graph:
             seq.sort(reverse=True)
 
     def EdgesRandomization(self, count):
-        if Node.count*(Node.count-1)/2 == Edge.count:
-            return False
-        else:
+        if CanEdegRandomize(self):
             i = 0
             while i < count:
                 Samples = random.sample(self.edges, 2)
                 if AreUnique(Samples):
-                    a = Samples[0].node1.index
-                    b = Samples[0].node2.index
-                    c = Samples[1].node1.index
-                    d = Samples[1].node2.index
-                    if self.Connect(a, c):
-                        if(self.Connect(d, b)):
+                    a = Samples[0].node1
+                    b = Samples[0].node2
+                    c = Samples[1].node1
+                    d = Samples[1].node2
+                    if a.index != c.index and (a, c) not in self.connections and (c, a) not in self.connections:
+                        if(self.Connect(d.index, b.index)):
+                            self.Connect(a.index, c.index)
                             self.Disconnect(Samples[0])
                             self.Disconnect(Samples[1])
                             i += 1
-                        else:
-                            self.Disconnect(Samples[0])
-                            i += 1
-                    elif self.Connect(b, c):
-                        if(self.Connect(d, a)):
-                            self.Disconnect(Samples[0])
-                            self.Disconnect(Samples[1])
-                            i += 1
-                        else:
-                            self.Disconnect(Samples[0])
-                            i += 1
-                    else:
-                        i += 1
             return True
+
+        else:
+            return False
 
     # 2_5
     def FillKReguralGraph(self, canvas, n_nodes, degree, inCircle=False):
