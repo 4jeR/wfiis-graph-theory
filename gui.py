@@ -38,12 +38,12 @@ class GUI:
     def ClearCanvas(self):
         self.canvas.delete("all")
 
-    def Draw(self, graph, inCircle=False, color="#aaa"):
+    def Draw(self, graph, inCircle=False, color="#aaa", withWages = False):
         self.ClearCanvas()
         if inCircle:
             self.DrawCircleTrace(graph)
         for e in graph.edges:
-            e.Draw(self.canvas)
+            e.Draw(self.canvas, withWages)
         for n in graph.nodes:
             n.Draw(self.canvas, color)
 

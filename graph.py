@@ -351,7 +351,7 @@ class Graph:
         else:
             return False
     
-    # 2_3
+    # 2_3 
     def CommonComponentsToString(self, canvas, comp):
         ComponentsList = ""
         for i in range(0, len(comp)):
@@ -380,6 +380,7 @@ class Graph:
 
     def FillComponents(self, filename, canvas, inCircle=True):
         self.FillGraphFromAM(filename, canvas, inCircle)
+        SetRandomWagesOfEdges(self, 1, 10)
         nr = 0
         comp = []
         for i in range(len(self.nodes)):
@@ -441,7 +442,7 @@ class Graph:
         :return: True of False
         """
 
-        is_bridge = False;
+        is_bridge = False
 
         num_of_commmon_components_before_disconecting = len(self.GetCommonComponents())
 
@@ -517,7 +518,6 @@ class Graph:
 
         return euler_cycle_readable_format
 
-
     # 2_4
     def GetEulersCycleFromRandomEulerGraph(self, canvas, num_of_nodes=0, in_circle=False):
         """
@@ -546,11 +546,4 @@ class Graph:
 
             if filepath == None:
                 self.FillRandomizeGraphGNP(canvas, 0, 0.5, inCircle=in_circle)
-
-
-
-
-
-
-
 
