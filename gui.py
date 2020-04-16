@@ -78,7 +78,7 @@ class GUI:
         self.Draw(g, isChecked)
 
         g.PrintAdjacencyMatrix()
-        g.PrintAdjacencyMatrix()
+        g.PrintIncidenceMatrix()
 
     def SelectAM(self):
         filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
@@ -88,7 +88,7 @@ class GUI:
         g.FillGraphFromAM(filepath, self.canvas, isChecked)
         self.Draw(g, isChecked)
 
-        g.PrintAdjacencyMatrix()
+        g.PrintIncidenceMatrix()
         g.PrintAdjacencyList()
 
     def SelectRandomGraphNL(self, n, l):
