@@ -11,6 +11,7 @@ from collections import *
 class Graph:
     def __init__(self, nodes=[], edges=[], connections=[]):
         Node.count=0
+        Edge.count=0
         self.nodes = [n for n in nodes]
         self.edges = [e for e in edges]
         self.connections = [(a, b) for (a, b) in connections]
