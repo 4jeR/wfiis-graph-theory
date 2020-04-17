@@ -6,6 +6,7 @@ from helping_funcs import *
 from edge import *
 from node import *
 from collections import *
+from tkinter import messagebox
 
 
 class Graph:
@@ -248,44 +249,35 @@ class Graph:
     def FillFromGraphicSequence(self, filename, canvas, line=1, inCircle=False):
         seq, pls = self.ParseGraphicSequence(filename, line)
 
-        if pls:
-            # construct nodes
-            if inCircle:
-                for i in range(len(seq)):
-                    xnext = canvas.winfo_width()/2.0 - 255 * math.cos(i * 2*math.pi / (len(seq)))
-                    ynext = canvas.winfo_height()/2.0 - 255 * math.sin(i * 2*math.pi / (len(seq)))
-                    self.AddNode(Node(i+1, xnext, ynext))
-            else:
-                for i in range(len(seq)):
-                    xx = random.randint(30, canvas.winfo_width() - 30)
-                    yy = random.randint(30, canvas.winfo_height() - 30)
-                    self.AddNode(Node(i+1, xx, yy))
+        if pls:      
+            seq_copy = [[idx, deg] for idx, deg in enumerate(seq)]
+        
+            adj_list = [[] for _ in range(len(seq))]
+            for _ in range(len(seq)):
+                seq_copy.sort(reverse=True, key=itemgetter(1))
+                i = 0
+                j = i + 1
+                while seq_copy[i][1] > 0 and j < len(seq_copy):
+                    adj_list[seq_copy[i][0]].append(seq_copy[j][0])
+                    adj_list[seq_copy[j][0]].append(seq_copy[i][0])
+                    seq_copy[i][1] -= 1
+                    seq_copy[j][1] -= 1
+                    j += 1
 
-            # make connections based on sequence
-            seq_copy = seq.copy()
-            
-            # seq_copy.sort(reverse=True)
-            idx = 1
-            while sum(seq_copy.values()) > 0:
-                print("suma = {}, idx = {}".format(sum(seq_copy.values()), idx))
-                list_idx = [idx]
-                while seq_copy[idx-1] > 0:
-                    rand_idx = RandomizeIndex(idx, len(seq_copy), list_idx, seq_copy)
-                    list_idx.append(rand_idx)
-                    if self.Connect(idx, rand_idx):
-                        seq_copy[idx-1] -= 1
-                        seq_copy[rand_idx-1] -= 1
-                idx += 1
-                if idx + 1 >= len(seq_copy):
-                    if True not in seq_copy:
-                        break
-                    else:
-                        seq_copy = seq.copy()
-                        idx = 1
+            f = open("examples/AL_from_gs.txt", "w")
+            ct = 1
+            for nbs in adj_list:
+                line = ' '.join([str(v+1) for v in nbs]).strip()
+                f.write(str(line))
+                if ct < len(seq):
+                    f.write('\n')
+                ct +=1 
+                    
+            f.close()
+            self.FillGraphFromAL("examples/AL_from_gs.txt", canvas,inCircle)
                 
             return True
         else:
-            print("[FillFromGraphicSequence] Couldn't construct graph from this sequence.")
             return False
 
     def ParseGraphicSequence(self, filename, line=1):
@@ -294,9 +286,8 @@ class Graph:
         for i in range(line):
             seq = list(map(int, f.readline().split(" ")))
 
+        seq_result = seq.copy()
         seq.sort(reverse=True)
-        seq_result = dict(enumerate(seq.copy()))
-        print(seq_result)
 
 
         while(True):
@@ -312,7 +303,7 @@ class Graph:
             seq.sort(reverse=True)
 
     def EdgesRandomization(self, count):
-        if CanEdegRandomize(self):
+        if CanEdgeRandomize(self):
             i = 0
             while i < count:
                 Samples = random.sample(self.edges, 2)

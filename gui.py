@@ -178,7 +178,6 @@ class GUI:
     #################### POJECT 2 #########################
 
     def SelectGraphicSeq(self):
-        # filepath first letters should by LS == Logical Sequence
         filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
             ("Text files", "GS*.txt"), ("all files", "*.*")))
 

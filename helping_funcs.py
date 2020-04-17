@@ -48,7 +48,7 @@ def NodeFromIndex(graph, idx):
         else:
             continue
 
-def CanEdegRandomize(graph):
+def CanEdgeRandomize(graph):
     if len(graph.nodes) < 4:
         return False
     else:
