@@ -11,12 +11,15 @@ from tkinter import messagebox
 
 class Graph:
     def __init__(self, nodes=[], edges=[], connections=[]):
+        """ 
+        Constructor for Graph objects.
+        :return: nothing
+        """
         Node.count=0
         Edge.count=0
         self.nodes = [n for n in nodes]
         self.edges = [e for e in edges]
         self.connections = [(a, b) for (a, b) in connections]
-
 
     def AddNode(self, node):
         """ 
@@ -32,7 +35,6 @@ class Graph:
                      for i in range(len(self.nodes)) if i != indx]
         self.nodes = [n for n in new_nodes]
 
-    
     def PrintGraph(self):
         """
         Prints graph info and stats to the console.
@@ -50,7 +52,6 @@ class Graph:
         for node in self.nodes:
             print(f"D of {node.index} = {len(node.neighbours)}")
 
-    # prints neighbour Matrix to the console
     def PrintAdjacencyMatrix(self):
         """
         Prints graph represented by Adjacency Matrix form to the console.
@@ -128,6 +129,10 @@ class Graph:
             print("Exception {} occured when trying to disconnect the edge".format(exc))
 
     def AreConnected(self, node1_idx, node2_idx):
+        """
+        Checks if two nodes with given indexes are already connected with each other.
+        :return: bool
+        """
         for n in self.nodes:
             if n.index == node1_idx:
                 a = n
@@ -261,6 +266,10 @@ class Graph:
 
     # 1_3a
     def FillRandomizeGraphGNL(self, canvas, n_nodes, l_edges,  inCircle=False):
+        """
+        Constructs random graph with given number of nodes and edges.
+        :return: nothing
+        """
         if inCircle:
             for i in range(n_nodes):
                 xnext = canvas.winfo_width()/2.0 - 255 * math.cos(i * 2*math.pi / (n_nodes))
@@ -279,6 +288,12 @@ class Graph:
 
     # 1_3b
     def FillRandomizeGraphGNP(self, canvas, n_nodes, prob,  inCircle=False):
+        """
+        Constructs random graph with given number of nodes and probability
+        of that there exists edge between any two nodes. 
+        Probability ranges between 0 and 100 [%].
+        :return: nothing
+        """
         if inCircle:
             for i in range(n_nodes):
                 xnext = canvas.winfo_width()/2.0 - 255 * math.cos(i * 2*math.pi / (n_nodes))
@@ -299,6 +314,11 @@ class Graph:
     ########## PROJECT 2 PARTS ##########
 
     def FillFromGraphicSequence(self, filename, canvas, line=1, inCircle=False):
+        """
+        Constructs random graph from given graphic sequence.
+        Returns True if it successfully constructed graph, otherwise False.
+        :return: bool
+        """
         seq, pls = self.ParseGraphicSequence(filename, line)
 
         if pls:      
@@ -333,6 +353,12 @@ class Graph:
             return False
 
     def ParseGraphicSequence(self, filename, line=1):
+        """
+        Checks if given string from file is a graphic sequence; meaning if it is
+        possible to construct graph from it. Returns True if graph can be generated,
+        otherwise False.
+        :return: bool
+        """
         f = open(filename, "r")
         seq = list()
         for i in range(line):
@@ -355,6 +381,12 @@ class Graph:
             seq.sort(reverse=True)
 
     def EdgesRandomization(self, count):
+        """
+        Randomizes [count] times graph's edges. The following statement is true:
+        count of edges before = count of edges after randomization.
+        Returns False if it cannot randomize, otherwise True.
+        :return: bool
+        """
         if CanEdgeRandomize(self):
             i = 0
             while i < count:
@@ -668,5 +700,3 @@ class Graph:
                 break
         
         return mst
-
-
