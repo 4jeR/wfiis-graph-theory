@@ -6,7 +6,7 @@ import random
 class Edge:
     count = 0
 
-    def __init__(self, index, node1, node2, wage = 0, arrow=False):
+    def __init__(self, index, node1, node2, arrow=False, wage = 0):
         self.index = index
         self.node1 = node1
         self.node2 = node2

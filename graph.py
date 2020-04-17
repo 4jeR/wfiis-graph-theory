@@ -18,45 +18,62 @@ class Graph:
         self.connections = [(a, b) for (a, b) in connections]
 
 
-    # this does exactly what you think it does
     def AddNode(self, node):
+        """ 
+        Adds Node object to the graph. Returns added node
+        :return: Node
+        """
         self.nodes.append(node)
+        return node
 
-    # this does exactly what you think it does
     def RemoveNode(self, indx):
+        """ IT NEEDS FIXES """
         new_nodes = [self.nodes[i]
                      for i in range(len(self.nodes)) if i != indx]
         self.nodes = [n for n in new_nodes]
 
-    # HELP
+    
     def PrintGraph(self):
+        """
+        Prints graph info and stats to the console.
+        :return: nothing
+        """
         print("Graph has {} nodes and {} edges.".format(Node.count, Edge.count))
         print("Unique connected nodes:")
         for (a, b) in self.connections:
             print("{},{}".format(a.index, b.index))
 
-        print("\nAll edges : {}".format([e.index for e in self.edges]))
+        print(f"\nAll edges : {[e.index for e in self.edges]}")
 
-        print("\nDegree of nodes".format())
+        print("\nDegree of nodes")
 
         for node in self.nodes:
-            print("D of {} = {}".format(node.index, len(node.neighbours)))
+            print(f"D of {node.index} = {len(node.neighbours)}")
 
     # prints neighbour Matrix to the console
     def PrintAdjacencyMatrix(self):
+        """
+        Prints graph represented by Adjacency Matrix form to the console.
+        :return: nothing
+        """
         print("\nAdjacency Matrix:")
         for node in self.nodes:
             node.PrintNeighboursInVector()
 
-    # prints neighbour list to the console
-
     def PrintAdjacencyList(self):
+        """
+        Prints graph represented by Adjacency List form to the console.
+        :return: nothing
+        """
         print("\nAdjacency list:")
         for node in self.nodes:
             node.PrintNeighbours()
 
-    # prints incidence Matrix to the console
     def PrintIncidenceMatrix(self):
+        """
+        Prints graph represented by Incidence Matrix form to the console.
+        :return: nothing
+        """
         print("\nIncident matrix:")
         Matrix = [[0 for i in range(len(self.edges))]
                   for y in range(len(self.nodes))]
@@ -68,10 +85,12 @@ class Graph:
                 print(val, " ", end='')
             print()
 
-    # connects two [Node] objects together
-    def Connect(self, node1_idx, node2_idx, Arrow=False):
-        # check for (x,y) for both 2 nodes that are going to be connected
-        
+    def Connect(self, node1_idx, node2_idx, arrow=False, wage = 0):
+        """
+        Constructs edge between two nodes of given indexes. If they were succesfully connected
+        then it returns True, otherwise returns False.
+        :return: bool
+        """
         if node1_idx == node2_idx or node1_idx > self.NodesCount() or node2_idx > self.NodesCount():
             return False
 
@@ -84,7 +103,7 @@ class Graph:
         # prevent from adding already connected nodes
         if a.index != b.index and (a, b) not in self.connections and (b, a) not in self.connections:
             self.edges.append(
-                Edge(len(self.edges)+1, a, b, Arrow))
+                Edge(len(self.edges)+1, a, b, arrow, wage))
             self.connections.append((a, b))
             if b.index not in a.neighbours:
                 a.neighbours.append(b.index)
@@ -95,6 +114,10 @@ class Graph:
             return False
 
     def Disconnect(self, edge):
+        """
+        Removes edge from graph and updates status of all properties.
+        :return: nothing
+        """
         try:
             self.edges.remove(edge)
             self.connections.remove((edge.node1, edge.node2))
@@ -104,14 +127,35 @@ class Graph:
         except Exception as exc:
             print("Exception {} occured when trying to disconnect the edge".format(exc))
 
+    def AreConnected(self, node1_idx, node2_idx):
+        for n in self.nodes:
+            if n.index == node1_idx:
+                a = n
+            elif n.index == node2_idx:
+                b = n
+
+        return ((b.index in a.neighbours) and (a.index in b.neighbours))
+
     def NodesCount(self):
+        """
+        Returns count of nodes in graph.
+        :return: int
+        """
         return len(self.nodes)
 
     def EdgesCount(self):
+        """
+        Returns count of edges in graph.
+        :return: int
+        """
         return len(self.edges)
 
     # 1_1a
     def FillGraphFromIM(self, filename, canvas, inCircle=False):
+        """
+        Constructs graph from Incidence Matrix.
+        :return: nothing
+        """
         matrix, rows, cols = FileToMatrix(filename)
         # put vertexes on the circle
         if inCircle:
@@ -152,6 +196,10 @@ class Graph:
 
     # 1_1b
     def FillGraphFromAL(self, filename, canvas, inCircle=False):
+        """
+        Constructs graph from Adjacency List.
+        :return: nothing
+        """
         vert_count = 0
         with open(filename, 'r') as f:
             for line in f:
@@ -183,6 +231,10 @@ class Graph:
 
     # 1_1c
     def FillGraphFromAM(self, filename, canvas, inCircle=False):
+        """
+        Constructs graph from Adjacency Matrix.
+        :return: nothing
+        """
         f, rows, cols = GetFileRowsCols(self, filename)
 
         if inCircle:
@@ -537,4 +589,84 @@ class Graph:
 
             if filepath == None:
                 self.FillRandomizeGraphGNP(canvas, 0, 0.5, inCircle=in_circle)
+
+    # 3_5
+    def GetEdgeFromIndexes(self, idx1, idx2):
+        """
+        Gets the Edge object that connects two nodes of given indexes.
+        :return: Edge
+        """
+        try:
+            for e in self.edges:
+                if (e.node1.index == idx1 and e.node2.index == idx2) or (e.node1.index == idx2 and e.node2.index == idx1):
+                    return e
+        except Exception:
+            print(f"[GetEdgeFromIndexes] There is no connection ({idx1},{idx2}) in this graph.")
+    
+    def IsCyclicRec(self, idx, visited, parent): 
+        """
+        Helper func for checking if graph is cyclic.
+
+        :return: bool
+        """
+        visited[idx-1] = True
+        curr_node = NodeFromIndex(self, idx)
+        for nb_idx in curr_node.neighbours:
+            if not visited[nb_idx-1]:
+                if self.IsCyclicRec(nb_idx, visited, curr_node.index):
+                    return True
+            elif parent != nb_idx: 
+                return True
+        return False
+
+    def IsCyclic(self): 
+        """
+        Method that checks if there exists any cycle in graph.
+        :return: bool
+        """
+
+        visited = [False for _ in range(self.NodesCount())]
+        
+        for idx in range(1, self.NodesCount()+1): 
+            if not visited[idx-1]: 
+                if self.IsCyclicRec(idx, visited, -1): 
+                    return True
+        return False
+
+    def CausesCycleIfAdded(self, edge):
+        """
+        Checks if adding edge to the current graph would cause cycle.
+        :return: bool
+        """
+        i1 = edge.node1.index
+        i2 = edge.node2.index
+        if not self.AreConnected(i1, i2):
+            self.Connect(i1, i2)
+            causes = self.IsCyclic()
+            self.DisconnectByIndexes(i1, i2)
+            return causes    
+        else:
+            return False
+
+    def MinSpanningTreeKruskal(self):
+        """
+        Generates minimum spanning tree based on Kruskal algorithm.
+        Prerequisite to use this function is that current graph 
+        is already constructed (not empty).
+        
+        :return: Nothing
+        """
+        mst = []
+        edges = self.edges.copy()
+        edges.sort(key=lambda e: e.wage)
+        for e in edges:
+            print(f"{e.wage} -> {e.node1.index, e.node2.index}")
+        for edge in edges:
+            if not self.CausesCycleIfAdded(edge):
+                mst.append((edge.node1.index, edge.node2.index))
+            if len(mst) == self.NodesCount()-1:
+                break
+        
+        return mst
+
 
