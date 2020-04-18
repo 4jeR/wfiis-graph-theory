@@ -3,6 +3,7 @@ from tkinter.ttk import *
 from graph import *
 from tkinter import filedialog
 from tkinter import messagebox
+import tkinter as tk
 
 
 class GUI:
@@ -11,10 +12,13 @@ class GUI:
         root.geometry("1400x900")
         root.minsize(1400, 900)
 
+        self.graph = Graph()  # since project 3
+
         self.canvas = Canvas(root, width=1200, height=800, bg="white")
         self.AddTabs(root)
         self.AddProject1Widgets(root)
         self.AddProject2Widgets(root)
+        self.AddProject3Widgets(root)
 
         self.allTabs.pack(expand=1, fill='both')
         self.canvas.pack(fill=X, padx=10, pady=10)
@@ -38,12 +42,12 @@ class GUI:
     def ClearCanvas(self):
         self.canvas.delete("all")
 
-    def Draw(self, graph, inCircle=False, color="#aaa", withWages = False):
+    def Draw(self, graph, inCircle=False, color="#aaa", withExtent=False):
         self.ClearCanvas()
         if inCircle:
             self.DrawCircleTrace(graph)
         for e in graph.edges:
-            e.Draw(self.canvas, withWages)
+            e.Draw(self.canvas, withExtent)
         for n in graph.nodes:
             n.Draw(self.canvas, color)
 
@@ -359,3 +363,237 @@ class GUI:
         button6b.grid(column=2, row=7, sticky="nsew", padx=10, pady=5)
 
         menuProj2.pack(fill=Y)
+
+    #################### POJECT 3 #########################
+
+    def SelectBasicGraph(self, fromFile, n=0, l=0):
+        # TO DO
+        # check is connected graph
+        self.graph.ResetGraph()
+        isCheckedCircle = bool(self.checkP3.get())
+        isCheckedExtent = bool(self.checkP3Extent.get())
+        if(fromFile == True):  # fromFile True for generate graph from file
+            filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
+                ("Text files", "IM_*.txt"), ("all files", "*.*")))
+            self.graph.FillGraphFromIM(filepath, self.canvas, isCheckedCircle)
+            self.Draw(self.graph, inCircle=isCheckedCircle,
+                      withExtent=isCheckedExtent)
+        else:       # fromFile False for generate random graph
+            if(l > (n * (n-1) / 2)):
+                messagebox.showerror(
+                    title="Błąd", message="[SelectBasicGraph] Invalid arguments' values.")
+            else:
+                self.graph.FillRandomizeGraphGNL(
+                    self.canvas, n, l, isCheckedCircle)
+                self.Draw(self.graph, inCircle=isCheckedCircle,
+                          withExtent=isCheckedExtent)
+
+    def SelectAddWages(self):
+        isCheckedCircle = bool(self.checkP3.get())
+        isCheckedExtent = bool(self.checkP3Extent.get())
+        SetRandomWagesOfEdges(self.graph, 1, 10)
+        self.Draw(self.graph, inCircle=isCheckedCircle,
+                  withExtent=isCheckedExtent)
+
+    def SelectTheShortestPath(self, numOfVertex=1):
+        pass
+        ######################
+        # TO DO
+        #
+        # NEW_FUNCTION(numOfVertex)
+        # numOfVertex -> number of vertex which we are looking for the shortest path
+        #
+        # NEW_FUNCTION should
+        #   return string == info
+        #   e.g.
+        # "START : s = 1
+        # 2 d (1) = 0 == > [1]
+        # 3 d (2) = 3 == > [1 - 2]
+        # 4 d (3) = 2 == > [1 - 3]
+        # 5 d (4) = 5 == > [1 - 2 - 4]
+        # 6 d (5) = 7 == > [1 - 2 - 5]
+        # 7 d (6) = 10 == > [1 - 2 - 5 - 8 - 6]
+        # 8 d (7) = 8 == > [1 - 2 - 4 - 7]
+        # 9 d (8) = 9 == > [1 - 2 - 5 - 8]
+        # 10 d (9) = 12 == > [1 - 2 - 5 - 8 - 6 - 9]
+        # 11 d (10) = 13 == > [1 - 2 - 4 - 7 - 10]
+        # 12 d (11) = 14 == > [1 - 2 - 5 - 8 - 6 - 9 - 11]
+        # 13 d (12) = 17 == > [1 - 2 - 5 - 8 - 6 - 9 - 11 - 12]"
+        #
+        ######################
+
+        # info = self.graph.NEW_FUNCTION(numOfVertex)
+        # messagebox.showinfo(
+        #        title="Informacja", message=info)
+
+    def SelectDistanceMatrix(self):
+        pass
+        ######################
+        # TO DO
+        #
+        # NEW_FUNCTION()
+        #
+        # NEW_FUNCTION should
+        #   return string == info
+        #   e.g.
+        # "0 3 2 5 7 10 8 9 12 13 14 17
+        # 2 3 0 5 2 4 7 5 6 9 10 11 14
+        # 3 2 5 0 7 6 9 7 8 11 12 13 16
+        # 4 5 2 7 0 4 7 3 6 9 8 11 13
+        # 5 7 4 6 4 0 3 1 2 5 6 7 10
+        # 6 10 7 9 7 3 0 4 1 2 6 4 7
+        # 7 8 5 7 3 1 4 0 3 6 5 8 10
+        # 8 9 6 8 6 2 1 3 0 3 5 5 8
+        # 9 12 9 11 9 5 2 6 3 0 8 2 5
+        # 10 13 10 12 8 6 6 5 5 8 0 8 5
+        # 11 14 11 13 11 7 4 8 5 2 8 0 3
+        # 12 17 14 16 13 10 7 10 8 5 5 3 0"
+        #
+        ######################
+
+        # info = self.graph.NEW_FUNCTION()
+        # messagebox.showinfo(
+        #        title="Informacja", message=info)
+
+    def SelectFindCentralVertex(self):
+        pass
+        ######################
+        # TO DO
+        #
+        # NEW_FUNCTION()
+        #
+        # NEW_FUNCTION should
+        #   return string == info
+        #   e.g.
+        # "Centrum = 5 ( suma odleglosci : 55)"
+        #
+        ######################
+
+        # info = self.graph.NEW_FUNCTION()
+        # messagebox.showinfo(
+        #        title="Informacja", message=info)
+
+    def SelectFindMinimaxVertex(self):
+        pass
+        ######################
+        # TO DO
+        #
+        # NEW_FUNCTION()
+        #
+        # NEW_FUNCTION should
+        #   return string == info
+        #   e.g.
+        # "Centrum minimax = 8 ( odleglosc od najdalszego : 9)"
+        #
+        ######################
+
+        # info = self.graph.NEW_FUNCTION()
+        # messagebox.showinfo(
+        #        title="Informacja", message=info)
+
+    def SelectFindMinSpanningTree(self):
+        isCheckedCircle = bool(self.checkP3.get())
+        isCheckedExtent = bool(self.checkP3Extent.get())
+        ######################
+        # TO DO
+        #
+        # NEW_FUNCTION()
+        #
+        # NEW_FUNCTION should
+        #   change graph
+        #
+        ######################
+
+        # self.graph.NEW_FUNCTION()
+        # self.Draw(self.graph, inCircle=isCheckedCircle, withExtent=isCheckedExtent)
+
+    def AddProject3Widgets(self, root):
+        menuProj3 = Frame(self.tab3, width=1200, height=30)
+
+        # check if generate graph in circle
+        self.checkP3 = IntVar()
+        checkInCircle3 = Checkbutton(
+            menuProj3, text="In circle", variable=self.checkP3)
+
+        # check if generate graph draw with wages
+        self.checkP3Extent = IntVar()
+        checkShowWages3 = Checkbutton(
+            menuProj3, text="Show extent", variable=self.checkP3Extent)
+
+        # 0
+        label0a = Label(menuProj3, text='- vertices')
+        label0b = Label(menuProj3, text='- edges')
+        spinbox0a = Spinbox(menuProj3, from_=0, to=100,
+                            width=35, state="readonly")
+        spinbox0b = Spinbox(menuProj3, from_=0, to=100,
+                            width=35, state="readonly")
+        button0a = tk.Button(
+            menuProj3, width=35, text='Generate graph from file', command=lambda: self.SelectBasicGraph(True), bg="red", fg="white")
+
+        button0b = tk.Button(
+            menuProj3, width=35,  text="Generate random graph", command=lambda: self.SelectBasicGraph(False, int(spinbox0a.get()), int(spinbox0b.get())), bg="red", fg="white")
+
+        # 1
+        label1 = Label(menuProj3, text='Task 1', foreground="red")
+        button1 = Button(
+            menuProj3, text="Add edges' extent", command=lambda: self.SelectAddWages())
+
+        # 2
+        label2 = Label(menuProj3, text='Task 2', foreground="red")
+        spinbox2 = Spinbox(menuProj3, from_=1, to=100,
+                           width=8, state="readonly")
+        button2 = Button(
+            menuProj3, text="Find the shortest path (choose vertex first)", command=lambda: self.SelectTheShortestPath(int(spinbox2.get())))
+
+        # 3
+        label3 = Label(menuProj3, text='Task 3', foreground="red")
+        button3 = Button(
+            menuProj3, text="Generate Distance Matrix", command=self.SelectDistanceMatrix)
+
+        # 4
+        label4 = Label(menuProj3, text='Task 4', foreground="red")
+        button4a = Button(
+            menuProj3, text="Find central vertex", command=lambda: self.SelectFindCentralVertex)
+        button4b = Button(
+            menuProj3, text="Find minimax vertex", command=lambda: self.SelectFindMinimaxVertex)
+
+        # 5
+        label5 = Label(menuProj3, text='Task 5', foreground="red")
+        button5 = Button(
+            menuProj3, text="Find minimum spanning tree", command=lambda: self.SelectFindMinSpanningTree)
+
+        # row 0
+        spinbox0a.grid(column=0, row=0, sticky="nsew", padx=10, pady=5)
+        label0a.grid(column=1, row=0, sticky="w")
+        button0a.grid(column=2, row=0, sticky="nsew", padx=10, pady=5)
+        checkInCircle3.grid(column=3, row=0, sticky="nsew", padx=10, pady=5)
+
+        # row 1
+        spinbox0b.grid(column=0, row=1, sticky="nsew", padx=10, pady=5)
+        label0b.grid(column=1, row=1, sticky="w")
+        button0b.grid(column=2, row=1, sticky="nsew", padx=10, pady=5)
+        checkShowWages3.grid(column=3, row=1, sticky="nsew", padx=10, pady=5)
+
+        # row 2
+        label1.grid(column=0, row=2)
+        label2.grid(column=1, row=2)
+        label3.grid(column=2, row=2)
+
+        # row 3
+        button1.grid(column=0, row=3, sticky="nsew", padx=10, pady=5)
+        spinbox2.grid(column=1, row=3, sticky="nsew", padx=10, pady=5)
+        button3.grid(column=2, row=3, sticky="nsew", padx=10, pady=5)
+
+        # row 4
+        label4.grid(column=0, row=4)
+        button2.grid(column=1, row=4, sticky="nsew", padx=10, pady=5)
+        label5.grid(column=2, row=4)
+
+        # row 5
+        button4a.grid(column=0, row=5, sticky="nsew", padx=10, pady=5)
+        button5.grid(column=2, row=5, sticky="nsew", padx=10, pady=5)
+
+        # row 6
+        button4b.grid(column=0, row=6, sticky="nsew", padx=10, pady=5)
+
+        menuProj3.pack(fill=Y)
