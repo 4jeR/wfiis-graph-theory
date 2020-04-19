@@ -248,40 +248,29 @@ class GUI:
                 message="[SelectKReguralGraph] Couldn't make {}-regular graph from given values.".format(k))
 
     def SelectCheckHamiltonGraph(self, tof):
+        """
+        Checks if graph is Hamilton graph, if that's true, hamilton cycle is printed.
+
+        :param tof: Value determinig if graph is loaded from incidence matrix.
+        :return: None
+        """
         g = Graph()
+        filepath = None
         if(tof):
-            filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
-                ("Text files", "HG_*.txt"), ("all files", "*.*")))
+            filepath = filedialog.askopenfilename(filetypes=(
+                ("Text files", "IM_*.txt"), ("all files", "*.*")))
         else:
             filepath = None
-        is_checked = bool(self.checkP2.get())
-        g.CheckIfIsHamiltonGraph(self.canvas, filepath, in_circle=is_checked)
-        ######################
-        # TO DO
-        #
-        # in class Graph
-        #
-        # NEW_FUNCTION(tof, filepath ......)
-        # tof -> boolean; if True check from file ; if False genetare random sequence and check
-        # filepath -> name of path with example sequence; "HG_*.txt" or empty string
-        #
-        # NEW_FUNCTION should
-        #   return info
-        #   e.g.
-        #       1) if graph is hamilton's graph
-        #          "Podany graf: [sekwencja logiczna OR adjacency matrix OR ...]
-        #           Jest grafem hamiltonowskim
-        #           Cykl Hamiltona :[1 - 2 - 3 - 7 - 4 - 6 - 8 - 5 - 1]"
-        #
-        #       2) if graph is not hamilton's graph
-        #          "Podany graf: [sekwencja logiczna OR adjacency matrix OR ...]
-        #           Nie jest grafem hamiltonowskim"
-        #
-        ######################
+        is_checked = bool(self.checkP2.get())    
 
-        # info = g.NEW_FUNCTION(tof, filepath ..)
-        # messagebox.showinfo(
-        #        title="Informacja", message=info)
+        hamilton_cycle = g.CheckIfIsHamiltonGraph(self.canvas, filepath, in_circle=is_checked)
+        g.PrintGraph()
+        self.Draw(g)
+
+        if hamilton_cycle:
+            messagebox.showinfo(title="Informacja", message="[SelectEuleranGraph]  Found hamilton cycle: {}".format(hamilton_cycle))
+        else:
+            messagebox.showinfo(title="Informacja", message="[SelectEuleranGraph]  Given graph is not Hamilton graph: {}".format(hamilton_cycle))
 
     def AddProject2Widgets(self, root):
         menuProj2 = Frame(self.tab2, width=1200, height=30)
