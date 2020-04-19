@@ -76,7 +76,7 @@ def CanEdgeRandomize(graph):
 def SetRandomWagesOfEdges(graph, min, max):
     if( min <= max ):
         for i in graph.edges:
-            i.wage = random.randint(min, max)
+            i.weight = random.randint(min, max)
     else:
         pass
         #todo print info in alert
