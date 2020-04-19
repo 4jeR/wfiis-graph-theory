@@ -42,12 +42,12 @@ class GUI:
     def ClearCanvas(self):
         self.canvas.delete("all")
 
-    def Draw(self, graph, inCircle=False, color="#aaa", withExtent=False):
+    def Draw(self, graph, inCircle=False, color="#aaa", weighted=False):
         self.ClearCanvas()
         if inCircle:
             self.DrawCircleTrace(graph)
         for e in graph.edges:
-            e.Draw(self.canvas, withExtent)
+            e.Draw(self.canvas, weighted)
         for n in graph.nodes:
             n.Draw(self.canvas, color)
 
@@ -370,13 +370,14 @@ class GUI:
         # check is connected graph
         self.graph.ResetGraph()
         isCheckedCircle = bool(self.checkP3.get())
-        isCheckedExtent = bool(self.checkP3Extent.get())
+        isWeighted = bool(self.checkP3weighted.get())
         if(fromFile == True):  # fromFile True for generate graph from file
             filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
                 ("Text files", "IM_*.txt"), ("all files", "*.*")))
             self.graph.FillGraphFromIM(filepath, self.canvas, isCheckedCircle)
+            
             self.Draw(self.graph, inCircle=isCheckedCircle,
-                      withExtent=isCheckedExtent)
+                      weighted=isWeighted)
         else:       # fromFile False for generate random graph
             if(l > (n * (n-1) / 2)):
                 messagebox.showerror(
@@ -385,14 +386,14 @@ class GUI:
                 self.graph.FillRandomizeGraphGNL(
                     self.canvas, n, l, isCheckedCircle)
                 self.Draw(self.graph, inCircle=isCheckedCircle,
-                          withExtent=isCheckedExtent)
+                          weighted=isWeighted)
 
-    def SelectAddWages(self):
+    def SelectAddWeights(self):
         isCheckedCircle = bool(self.checkP3.get())
-        isCheckedExtent = bool(self.checkP3Extent.get())
+        isWeighted = bool(self.checkP3weighted.get())
         SetRandomWagesOfEdges(self.graph, 1, 10)
         self.Draw(self.graph, inCircle=isCheckedCircle,
-                  withExtent=isCheckedExtent)
+                  weighted=isWeighted)
 
     def SelectTheShortestPath(self, numOfVertex=1):
         pass
@@ -492,19 +493,11 @@ class GUI:
 
     def SelectFindMinSpanningTree(self):
         isCheckedCircle = bool(self.checkP3.get())
-        isCheckedExtent = bool(self.checkP3Extent.get())
-        ######################
-        # TO DO
-        #
-        # NEW_FUNCTION()
-        #
-        # NEW_FUNCTION should
-        #   change graph
-        #
-        ######################
+        isWeighted = bool(self.checkP3weighted.get())
 
-        # self.graph.NEW_FUNCTION()
-        # self.Draw(self.graph, inCircle=isCheckedCircle, withExtent=isCheckedExtent)
+        self.ClearCanvas()
+        self.graph.MinSpanningTreeKruskal()
+        self.Draw(self.graph, inCircle=isCheckedCircle, weighted=isWeighted)
 
     def AddProject3Widgets(self, root):
         menuProj3 = Frame(self.tab3, width=1200, height=30)
@@ -515,9 +508,9 @@ class GUI:
             menuProj3, text="In circle", variable=self.checkP3)
 
         # check if generate graph draw with wages
-        self.checkP3Extent = IntVar()
+        self.checkP3weighted = IntVar()
         checkShowWages3 = Checkbutton(
-            menuProj3, text="Show extent", variable=self.checkP3Extent)
+            menuProj3, text="Weighted graph", variable=self.checkP3weighted)
 
         # 0
         label0a = Label(menuProj3, text='- vertices')
@@ -535,7 +528,7 @@ class GUI:
         # 1
         label1 = Label(menuProj3, text='Task 1', foreground="red")
         button1 = Button(
-            menuProj3, text="Add edges' extent", command=lambda: self.SelectAddWages())
+            menuProj3, text="Randomize graph's weights", command=lambda: self.SelectAddWeights())
 
         # 2
         label2 = Label(menuProj3, text='Task 2', foreground="red")
@@ -559,7 +552,7 @@ class GUI:
         # 5
         label5 = Label(menuProj3, text='Task 5', foreground="red")
         button5 = Button(
-            menuProj3, text="Find minimum spanning tree", command=lambda: self.SelectFindMinSpanningTree)
+            menuProj3, text="Find minimum spanning tree", command=self.SelectFindMinSpanningTree)
 
         # row 0
         spinbox0a.grid(column=0, row=0, sticky="nsew", padx=10, pady=5)

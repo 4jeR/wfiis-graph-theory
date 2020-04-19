@@ -86,7 +86,8 @@ class Graph:
                 print(val, " ", end='')
             print()
 
-    def Connect(self, node1_idx, node2_idx, arrow=False, wage = 0):
+
+    def Connect(self, node1_idx, node2_idx, arrow=False, weight = 0):
         """
         Constructs edge between two nodes of given indexes. If they were succesfully connected
         then it returns True, otherwise returns False.
@@ -104,7 +105,7 @@ class Graph:
         # prevent from adding already connected nodes
         if a.index != b.index and (a, b) not in self.connections and (b, a) not in self.connections:
             self.edges.append(
-                Edge(len(self.edges)+1, a, b, arrow, wage))
+                Edge(len(self.edges)+1, a, b, arrow, weight))
             self.connections.append((a, b))
             if b.index not in a.neighbours:
                 a.neighbours.append(b.index)
@@ -114,7 +115,24 @@ class Graph:
         else:
             return False
 
-    def Disconnect(self, edge):
+    def Disconnect(self, node1_idx, node2_idx):
+        """
+        Removes edge that at the first end has node with index node1_idx and at second edge has node with index node2_idx.
+        :return: None
+        """
+        for edge in self.edges:
+            if (edge.node1.index == node1_idx and edge.node2.index == node2_idx) or (edge.node1.index == node2_idx and edge.node2.index == node1_idx):
+                self.DisconnectByEdge(edge) 
+
+    def ConnectByEdge(self, edge, arrow=False):
+        """
+        Constructs edge between two nodes of given indexes. If they were succesfully connected
+        then it returns True, otherwise returns False.
+        :return: bool
+        """
+        return self.Connect(edge.node1.index, edge.node2.index,arrow, edge.weight)
+
+    def DisconnectByEdge(self, edge):
         """
         Removes edge from graph and updates status of all properties.
         :return: nothing
@@ -140,6 +158,7 @@ class Graph:
                 b = n
 
         return ((b.index in a.neighbours) and (a.index in b.neighbours))
+
 
     def NodesCount(self):
         """
@@ -399,8 +418,8 @@ class Graph:
                     if a.index != c.index and (a, c) not in self.connections and (c, a) not in self.connections:
                         if(self.Connect(d.index, b.index)):
                             self.Connect(a.index, c.index)
-                            self.Disconnect(Samples[0])
-                            self.Disconnect(Samples[1])
+                            self.DisconnectByEdge(Samples[0])
+                            self.DisconnectByEdge(Samples[1])
                             i += 1
             return True
 
@@ -501,18 +520,9 @@ class Graph:
                         comp[i] = 0
         return ComponentsList.split("\n")
 
-    def DisconnectByIndexes(self, node1_i, node2_i):
+    def CheckIfConnectionIsABridge(self, node1_idx, node2_idx):
         """
-        Removes edge that at the first end has node with index node1_i and at second edge has node with index node2_i.
-        :return: None
-        """
-        for edge in self.edges:
-            if (edge.node1.index == node1_i and edge.node2.index == node2_i) or (edge.node1.index == node2_i and edge.node2.index == node1_i):
-                self.Disconnect(edge) 
-
-    def CheckIfConnectionIsABridge(self, node1_i, node2_i):
-        """
-        Check if edge connecting node with index node1_i and node with index node2_i is a bridge, that is, checks if number 
+        Check if edge connecting node with index node1_idx and node with index node2_idx is a bridge, that is, checks if number 
         of common connected components after removing the edge increases.
         :return: True of False
         """
@@ -521,13 +531,13 @@ class Graph:
 
         num_of_commmon_components_before_disconecting = len(self.GetCommonComponents())
 
-        self.DisconnectByIndexes(node1_i, node2_i)
+        self.Disconnect(node1_idx, node2_idx)
 
         num_of_commmon_components_after_disconecting = len(self.GetCommonComponents())
 
         if num_of_commmon_components_after_disconecting > num_of_commmon_components_before_disconecting:
             is_bridge = True
-        self.Connect(node1_i, node2_i)
+        self.Connect(node1_idx, node2_idx)
 
         return is_bridge
 
@@ -577,7 +587,7 @@ class Graph:
                 for i, neighbour in enumerate(current_node.neighbours):
                     if (not self.CheckIfConnectionIsABridge(neighbour, current_node.index)) or (i == (len(current_node.neighbours) - 1)):
                         euler_cycle.append(neighbour)
-                        self.DisconnectByIndexes(neighbour, current_node.index)
+                        self.Disconnect(neighbour, current_node.index)
                         current_node = self.nodes[neighbour - 1]
                         break
 
@@ -657,7 +667,7 @@ class Graph:
         :return: bool
         """
 
-        visited = [False for _ in range(self.NodesCount())]
+        visited = [False for i in range(self.NodesCount())]
         
         for idx in range(1, self.NodesCount()+1): 
             if not visited[idx-1]: 
@@ -673,30 +683,35 @@ class Graph:
         i1 = edge.node1.index
         i2 = edge.node2.index
         if not self.AreConnected(i1, i2):
+            return True
+        else:
             self.Connect(i1, i2)
             causes = self.IsCyclic()
-            self.DisconnectByIndexes(i1, i2)
+            self.Disconnect(i1, i2)
             return causes    
-        else:
-            return False
+        
 
     def MinSpanningTreeKruskal(self):
         """
         Generates minimum spanning tree based on Kruskal algorithm.
         Prerequisite to use this function is that current graph 
-        is already constructed (not empty).
+        is already constructed (not empty) and consistent.
         
         :return: Nothing
         """
         mst = []
-        edges = self.edges.copy()
-        edges.sort(key=lambda e: e.wage)
+        edges = [e for e in self.edges]
+        nodes = [n for n in self.nodes]
+        edges.sort(key=lambda e: e.weight, reverse=True)
         for e in edges:
-            print(f"{e.wage} -> {e.node1.index, e.node2.index}")
+            print(f"{e.weight} -> {e.node1.index, e.node2.index}")
         for edge in edges:
             if not self.CausesCycleIfAdded(edge):
-                mst.append((edge.node1.index, edge.node2.index))
+                mst.append(edge)
             if len(mst) == self.NodesCount()-1:
                 break
         
-        return mst
+        self.ResetGraph()
+        self.nodes = [n for n in nodes]
+        for e in mst:
+            self.ConnectByEdge(e)
