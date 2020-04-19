@@ -12,6 +12,7 @@ class Graph:
     def __init__(self, nodes=[], edges=[], connections=[]):
         Node.count = 0
         Edge.count = 0
+        self.cycle = list()
         self.nodes = [n for n in nodes]
         self.edges = [e for e in edges]
         self.connections = [(a, b) for (a, b) in connections]
@@ -540,15 +541,58 @@ class Graph:
         return self.FindEulerCycle()
 
 
-        def checkIfIsHamiltonGraph(self, canvas, filepath, in_circle=False):
+    def IsEveryNodeInTheList(self, list_to_check):
+        """
+        Checks if every node index is contined in a passed list. 
+        :param list_to_check: List to be search for all nodes indexes.
+        :return: True or False.
+        """
+        for node in self.nodes:
+            if node.index not in list_to_check:
+                return False
+        return True
 
-            if filepath == None:
-                self.FillRandomizeGraphGNP(canvas, 0, 0.5, inCircle=in_circle)
+    def FindHamiltonCycle(self):
+        """
+        If current graph is Hamilton graph, Hamilton Cycle of the graph is found. 
+        :return: Hamilton Cycle stored in the list type, or False if there is no Hamilton Cycle of current graph.
+        """
+        hamilton_cycle = list()
+        visited_from = list()
+        for node in self.nodes:
+            current_node = node
+            if current_node.index not in hamilton_cycle:
+                hamilton_cycle.append(current_node.index)
+                while len(hamilton_cycle) != 0:
+                    print("2. {}".format(hamilton_cycle))
+                    current_node = self.nodes[hamilton_cycle[-1] - 1]
+                    for i, neighbour in enumerate(current_node.neighbours):
+                        check = [node_index for node_index in hamilton_cycle]
+                        check.append(neighbour)
+                        if (neighbour not in hamilton_cycle) and (check not in visited_from):
+                            hamilton_cycle.append(neighbour)
+                            visited_from.append(check)
+                            current_node = self.nodes[neighbour - 1]
+                            visited_from.append(hamilton_cycle)
+                            break
+                        elif self.IsEveryNodeInTheList(hamilton_cycle) and (hamilton_cycle[0] == neighbour):
+                            hamilton_cycle.append(neighbour)
+                            return hamilton_cycle
+                        elif i == len(current_node.neighbours) - 1:
+                            hamilton_cycle.pop()
+        return None
 
+    # 2_5
+    def CheckIfIsHamiltonGraph(self, canvas, filepath, in_circle=False):
+        """
+        Check if current graph contains Hamilton Cycle. 
+        :return: Value returned by FindHamiltonCycle() method.
+        """
+        if filepath == None:
+            print("filename = {}".format(filepath))
+            num_of_nodes = random.randint(5, 15)
+            self.FillRandomizeGraphGNP(canvas, 5, 0.5, inCircle=in_circle)
+        else: 
+            self.FillGraphFromIM(filepath, canvas, inCircle=in_circle)
 
-
-
-
-
-
-
+        return self.FindHamiltonCycle()
