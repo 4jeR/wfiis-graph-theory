@@ -422,6 +422,8 @@ class Graph:
         f.close()
 
         if (self.FillFromGraphicSequence(filename, canvas, 1, inCircle)):
+            if(CanEdgeRandomize(self)):
+                self.EdgesRandomization(10)
             return True
         else:
             return False
