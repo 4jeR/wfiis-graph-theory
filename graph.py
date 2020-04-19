@@ -1,61 +1,80 @@
 import math
 import copy
 
-
+from operator import itemgetter
 from helping_funcs import *
 from edge import *
 from node import *
 from collections import *
+from tkinter import messagebox
 
 
 class Graph:
     def __init__(self, nodes=[], edges=[], connections=[]):
-        Node.count = 0
-        Edge.count = 0
-        self.cycle = list()
+        """ 
+        Constructor for Graph objects.
+        :return: nothing
+        """
+        Node.count=0
+        Edge.count=0
         self.nodes = [n for n in nodes]
         self.edges = [e for e in edges]
         self.connections = [(a, b) for (a, b) in connections]
 
-    # this does exactly what you think it does
     def AddNode(self, node):
+        """ 
+        Adds Node object to the graph. Returns added node
+        :return: Node
+        """
         self.nodes.append(node)
+        return node
 
-    # this does exactly what you think it does
     def RemoveNode(self, indx):
+        """ IT NEEDS FIXES """
         new_nodes = [self.nodes[i]
                      for i in range(len(self.nodes)) if i != indx]
         self.nodes = [n for n in new_nodes]
 
-    # HELP
     def PrintGraph(self):
+        """
+        Prints graph info and stats to the console.
+        :return: nothing
+        """
         print("Graph has {} nodes and {} edges.".format(Node.count, Edge.count))
         print("Unique connected nodes:")
         for (a, b) in self.connections:
             print("{},{}".format(a.index, b.index))
 
-        print("\nAll edges : {}".format([e.index for e in self.edges]))
+        print(f"\nAll edges : {[e.index for e in self.edges]}")
 
-        print("\nDegree of nodes".format())
+        print("\nDegree of nodes")
 
         for node in self.nodes:
-            print("D of {} = {}".format(node.index, len(node.neighbours)))
+            print(f"D of {node.index} = {len(node.neighbours)}")
 
-    # prints neighbour Matrix to the console
     def PrintAdjacencyMatrix(self):
+        """
+        Prints graph represented by Adjacency Matrix form to the console.
+        :return: nothing
+        """
         print("\nAdjacency Matrix:")
         for node in self.nodes:
             node.PrintNeighboursInVector()
 
-    # prints neighbour list to the console
-
     def PrintAdjacencyList(self):
+        """
+        Prints graph represented by Adjacency List form to the console.
+        :return: nothing
+        """
         print("\nAdjacency list:")
         for node in self.nodes:
             node.PrintNeighbours()
 
-    # prints incidence Matrix to the console
     def PrintIncidenceMatrix(self):
+        """
+        Prints graph represented by Incidence Matrix form to the console.
+        :return: nothing
+        """
         print("\nIncident matrix:")
         Matrix = [[0 for i in range(len(self.edges))]
                   for y in range(len(self.nodes))]
@@ -67,28 +86,25 @@ class Graph:
                 print(val, " ", end='')
             print()
 
-    # connects two [Node] objects together
-    def Connect(self, node1_idx, node2_idx, Arrow=False):
-        # check for (x,y) for both 2 nodes that are going to be connected
-        
+    def Connect(self, node1_idx, node2_idx, arrow=False, wage = 0):
+        """
+        Constructs edge between two nodes of given indexes. If they were succesfully connected
+        then it returns True, otherwise returns False.
+        :return: bool
+        """
         if node1_idx == node2_idx or node1_idx > self.NodesCount() or node2_idx > self.NodesCount():
             return False
 
         for n in self.nodes:
             if n.index == node1_idx:
-                x1 = n.x
-                y1 = n.y
                 a = n
             elif n.index == node2_idx:
-                x2 = n.x
-                y2 = n.y
                 b = n
 
         # prevent from adding already connected nodes
-
         if a.index != b.index and (a, b) not in self.connections and (b, a) not in self.connections:
             self.edges.append(
-                Edge(len(self.edges)+1, a, b, Arrow))
+                Edge(len(self.edges)+1, a, b, arrow, wage))
             self.connections.append((a, b))
             if b.index not in a.neighbours:
                 a.neighbours.append(b.index)
@@ -99,6 +115,10 @@ class Graph:
             return False
 
     def Disconnect(self, edge):
+        """
+        Removes edge from graph and updates status of all properties.
+        :return: nothing
+        """
         try:
             self.edges.remove(edge)
             self.connections.remove((edge.node1, edge.node2))
@@ -108,14 +128,39 @@ class Graph:
         except Exception as exc:
             print("Exception {} occured when trying to disconnect the edge".format(exc))
 
+    def AreConnected(self, node1_idx, node2_idx):
+        """
+        Checks if two nodes with given indexes are already connected with each other.
+        :return: bool
+        """
+        for n in self.nodes:
+            if n.index == node1_idx:
+                a = n
+            elif n.index == node2_idx:
+                b = n
+
+        return ((b.index in a.neighbours) and (a.index in b.neighbours))
+
     def NodesCount(self):
+        """
+        Returns count of nodes in graph.
+        :return: int
+        """
         return len(self.nodes)
 
     def EdgesCount(self):
+        """
+        Returns count of edges in graph.
+        :return: int
+        """
         return len(self.edges)
 
     # 1_1a
     def FillGraphFromIM(self, filename, canvas, inCircle=False):
+        """
+        Constructs graph from Incidence Matrix.
+        :return: nothing
+        """
         matrix, rows, cols = FileToMatrix(filename)
         # put vertexes on the circle
         if inCircle:
@@ -151,9 +196,15 @@ class Graph:
                     counter += 1
                     break
             self.Connect(node1, node2)
+            
+        return True
 
     # 1_1b
     def FillGraphFromAL(self, filename, canvas, inCircle=False):
+        """
+        Constructs graph from Adjacency List.
+        :return: nothing
+        """
         vert_count = 0
         with open(filename, 'r') as f:
             for line in f:
@@ -185,6 +236,10 @@ class Graph:
 
     # 1_1c
     def FillGraphFromAM(self, filename, canvas, inCircle=False):
+        """
+        Constructs graph from Adjacency Matrix.
+        :return: nothing
+        """
         f, rows, cols = GetFileRowsCols(self, filename)
 
         if inCircle:
@@ -207,9 +262,14 @@ class Graph:
                     self.Connect(i+1, j+1)
 
         f.close()
+        return True
 
     # 1_3a
     def FillRandomizeGraphGNL(self, canvas, n_nodes, l_edges,  inCircle=False):
+        """
+        Constructs random graph with given number of nodes and edges.
+        :return: nothing
+        """
         if inCircle:
             for i in range(n_nodes):
                 xnext = canvas.winfo_width()/2.0 - 255 * math.cos(i * 2*math.pi / (n_nodes))
@@ -228,6 +288,12 @@ class Graph:
 
     # 1_3b
     def FillRandomizeGraphGNP(self, canvas, n_nodes, prob,  inCircle=False):
+        """
+        Constructs random graph with given number of nodes and probability
+        of that there exists edge between any two nodes. 
+        Probability ranges between 0 and 100 [%].
+        :return: nothing
+        """
         if inCircle:
             for i in range(n_nodes):
                 xnext = canvas.winfo_width()/2.0 - 255 * math.cos(i * 2*math.pi / (n_nodes))
@@ -248,35 +314,51 @@ class Graph:
     ########## PROJECT 2 PARTS ##########
 
     def FillFromGraphicSequence(self, filename, canvas, line=1, inCircle=False):
+        """
+        Constructs random graph from given graphic sequence.
+        Returns True if it successfully constructed graph, otherwise False.
+        :return: bool
+        """
         seq, pls = self.ParseGraphicSequence(filename, line)
 
-        if pls:
-            # construct nodes
-            if inCircle:
-                for i in range(len(seq)):
-                    xnext = canvas.winfo_width()/2.0 - 255 * math.cos(i * 2*math.pi / (len(seq)))
-                    ynext = canvas.winfo_height()/2.0 - 255 * math.sin(i * 2*math.pi / (len(seq)))
-                    self.AddNode(Node(i+1, xnext, ynext))
-            else:
-                for i in range(len(seq)):
-                    xx = random.randint(30, canvas.winfo_width() - 30)
-                    yy = random.randint(30, canvas.winfo_height() - 30)
-                    self.AddNode(Node(i+1, xx, yy))
+        if pls:      
+            seq_copy = [[idx, deg] for idx, deg in enumerate(seq)]
+        
+            adj_list = [[] for _ in range(len(seq))]
+            for _ in range(len(seq)):
+                seq_copy.sort(reverse=True, key=itemgetter(1))
+                i = 0
+                j = i + 1
+                while seq_copy[i][1] > 0 and j < len(seq_copy):
+                    adj_list[seq_copy[i][0]].append(seq_copy[j][0])
+                    adj_list[seq_copy[j][0]].append(seq_copy[i][0])
+                    seq_copy[i][1] -= 1
+                    seq_copy[j][1] -= 1
+                    j += 1
 
-            # make connections based on sequence
-            idx = 1
-            while sum(seq) > 0:
-                for i in range(1, seq[idx-1]+1):
-                    self.Connect(idx, idx + i)
-                    seq[idx-1] -= 1
-                    seq[idx+i-1] -= 1
-                idx += 1
+            f = open("examples/AL_from_gs.txt", "w")
+            ct = 1
+            for nbs in adj_list:
+                line = ' '.join([str(v+1) for v in nbs]).strip()
+                f.write(str(line))
+                if ct < len(seq):
+                    f.write('\n')
+                ct +=1 
+                    
+            f.close()
+            self.FillGraphFromAL("examples/AL_from_gs.txt", canvas,inCircle)
+                
             return True
         else:
-            print("[FillFromGraphicSequence] Couldn't construct graph from this sequence.")
             return False
 
     def ParseGraphicSequence(self, filename, line=1):
+        """
+        Checks if given string from file is a graphic sequence; meaning if it is
+        possible to construct graph from it. Returns True if graph can be generated,
+        otherwise False.
+        :return: bool
+        """
         f = open(filename, "r")
         seq = list()
         for i in range(line):
@@ -284,8 +366,10 @@ class Graph:
 
         seq_result = seq.copy()
         seq.sort(reverse=True)
+
+
         while(True):
-            if sum(seq) <= 0:
+            if int(True) not in seq:
                 f.close()
                 return seq_result, True
             if seq[0] < 0 or seq[0] >= len(seq) or sum(1 for el in seq if el < 0) > 0:
@@ -297,36 +381,31 @@ class Graph:
             seq.sort(reverse=True)
 
     def EdgesRandomization(self, count):
-        if Node.count*(Node.count-1)/2 == Edge.count:
-            return False
-        else:
+        """
+        Randomizes [count] times graph's edges. The following statement is true:
+        count of edges before = count of edges after randomization.
+        Returns False if it cannot randomize, otherwise True.
+        :return: bool
+        """
+        if CanEdgeRandomize(self):
             i = 0
             while i < count:
                 Samples = random.sample(self.edges, 2)
                 if AreUnique(Samples):
-                    a = Samples[0].node1.index
-                    b = Samples[0].node2.index
-                    c = Samples[1].node1.index
-                    d = Samples[1].node2.index
-                    if self.Connect(a, c):
-                        if(self.Connect(d, b)):
+                    a = Samples[0].node1
+                    b = Samples[0].node2
+                    c = Samples[1].node1
+                    d = Samples[1].node2
+                    if a.index != c.index and (a, c) not in self.connections and (c, a) not in self.connections:
+                        if(self.Connect(d.index, b.index)):
+                            self.Connect(a.index, c.index)
                             self.Disconnect(Samples[0])
                             self.Disconnect(Samples[1])
                             i += 1
-                        else:
-                            self.Disconnect(Samples[0])
-                            i += 1
-                    elif self.Connect(b, c):
-                        if(self.Connect(d, a)):
-                            self.Disconnect(Samples[0])
-                            self.Disconnect(Samples[1])
-                            i += 1
-                        else:
-                            self.Disconnect(Samples[0])
-                            i += 1
-                    else:
-                        i += 1
             return True
+
+        else:
+            return False
 
     # 2_5
     def FillKReguralGraph(self, canvas, n_nodes, degree, inCircle=False):
@@ -336,10 +415,8 @@ class Graph:
         if not 0 <= degree < n_nodes:
             return False
 
-        # add new file
-        # f = open("examples/k-regGraph.txt", "w")
         seq = [degree for d in range(n_nodes)]
-        filename = "examples/k-regGraph.txt"
+        filename = "examples/GS_ex3.txt"
         with open(filename, "w") as f:
             f.write(' '.join([str(x) for x in seq]))
         f.close()
@@ -348,9 +425,9 @@ class Graph:
             return True
         else:
             return False
-    # 2_3
-
-    def CommonComponentsToStringAndDraw(self, canvas, comp):
+    
+    # 2_3 
+    def CommonComponentsToString(self, canvas, comp):
         ComponentsList = ""
         for i in range(0, len(comp)):
             if (comp[i] != 0):
@@ -360,13 +437,12 @@ class Graph:
                 randomColor = "#"+("%06x" % random.randint(500000, 16777215))
                 for i in range(len(comp)):
                     if comp[i] == nr:
-                        self.nodes[i].Draw(canvas, randomColor)
+                        self.nodes[i].color = randomColor
                         ComponentsList += (str)(self.nodes[i].index) + " "
                         comp[i] = 0
         tab = ComponentsList.split("\n")
         longest_string = max(tab, key=len)
-        for e in self.edges:
-            e.Draw(canvas)
+
         return ComponentsList + "\nThe longest common component has numer " + longest_string[0]
 
     def Components_R(self, nr, n, comp):
@@ -377,8 +453,9 @@ class Graph:
             else:
                 continue
 
-    def FillComponentsAndDraw(self, filename, canvas, inCircle=True):
+    def FillComponents(self, filename, canvas, inCircle=True):
         self.FillGraphFromAM(filename, canvas, inCircle)
+        SetRandomWagesOfEdges(self, 1, 10)
         nr = 0
         comp = []
         for i in range(len(self.nodes)):
@@ -388,7 +465,7 @@ class Graph:
                 nr += 1
                 comp[n.index-1] = nr
                 self.Components_R(nr, n, comp)
-        return self.CommonComponentsToStringAndDraw(canvas, comp)
+        return self.CommonComponentsToString(canvas, comp)
 
     def GetCommonComponents(self):
         """
@@ -440,7 +517,7 @@ class Graph:
         :return: True of False
         """
 
-        is_bridge = False;
+        is_bridge = False
 
         num_of_commmon_components_before_disconecting = len(self.GetCommonComponents())
 
@@ -516,7 +593,6 @@ class Graph:
 
         return euler_cycle_readable_format
 
-
     # 2_4
     def GetEulersCycleFromRandomEulerGraph(self, canvas, num_of_nodes=0, in_circle=False):
         """
@@ -539,7 +615,6 @@ class Graph:
                 break
 
         return self.FindEulerCycle()
-
 
     def IsEveryNodeInTheList(self, list_to_check):
         """
@@ -596,3 +671,83 @@ class Graph:
             self.FillGraphFromIM(filepath, canvas, inCircle=in_circle)
 
         return self.FindHamiltonCycle()
+
+
+    # 3_5
+    def GetEdgeFromIndexes(self, idx1, idx2):
+        """
+        Gets the Edge object that connects two nodes of given indexes.
+        :return: Edge
+        """
+        try:
+            for e in self.edges:
+                if (e.node1.index == idx1 and e.node2.index == idx2) or (e.node1.index == idx2 and e.node2.index == idx1):
+                    return e
+        except Exception:
+            print(f"[GetEdgeFromIndexes] There is no connection ({idx1},{idx2}) in this graph.")
+    
+    def IsCyclicRec(self, idx, visited, parent): 
+        """
+        Helper func for checking if graph is cyclic.
+
+        :return: bool
+        """
+        visited[idx-1] = True
+        curr_node = NodeFromIndex(self, idx)
+        for nb_idx in curr_node.neighbours:
+            if not visited[nb_idx-1]:
+                if self.IsCyclicRec(nb_idx, visited, curr_node.index):
+                    return True
+            elif parent != nb_idx: 
+                return True
+        return False
+
+    def IsCyclic(self): 
+        """
+        Method that checks if there exists any cycle in graph.
+        :return: bool
+        """
+
+        visited = [False for _ in range(self.NodesCount())]
+        
+        for idx in range(1, self.NodesCount()+1): 
+            if not visited[idx-1]: 
+                if self.IsCyclicRec(idx, visited, -1): 
+                    return True
+        return False
+
+    def CausesCycleIfAdded(self, edge):
+        """
+        Checks if adding edge to the current graph would cause cycle.
+        :return: bool
+        """
+        i1 = edge.node1.index
+        i2 = edge.node2.index
+        if not self.AreConnected(i1, i2):
+            self.Connect(i1, i2)
+            causes = self.IsCyclic()
+            self.DisconnectByIndexes(i1, i2)
+            return causes    
+        else:
+            return False
+
+    def MinSpanningTreeKruskal(self):
+        """
+        Generates minimum spanning tree based on Kruskal algorithm.
+        Prerequisite to use this function is that current graph 
+        is already constructed (not empty).
+        
+        :return: Nothing
+        """
+        mst = []
+        edges = self.edges.copy()
+        edges.sort(key=lambda e: e.wage)
+        for e in edges:
+            print(f"{e.wage} -> {e.node1.index, e.node2.index}")
+        for edge in edges:
+            if not self.CausesCycleIfAdded(edge):
+                mst.append((edge.node1.index, edge.node2.index))
+            if len(mst) == self.NodesCount()-1:
+                break
+        
+        return mst

@@ -27,12 +27,18 @@ def AreUnique(Samples):
            (Samples[0].node2 != Samples[1].node1) and
            (Samples[0].node2 != Samples[1].node2))
 
+def AreUniqueInt(a,b,c,d):
+    return((a != c) and
+           (a != d) and
+           (b != c) and
+           (b != d))
 
-def RandomizeIndex(a, b, bad_idx, seq):
-    res = random.randint(a, b)
-    while not (res != bad_idx and seq[res-1] > 0):
-        res = random.randint(a, b)
-    return res
+
+def RandomizeIndex(a, b, bad_idx_list, seq):
+    ok_idx = random.randint(a, b)
+    while ok_idx in bad_idx_list or seq[ok_idx-1] <= 0:
+        ok_idx = random.randint(a, b) 
+    return ok_idx
 
 
 def NodeFromIndex(graph, idx):
@@ -41,3 +47,36 @@ def NodeFromIndex(graph, idx):
             return n
         else:
             continue
+
+def CanEdgeRandomize(graph):
+    if len(graph.nodes) < 4:
+        return False
+    else:
+        #if counter >=2 grpah can be randomized
+        counter  = 0
+        #variables for begin/end of the missing edge 
+        node1_idx = 0
+        node2_idx = 0
+        #for each nodes in graph
+        for i in range(len(graph.nodes)):
+        #for each possible neighbour
+            for j in range(len(graph.nodes)):
+                if( ((j+1) not in graph.nodes[i].neighbours) and ((j+1)!=graph.nodes[i].index)):
+                    if counter==0:
+                        counter+=1
+                        node1_idx = graph.nodes[i].index
+                        node2_idx = j+1
+                        break
+                    if counter==1 and AreUniqueInt(node1_idx,node2_idx,j+1,graph.nodes[i].index):
+                        counter+=1
+                        return True
+
+        return False
+
+def SetRandomWagesOfEdges(graph, min, max):
+    if( min <= max ):
+        for i in graph.edges:
+            i.wage = random.randint(min, max)
+    else:
+        pass
+        #todo print info in alert
