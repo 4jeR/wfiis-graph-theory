@@ -379,7 +379,7 @@ class GUI:
     def SelectAddWeights(self):
         isCheckedCircle = bool(self.checkP3.get())
         isWeighted = bool(self.checkP3weighted.get())
-        SetRandomWagesOfEdges(self.graph, 1, 10)
+        SetRandomWeightsOfEdges(self.graph, 1, 10)
         self.Draw(self.graph, inCircle=isCheckedCircle,
                   weighted=isWeighted)
 
@@ -501,9 +501,9 @@ class GUI:
         checkInCircle3 = Checkbutton(
             menuProj3, text="In circle", variable=self.checkP3)
 
-        # check if generate graph draw with wages
+        # check if generate graph draw with Weights
         self.checkP3weighted = IntVar()
-        checkShowWages3 = Checkbutton(
+        checkShowWeights3 = Checkbutton(
             menuProj3, text="Weighted graph", variable=self.checkP3weighted)
 
         # 0
@@ -558,7 +558,7 @@ class GUI:
         spinbox0b.grid(column=0, row=1, sticky="nsew", padx=10, pady=5)
         label0b.grid(column=1, row=1, sticky="w")
         button0b.grid(column=2, row=1, sticky="nsew", padx=10, pady=5)
-        checkShowWages3.grid(column=3, row=1, sticky="nsew", padx=10, pady=5)
+        checkShowWeights3.grid(column=3, row=1, sticky="nsew", padx=10, pady=5)
 
         # row 2
         label1.grid(column=0, row=2)

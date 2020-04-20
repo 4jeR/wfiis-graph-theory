@@ -476,7 +476,7 @@ class Graph:
 
     def FillComponents(self, filename, canvas, inCircle=True):
         self.FillGraphFromAM(filename, canvas, inCircle)
-        SetRandomWagesOfEdges(self, 1, 10)
+        SetRandomWeightsOfEdges(self, 1, 10)
         nr = 0
         comp = []
         for i in range(len(self.nodes)):
@@ -700,7 +700,7 @@ class Graph:
         w = 0
         for e in self.edges:
             if ( (e.node1 == node1) and (e.node2 == node2) ) or ( (e.node1 == node2) and (e.node2 == node1) ):
-                w = e.wage
+                w = e.weight
         if d[node2.index-1] > (d[node1.index-1] + w):
             d[node2.index-1] = d[node1.index-1] + w
             p[node2.index-1] = node1.index - 1
@@ -722,11 +722,11 @@ class Graph:
             tempD = d.copy()
             for n in S:
                 tempD[n.index-1] = float("inf")
-        infoString = "START! s = " + str(nodeIdx)
+        infoString = "START: s = " + str(nodeIdx)
         listOfPaths = []
         for n in range(0, len(self.nodes)):
             shortestPath = []
-            infoString += "\nd[" + str(n+1) + "] = " + str(d[n]) + " ==> ("
+            infoString += "\nd(" + str(n+1) + ") = " + str(d[n]) + " ==> ["
             counter = 0
             tempS = []
             j = n
@@ -737,8 +737,8 @@ class Graph:
             while( counter > 0):
                 counter -= 1
                 shortestPath.append(tempS[counter]+1)
-                infoString += str(tempS[counter]+1) + "-"
-            infoString = infoString[:-1] + ')'
+                infoString += str(tempS[counter]+1) + " - "
+            infoString = infoString[:-2] + ']'
             listOfPaths.append(shortestPath)
         print("listOfPaths = {}".format(listOfPaths))
         return listOfPaths, infoString        

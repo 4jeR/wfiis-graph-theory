@@ -45,7 +45,7 @@ def NodeFromIndex(graph, idx):
         else:
             continue
 
-def CanEdegRandomize(graph):
+def CanEdgeRandomize(graph):
     if len(graph.nodes) < 4:
         return False
     else:
@@ -70,7 +70,7 @@ def CanEdegRandomize(graph):
 
         return False
 
-def SetRandomWagesOfEdges(graph, min, max):
+def SetRandomWeightsOfEdges(graph, min, max):
     if( min <= max ):
         for i in graph.edges:
             i.weight = random.randint(min, max)
