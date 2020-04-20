@@ -13,7 +13,6 @@ def GetFileRowsCols(self, filename):
     f.seek(0)
     return f, rows, cols
 
-
 def FileToMatrix(filename):
     with open(filename, 'r') as f:
         matrix = [[int(num) for num in line.split(' ')] for line in f]
@@ -33,13 +32,11 @@ def AreUniqueInt(a,b,c,d):
            (b != c) and
            (b != d))
 
-
 def RandomizeIndex(a, b, bad_idx_list, seq):
     ok_idx = random.randint(a, b)
     while ok_idx in bad_idx_list or seq[ok_idx-1] <= 0:
         ok_idx = random.randint(a, b) 
     return ok_idx
-
 
 def NodeFromIndex(graph, idx):
     for n in graph.nodes:
@@ -48,7 +45,7 @@ def NodeFromIndex(graph, idx):
         else:
             continue
 
-def CanEdgeRandomize(graph):
+def CanEdegRandomize(graph):
     if len(graph.nodes) < 4:
         return False
     else:
