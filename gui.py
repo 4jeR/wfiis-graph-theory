@@ -480,12 +480,18 @@ class GUI:
         #        title="Informacja", message=info)
 
     def SelectFindMinSpanningTree(self):
-        isCheckedCircle = bool(self.checkP3.get())
-        isWeighted = bool(self.checkP3weighted.get())
+        if not self.graph.IsGraphConsistent():
+            messagebox.showerror(
+                title="Error", message="[SelectFindMinSpanningTree] Graph is not consistent - cannot find minimum spanning tree.")
+        else:
+            isCheckedCircle = bool(self.checkP3.get())
+            isWeighted = bool(self.checkP3weighted.get())
 
-        self.ClearCanvas()
-        self.graph.MinSpanningTreeKruskal()
-        self.Draw(self.graph, inCircle=isCheckedCircle, weighted=isWeighted)
+            self.ClearCanvas()
+            self.graph.MinSpanningTreeKruskal()
+            self.Draw(self.graph, inCircle=isCheckedCircle, weighted=isWeighted)
+            messagebox.showinfo(
+                title="Info", message="[SelectFindMinSpanningTree] Minimum spanning tree has been drawn.")
 
     def AddProject3Widgets(self, root):
         menuProj3 = Frame(self.tab3, width=1200, height=30)

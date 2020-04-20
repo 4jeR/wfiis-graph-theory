@@ -696,6 +696,24 @@ class Graph:
         except Exception:
             print(f"[GetEdgeFromIndexes] There is no connection ({idx1},{idx2}) in this graph.")
     
+    def IsGraphConsistent(self):
+        visited = [False for _ in range(self.NodesCount())]
+        visit_count = 0
+        nodes_set = set([])
+        nodes_set.add(1)
+        visited[0] = True
+        while len(nodes_set) > 0:
+            node = NodeFromIndex(self, nodes_set.pop())
+            visit_count += 1
+            for nb in node.neighbours:
+                if visited[nb-1]:
+                    continue
+                visited[nb-1] = True
+                nodes_set.add(nb)
+            
+
+        return visit_count == self.NodesCount()
+
     def IsCyclicRec(self, idx, visited, parent): 
         """
         Helper func for checking if graph is cyclic.
@@ -733,36 +751,36 @@ class Graph:
         """
         i1 = edge.node1.index
         i2 = edge.node2.index
-        if not self.AreConnected(i1, i2):
-            return True
-        else:
-            self.Connect(i1, i2)
-            causes = self.IsCyclic()
-            self.Disconnect(i1, i2)
-            return causes    
+        self.Connect(i1, i2)
+        causes = self.IsCyclic()
+        self.Disconnect(i1, i2)
+        return causes    
         
 
     def MinSpanningTreeKruskal(self):
         """
         Generates minimum spanning tree based on Kruskal algorithm.
-        Prerequisite to use this function is that current graph 
-        is already constructed (not empty) and consistent.
+        Prerequisite to use this function properly is that current graph 
+        1) is already constructed (not empty)
+        2) is consistent.
         
         :return: Nothing
         """
-        mst = []
-        edges = [e for e in self.edges]
         nodes = [n for n in self.nodes]
-        edges.sort(key=lambda e: e.weight, reverse=True)
-        for e in edges:
-            print(f"{e.weight} -> {e.node1.index, e.node2.index}")
+        edges = [e for e in self.edges]
+        self.ResetGraph()
+        for n in nodes:
+            self.AddNode(n)
+            n.neighbours = []
+
+        
+        edges.sort(key=lambda e: e.weight)
+        
         for edge in edges:
             if not self.CausesCycleIfAdded(edge):
-                mst.append(edge)
-            if len(mst) == self.NodesCount()-1:
-                break
+                self.ConnectByEdge(edge)
+            if len(self.edges) == self.NodesCount()-1:
+                break 
+
+
         
-        self.ResetGraph()
-        self.nodes = [n for n in nodes]
-        for e in mst:
-            self.ConnectByEdge(e)
