@@ -264,7 +264,6 @@ class GUI:
         is_checked = bool(self.checkP2.get())    
 
         hamilton_cycle = g.CheckIfIsHamiltonGraph(self.canvas, filepath, in_circle=is_checked)
-        g.PrintGraph()
         self.Draw(g)
 
         if hamilton_cycle:
