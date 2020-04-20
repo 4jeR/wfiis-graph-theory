@@ -733,13 +733,10 @@ class Graph:
         """
         i1 = edge.node1.index
         i2 = edge.node2.index
-        if not self.AreConnected(i1, i2):
-            return True
-        else:
-            self.Connect(i1, i2)
-            causes = self.IsCyclic()
-            self.Disconnect(i1, i2)
-            return causes    
+        self.Connect(i1, i2)
+        causes = self.IsCyclic()
+        self.Disconnect(i1, i2)
+        return causes    
         
 
     def MinSpanningTreeKruskal(self):
@@ -750,19 +747,22 @@ class Graph:
         
         :return: Nothing
         """
-        mst = []
-        edges = [e for e in self.edges]
         nodes = [n for n in self.nodes]
-        edges.sort(key=lambda e: e.weight, reverse=True)
-        for e in edges:
-            print(f"{e.weight} -> {e.node1.index, e.node2.index}")
+        edges = [e for e in self.edges]
+        conns = [c for c in self.connections]
+        self.ResetGraph()
+        for n in nodes:
+            self.AddNode(n)
+            n.neighbours = []
+
+        
+        edges.sort(key=lambda e: e.weight)
+        
         for edge in edges:
             if not self.CausesCycleIfAdded(edge):
-                mst.append(edge)
-            if len(mst) == self.NodesCount()-1:
-                break
+                self.ConnectByEdge(edge)
+            if len(self.edges) == self.NodesCount()-1:
+                break 
+
+
         
-        self.ResetGraph()
-        self.nodes = [n for n in nodes]
-        for e in mst:
-            self.ConnectByEdge(e)

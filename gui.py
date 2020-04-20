@@ -487,6 +487,8 @@ class GUI:
         self.ClearCanvas()
         self.graph.MinSpanningTreeKruskal()
         self.Draw(self.graph, inCircle=isCheckedCircle, weighted=isWeighted)
+        messagebox.showinfo(
+                title="Info", message="[SelectFindMinSpanningTree] Minimum spanning tree has been drawn.")
 
     def AddProject3Widgets(self, root):
         menuProj3 = Frame(self.tab3, width=1200, height=30)
