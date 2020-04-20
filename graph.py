@@ -696,6 +696,24 @@ class Graph:
         except Exception:
             print(f"[GetEdgeFromIndexes] There is no connection ({idx1},{idx2}) in this graph.")
     
+    def IsGraphConsistent(self):
+        visited = [False for _ in range(self.NodesCount())]
+        visit_count = 0
+        nodes_set = set([])
+        nodes_set.add(1)
+        visited[0] = True
+        while len(nodes_set) > 0:
+            node = NodeFromIndex(self, nodes_set.pop())
+            visit_count += 1
+            for nb in node.neighbours:
+                if visited[nb-1]:
+                    continue
+                visited[nb-1] = True
+                nodes_set.add(nb)
+            
+
+        return visit_count == self.NodesCount()
+
     def IsCyclicRec(self, idx, visited, parent): 
         """
         Helper func for checking if graph is cyclic.
@@ -742,14 +760,14 @@ class Graph:
     def MinSpanningTreeKruskal(self):
         """
         Generates minimum spanning tree based on Kruskal algorithm.
-        Prerequisite to use this function is that current graph 
-        is already constructed (not empty) and consistent.
+        Prerequisite to use this function properly is that current graph 
+        1) is already constructed (not empty)
+        2) is consistent.
         
         :return: Nothing
         """
         nodes = [n for n in self.nodes]
         edges = [e for e in self.edges]
-        conns = [c for c in self.connections]
         self.ResetGraph()
         for n in nodes:
             self.AddNode(n)
