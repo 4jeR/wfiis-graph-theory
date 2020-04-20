@@ -22,6 +22,6 @@ g.Connect(3,6, wage=2)
 print(g.IsCyclic())
 
 print(g.MinSpanningTreeKruskal())
-gui.Draw(g,withWages=True)
+gui.Draw(g,True)
 root.update()
 root.mainloop()

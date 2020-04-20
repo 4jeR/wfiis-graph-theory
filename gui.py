@@ -399,10 +399,10 @@ class GUI:
         ######################
         # TO DO
         #
-        # NEW_FUNCTION(numOfVertex)
+        # DijkstraShortestPaths(numOfVertex)
         # numOfVertex -> number of vertex which we are looking for the shortest path
         #
-        # NEW_FUNCTION should
+        # DijkstraShortestPaths should
         #   return string == info
         #   e.g.
         # "START : s = 1
@@ -421,9 +421,9 @@ class GUI:
         #
         ######################
 
-        # info = self.graph.NEW_FUNCTION(numOfVertex)
-        # messagebox.showinfo(
-        #        title="Informacja", message=info)
+        shorthestPaths, info = self.graph.DijkstraShortestPaths(numOfVertex)
+        messagebox.showinfo(
+               title="Informacja", message=info)
 
     def SelectDistanceMatrix(self):
         pass

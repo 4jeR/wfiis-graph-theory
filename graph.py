@@ -311,7 +311,7 @@ class Graph:
                 if rand_prob <= prob:
                     self.Connect(node.index, i+1)
 
-    ########## PROJECT 2 PARTS ##########
+    ############################# PROJECT2 ################################
 
     def FillFromGraphicSequence(self, filename, canvas, line=1, inCircle=False):
         """
@@ -622,6 +622,66 @@ class Graph:
             if filepath == None:
                 self.FillRandomizeGraphGNP(canvas, 0, 0.5, inCircle=in_circle)
 
+    ############################# PROJECT3 ################################
+
+    # 3-2
+    def DijsktraInit(self, nodeIdx):
+        p = []
+        d = []
+        for n in self.nodes:
+            d.append(float("inf"))
+            p.append(None)
+        d[nodeIdx-1] = 0
+        p[nodeIdx-1] = -1
+        return p, d
+
+    def Relaxation(self, node1, node2, d, p):
+        w = 0
+        for e in self.edges:
+            if ( (e.node1 == node1) and (e.node2 == node2) ) or ( (e.node1 == node2) and (e.node2 == node1) ):
+                w = e.wage
+        if d[node2.index-1] > (d[node1.index-1] + w):
+            d[node2.index-1] = d[node1.index-1] + w
+            p[node2.index-1] = node1.index - 1
+
+    def DijkstraShortestPaths(self, nodeIdx):
+        if nodeIdx > self.NodesCount():
+            return "Wrong index"
+        S = []
+        p, d = self.DijsktraInit(nodeIdx)
+        tempD = d.copy()
+        u = self.nodes[0]
+        while len(S) < len(self.nodes):
+            index_min = tempD.index(min(tempD))
+            u = self.nodes[index_min]
+            S.append(u)
+            for v in u.neighbours:
+                if self.nodes[v-1] not in S:
+                    self.Relaxation(u, self.nodes[v-1], d, p)
+            tempD = d.copy()
+            for n in S:
+                tempD[n.index-1] = float("inf")
+        infoString = "START! s = " + str(nodeIdx)
+        listOfPaths = []
+        for n in range(0, len(self.nodes)):
+            shortestPath = []
+            infoString += "\nd[" + str(n+1) + "] = " + str(d[n]) + " ==> ("
+            counter = 0
+            tempS = []
+            j = n
+            while j > -1:
+                tempS.append(j)
+                counter += 1
+                j = p[j]
+            while( counter > 0):
+                counter -= 1
+                shortestPath.append(tempS[counter]+1)
+                infoString += str(tempS[counter]+1) + "-"
+            infoString = infoString[:-1] + ')'
+            listOfPaths.append(shortestPath)
+        print("listOfPaths = {}".format(listOfPaths))
+        return listOfPaths, infoString        
+    
     # 3_5
     def GetEdgeFromIndexes(self, idx1, idx2):
         """
