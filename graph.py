@@ -651,7 +651,6 @@ class Graph:
             if current_node.index not in hamilton_cycle:
                 hamilton_cycle.append(current_node.index)
                 while len(hamilton_cycle) != 0:
-                    print("2. {}".format(hamilton_cycle))
                     current_node = self.nodes[hamilton_cycle[-1] - 1]
                     for i, neighbour in enumerate(current_node.neighbours):
                         check = [node_index for node_index in hamilton_cycle]
@@ -676,7 +675,6 @@ class Graph:
         :return: Value returned by FindHamiltonCycle() method.
         """
         if filepath == None:
-            print("filename = {}".format(filepath))
             num_of_nodes = random.randint(5, 15)
             self.FillRandomizeGraphGNP(canvas, 5, 0.5, inCircle=in_circle)
         else: 
