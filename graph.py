@@ -755,6 +755,30 @@ class Graph:
             infoString += "\n"
         return distanceMatrix, infoString
 
+    # 3_4
+    def FindCentralVertex(self):
+        listAllDistance = [0 for i in range(self.NodesCount())]
+        distanceMatrix = self.DistanceMatrix()[0]
+
+        for i in range(self.NodesCount()):
+            for j in range(self.NodesCount()):
+                listAllDistance[i] += distanceMatrix[i][j]
+        
+        infoString = ("Central Vertex = {}\n(distance : {})").format(listAllDistance.index(min(listAllDistance)) + 1, min(listAllDistance))
+        
+        return infoString
+        
+    def FindMinimaxVertex(self):
+        listOfMaxAllDistances = []
+        distanceMatrix = self.DistanceMatrix()[0]
+
+        for i in range(self.NodesCount()):
+            listOfMaxAllDistances.append(max(distanceMatrix[i]))
+
+        infoString = ("Minimax Vertex = {}\n(distance : {})").format(listOfMaxAllDistances.index(min(listOfMaxAllDistances)) + 1, min(listOfMaxAllDistances))
+        
+        return infoString
+
     # 3_5
     def GetEdgeFromIndexes(self, idx1, idx2):
         """
