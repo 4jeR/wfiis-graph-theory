@@ -384,64 +384,14 @@ class GUI:
                   weighted=isWeighted)
 
     def SelectTheShortestPath(self, numOfVertex=1):
-        pass
-        ######################
-        # TO DO
-        #
-        # DijkstraShortestPaths(numOfVertex)
-        # numOfVertex -> number of vertex which we are looking for the shortest path
-        #
-        # DijkstraShortestPaths should
-        #   return string == info
-        #   e.g.
-        # "START : s = 1
-        # 2 d (1) = 0 == > [1]
-        # 3 d (2) = 3 == > [1 - 2]
-        # 4 d (3) = 2 == > [1 - 3]
-        # 5 d (4) = 5 == > [1 - 2 - 4]
-        # 6 d (5) = 7 == > [1 - 2 - 5]
-        # 7 d (6) = 10 == > [1 - 2 - 5 - 8 - 6]
-        # 8 d (7) = 8 == > [1 - 2 - 4 - 7]
-        # 9 d (8) = 9 == > [1 - 2 - 5 - 8]
-        # 10 d (9) = 12 == > [1 - 2 - 5 - 8 - 6 - 9]
-        # 11 d (10) = 13 == > [1 - 2 - 4 - 7 - 10]
-        # 12 d (11) = 14 == > [1 - 2 - 5 - 8 - 6 - 9 - 11]
-        # 13 d (12) = 17 == > [1 - 2 - 5 - 8 - 6 - 9 - 11 - 12]"
-        #
-        ######################
-
-        shorthestPaths, info = self.graph.DijkstraShortestPaths(numOfVertex)
+        info = self.graph.DijkstraShortestPaths(numOfVertex)[2]
         messagebox.showinfo(
                title="Informacja", message=info)
 
     def SelectDistanceMatrix(self):
-        pass
-        ######################
-        # TO DO
-        #
-        # NEW_FUNCTION()
-        #
-        # NEW_FUNCTION should
-        #   return string == info
-        #   e.g.
-        # "0 3 2 5 7 10 8 9 12 13 14 17
-        # 2 3 0 5 2 4 7 5 6 9 10 11 14
-        # 3 2 5 0 7 6 9 7 8 11 12 13 16
-        # 4 5 2 7 0 4 7 3 6 9 8 11 13
-        # 5 7 4 6 4 0 3 1 2 5 6 7 10
-        # 6 10 7 9 7 3 0 4 1 2 6 4 7
-        # 7 8 5 7 3 1 4 0 3 6 5 8 10
-        # 8 9 6 8 6 2 1 3 0 3 5 5 8
-        # 9 12 9 11 9 5 2 6 3 0 8 2 5
-        # 10 13 10 12 8 6 6 5 5 8 0 8 5
-        # 11 14 11 13 11 7 4 8 5 2 8 0 3
-        # 12 17 14 16 13 10 7 10 8 5 5 3 0"
-        #
-        ######################
-
-        # info = self.graph.NEW_FUNCTION()
-        # messagebox.showinfo(
-        #        title="Informacja", message=info)
+        info = self.graph.DistanceMatrix()[1]
+        messagebox.showinfo(
+               title="Informacja", message=info)
 
     def SelectFindCentralVertex(self):
         pass

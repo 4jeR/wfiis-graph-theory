@@ -738,11 +738,23 @@ class Graph:
                 counter -= 1
                 shortestPath.append(tempS[counter]+1)
                 infoString += str(tempS[counter]+1) + " - "
-            infoString = infoString[:-2] + ']'
+            infoString = infoString[:-3] + ']'
             listOfPaths.append(shortestPath)
-        print("listOfPaths = {}".format(listOfPaths))
-        return listOfPaths, infoString        
+        return d, listOfPaths, infoString        
     
+    # 3_3
+    def DistanceMatrix(self):
+        infoString = ""
+        distanceMatrix = []
+        for idx in range(self.NodesCount()):
+            distanceMatrix.append(self.DijkstraShortestPaths(idx + 1)[0])
+        
+        for i in range(self.NodesCount()):
+            for j in range(self.NodesCount()):
+                infoString += '{:4}'.format(str(distanceMatrix[i][j])) + "  "
+            infoString += "\n"
+        return distanceMatrix, infoString
+
     # 3_5
     def GetEdgeFromIndexes(self, idx1, idx2):
         """
