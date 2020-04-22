@@ -740,14 +740,14 @@ class Graph:
                 infoString += str(tempS[counter]+1) + " - "
             infoString = infoString[:-3] + ']'
             listOfPaths.append(shortestPath)
-        return d, listOfPaths, infoString        
+        return infoString,  d, listOfPaths    
     
     # 3_3
     def DistanceMatrix(self):
         infoString = ""
         distanceMatrix = []
         for idx in range(self.NodesCount()):
-            distanceMatrix.append(self.DijkstraShortestPaths(idx + 1)[0])
+            distanceMatrix.append(self.DijkstraShortestPaths(idx + 1)[1])
         
         for i in range(self.NodesCount()):
             for j in range(self.NodesCount()):
