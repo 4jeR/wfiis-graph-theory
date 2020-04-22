@@ -241,7 +241,7 @@ class GUI:
         g = Graph()
         isChecked = bool(self.checkP2.get())
         if (g.FillKReguralGraph(self.canvas, n, k, isChecked)):
-            self.Draw(g)
+            self.Draw(g, inCircle=is_checked)
         else:
             messagebox.showerror(
                 title="Error",
@@ -264,7 +264,7 @@ class GUI:
         is_checked = bool(self.checkP2.get())    
 
         hamilton_cycle = g.CheckIfIsHamiltonGraph(self.canvas, filepath, in_circle=is_checked)
-        self.Draw(g)
+        self.Draw(g, inCircle=is_checked)
 
         if hamilton_cycle:
             messagebox.showinfo(title="Info", message="[SelectEuleranGraph]  Found hamilton cycle: {}".format(hamilton_cycle))
