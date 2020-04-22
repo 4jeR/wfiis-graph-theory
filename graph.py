@@ -675,8 +675,8 @@ class Graph:
         :return: Value returned by FindHamiltonCycle() method.
         """
         if filepath == None:
-            num_of_nodes = random.randint(5, 15)
-            self.FillRandomizeGraphGNP(canvas, 5, 0.5, inCircle=in_circle)
+            num_of_nodes = random.randint(4, 10)
+            self.FillRandomizeGraphGNP(canvas, num_of_nodes, 0.5, inCircle=in_circle)
         else: 
             self.FillGraphFromIM(filepath, canvas, inCircle=in_circle)
 

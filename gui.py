@@ -231,6 +231,11 @@ class GUI:
         """
         g = Graph()
         is_checked = bool(self.checkP2.get())
+        if num_of_nodes != 0 and num_of_nodes < 3 :
+            messagebox.showinfo(
+                title="Info", message="[SelectEuleranGraph] Euler Graph must have at least 3 nodes")
+            return
+
         euler_circuit = g.GetEulersCycleFromRandomEulerGraph(
             self.canvas, num_of_nodes, in_circle=is_checked)
         self.Draw(g, inCircle=is_checked)
