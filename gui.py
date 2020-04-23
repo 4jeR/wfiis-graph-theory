@@ -246,7 +246,7 @@ class GUI:
         g = Graph()
         isChecked = bool(self.checkP2.get())
         if (g.FillKReguralGraph(self.canvas, n, k, isChecked)):
-            self.Draw(g, inCircle=is_checked)
+            self.Draw(g, inCircle=isChecked)
         else:
             messagebox.showerror(
                 title="Error",
