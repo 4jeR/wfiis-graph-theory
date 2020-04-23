@@ -220,7 +220,7 @@ class GUI:
             filepath, self.canvas, isChecked)  # info is string type
         self.Draw(g, isChecked)
         messagebox.showinfo(
-            title="Informacja", message=info)
+            title="Info", message=info)
 
     def SelectEuleranGraph(self, num_of_nodes=0):
         """
@@ -235,7 +235,7 @@ class GUI:
             self.canvas, num_of_nodes, in_circle=is_checked)
         self.Draw(g, inCircle=is_checked)
         messagebox.showinfo(
-            title="Informacja", message="[SelectEuleranGraph] Found Euler Cycle : {}".format(euler_circuit))
+            title="Info", message="[SelectEuleranGraph] Found Euler Cycle : {}".format(euler_circuit))
 
     def SelectKReguralGraph(self, n, k):
         g = Graph()
@@ -267,9 +267,9 @@ class GUI:
         self.Draw(g)
 
         if hamilton_cycle:
-            messagebox.showinfo(title="Informacja", message="[SelectEuleranGraph]  Found hamilton cycle: {}".format(hamilton_cycle))
+            messagebox.showinfo(title="Info", message="[SelectEuleranGraph]  Found hamilton cycle: {}".format(hamilton_cycle))
         else:
-            messagebox.showinfo(title="Informacja", message="[SelectEuleranGraph]  Given graph is not Hamilton graph: {}".format(hamilton_cycle))
+            messagebox.showinfo(title="Info", message="[SelectEuleranGraph]  Given graph is not Hamilton graph: {}".format(hamilton_cycle))
 
     def AddProject2Widgets(self, root):
         menuProj2 = Frame(self.tab2, width=1200, height=30)
@@ -384,100 +384,20 @@ class GUI:
                   weighted=isWeighted)
 
     def SelectTheShortestPath(self, numOfVertex=1):
-        pass
-        ######################
-        # TO DO
-        #
-        # DijkstraShortestPaths(numOfVertex)
-        # numOfVertex -> number of vertex which we are looking for the shortest path
-        #
-        # DijkstraShortestPaths should
-        #   return string == info
-        #   e.g.
-        # "START : s = 1
-        # 2 d (1) = 0 == > [1]
-        # 3 d (2) = 3 == > [1 - 2]
-        # 4 d (3) = 2 == > [1 - 3]
-        # 5 d (4) = 5 == > [1 - 2 - 4]
-        # 6 d (5) = 7 == > [1 - 2 - 5]
-        # 7 d (6) = 10 == > [1 - 2 - 5 - 8 - 6]
-        # 8 d (7) = 8 == > [1 - 2 - 4 - 7]
-        # 9 d (8) = 9 == > [1 - 2 - 5 - 8]
-        # 10 d (9) = 12 == > [1 - 2 - 5 - 8 - 6 - 9]
-        # 11 d (10) = 13 == > [1 - 2 - 4 - 7 - 10]
-        # 12 d (11) = 14 == > [1 - 2 - 5 - 8 - 6 - 9 - 11]
-        # 13 d (12) = 17 == > [1 - 2 - 5 - 8 - 6 - 9 - 11 - 12]"
-        #
-        ######################
-
-        shorthestPaths, info = self.graph.DijkstraShortestPaths(numOfVertex)
-        messagebox.showinfo(
-               title="Informacja", message=info)
+        info = self.graph.DijkstraShortestPaths(numOfVertex)[2]
+        messagebox.showinfo( title="Info", message=info)
 
     def SelectDistanceMatrix(self):
-        pass
-        ######################
-        # TO DO
-        #
-        # NEW_FUNCTION()
-        #
-        # NEW_FUNCTION should
-        #   return string == info
-        #   e.g.
-        # "0 3 2 5 7 10 8 9 12 13 14 17
-        # 2 3 0 5 2 4 7 5 6 9 10 11 14
-        # 3 2 5 0 7 6 9 7 8 11 12 13 16
-        # 4 5 2 7 0 4 7 3 6 9 8 11 13
-        # 5 7 4 6 4 0 3 1 2 5 6 7 10
-        # 6 10 7 9 7 3 0 4 1 2 6 4 7
-        # 7 8 5 7 3 1 4 0 3 6 5 8 10
-        # 8 9 6 8 6 2 1 3 0 3 5 5 8
-        # 9 12 9 11 9 5 2 6 3 0 8 2 5
-        # 10 13 10 12 8 6 6 5 5 8 0 8 5
-        # 11 14 11 13 11 7 4 8 5 2 8 0 3
-        # 12 17 14 16 13 10 7 10 8 5 5 3 0"
-        #
-        ######################
-
-        # info = self.graph.NEW_FUNCTION()
-        # messagebox.showinfo(
-        #        title="Informacja", message=info)
+        info = self.graph.DistanceMatrix()[1]
+        messagebox.showinfo( title="Info", message=info)
 
     def SelectFindCentralVertex(self):
-        pass
-        ######################
-        # TO DO
-        #
-        # NEW_FUNCTION()
-        #
-        # NEW_FUNCTION should
-        #   return string == info
-        #   e.g.
-        # "Centrum = 5 ( suma odleglosci : 55)"
-        #
-        ######################
-
-        # info = self.graph.NEW_FUNCTION()
-        # messagebox.showinfo(
-        #        title="Informacja", message=info)
+        info = self.graph.FindCentralVertex()
+        messagebox.showinfo( title="Info", message=info)
 
     def SelectFindMinimaxVertex(self):
-        pass
-        ######################
-        # TO DO
-        #
-        # NEW_FUNCTION()
-        #
-        # NEW_FUNCTION should
-        #   return string == info
-        #   e.g.
-        # "Centrum minimax = 8 ( odleglosc od najdalszego : 9)"
-        #
-        ######################
-
-        # info = self.graph.NEW_FUNCTION()
-        # messagebox.showinfo(
-        #        title="Informacja", message=info)
+        info = self.graph.FindMinimaxVertex()
+        messagebox.showinfo(title="Info", message=info)
 
     def SelectFindMinSpanningTree(self):
         if not self.graph.IsGraphConsistent():
@@ -539,9 +459,9 @@ class GUI:
         # 4
         label4 = Label(menuProj3, text='Task 4', foreground="red")
         button4a = Button(
-            menuProj3, text="Find central vertex", command=lambda: self.SelectFindCentralVertex)
+            menuProj3, text="Find central vertex", command=self.SelectFindCentralVertex)
         button4b = Button(
-            menuProj3, text="Find minimax vertex", command=lambda: self.SelectFindMinimaxVertex)
+            menuProj3, text="Find minimax vertex", command=self.SelectFindMinimaxVertex)
 
         # 5
         label5 = Label(menuProj3, text='Task 5', foreground="red")
