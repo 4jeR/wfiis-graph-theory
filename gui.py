@@ -231,6 +231,11 @@ class GUI:
         """
         g = Graph()
         is_checked = bool(self.checkP2.get())
+        if num_of_nodes != 0 and num_of_nodes < 3 :
+            messagebox.showinfo(
+                title="Info", message="[SelectEuleranGraph] Euler Graph must have at least 3 nodes")
+            return
+
         euler_circuit = g.GetEulersCycleFromRandomEulerGraph(
             self.canvas, num_of_nodes, in_circle=is_checked)
         self.Draw(g, inCircle=is_checked)
@@ -241,7 +246,7 @@ class GUI:
         g = Graph()
         isChecked = bool(self.checkP2.get())
         if (g.FillKReguralGraph(self.canvas, n, k, isChecked)):
-            self.Draw(g)
+            self.Draw(g, inCircle=is_checked)
         else:
             messagebox.showerror(
                 title="Error",
@@ -264,7 +269,7 @@ class GUI:
         is_checked = bool(self.checkP2.get())    
 
         hamilton_cycle = g.CheckIfIsHamiltonGraph(self.canvas, filepath, in_circle=is_checked)
-        self.Draw(g)
+        self.Draw(g, inCircle=is_checked)
 
         if hamilton_cycle:
             messagebox.showinfo(title="Info", message="[SelectEuleranGraph]  Found hamilton cycle: {}".format(hamilton_cycle))
@@ -354,27 +359,29 @@ class GUI:
     #################### POJECT 3 #########################
 
     def SelectBasicGraph(self, fromFile, n=0, l=0):
-        # TO DO
         # check is connected graph
-        self.graph.ResetGraph()
         isCheckedCircle = bool(self.checkP3.get())
-        isWeighted = bool(self.checkP3weighted.get())
         if(fromFile == True):  # fromFile True for generate graph from file
             filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
                 ("Text files", "IM_*.txt"), ("all files", "*.*")))
             self.graph.FillGraphFromIM(filepath, self.canvas, isCheckedCircle)
-            
-            self.Draw(self.graph, inCircle=isCheckedCircle,
-                      weighted=isWeighted)
+
         else:       # fromFile False for generate random graph
             if(l > (n * (n-1) / 2)):
                 messagebox.showerror(
                     title="Błąd", message="[SelectBasicGraph] Invalid arguments' values.")
             else:
-                self.graph.FillRandomizeGraphGNL(
-                    self.canvas, n, l, isCheckedCircle)
-                self.Draw(self.graph, inCircle=isCheckedCircle,
-                          weighted=isWeighted)
+                self.graph.FillRandomizeGraphGNL( self.canvas, n, l, isCheckedCircle)
+                
+        if not self.graph.IsGraphConsistent():
+            self.graph.ResetGraph()
+            self.ClearCanvas()
+            messagebox.showerror(
+                title="Error", message="[SelectBasicGraph] Graph is not connected.")
+        else:
+            isWeighted = bool(self.checkP3weighted.get())
+            self.Draw(self.graph, inCircle=isCheckedCircle,   weighted=isWeighted)
+
 
     def SelectAddWeights(self):
         isCheckedCircle = bool(self.checkP3.get())
@@ -384,7 +391,7 @@ class GUI:
                   weighted=isWeighted)
 
     def SelectTheShortestPath(self, numOfVertex=1):
-        info = self.graph.DijkstraShortestPaths(numOfVertex)[2]
+        info = self.graph.DijkstraShortestPaths(numOfVertex)[0]
         messagebox.showinfo( title="Info", message=info)
 
     def SelectDistanceMatrix(self):
