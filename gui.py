@@ -19,6 +19,7 @@ class GUI:
         self.AddProject1Widgets(root)
         self.AddProject2Widgets(root)
         self.AddProject3Widgets(root)
+        self.AddProject4Widgets(root)
 
         self.allTabs.pack(expand=1, fill='both')
         self.canvas.pack(fill=X, padx=10, pady=10)
@@ -382,7 +383,6 @@ class GUI:
             isWeighted = bool(self.checkP3weighted.get())
             self.Draw(self.graph, inCircle=isCheckedCircle,   weighted=isWeighted)
 
-
     def SelectAddWeights(self):
         isCheckedCircle = bool(self.checkP3.get())
         isWeighted = bool(self.checkP3weighted.get())
@@ -510,3 +510,119 @@ class GUI:
         button4b.grid(column=0, row=6, sticky="nsew", padx=10, pady=5)
 
         menuProj3.pack(fill=Y)
+
+ #################### POJECT 4 #########################
+    
+    def SelectBasicDigraph(self, n=0, l=0):
+        print()
+        # TO DO 
+        # FUNCTION TO CREATE RANDOM DIGRAPH
+        # # DRAW
+        # isCheckedCircle = bool(self.checkP4.get())
+        # isWeighted = bool(self.checkP4weighted.get())
+        #     self.Draw(self.graph, inCircle=isCheckedCircle,   weighted=isWeighted)
+
+    def SelectFindCommonComponentDigraph(self):
+        print()
+        # TO DO 
+        # FUNCTION TO FIND COMMON COMPONENT DIGRAPH
+        # should return info
+        # e. g. all vertex in component like in project 2
+        # messagebox.showinfo(
+            # title="Info", message=info)
+
+    def SelectAddWeightsDigraph(self):
+        print()
+        # TO DO 
+        # Add random weights [-5, 10]
+        # should draw
+        # isCheckedCircle = bool(self.checkP4.get())
+        # isWeighted = bool(self.checkP4weighted.get())
+        #     self.Draw(self.graph, inCircle=isCheckedCircle,   weighted=isWeighted)
+
+    def SelectTheShortestPathDigraph(self, numOfVertex=1):
+        print()
+        # TO DO 
+        # FUNCTION TO FIND SHORTEST PATH
+        # should return info
+        # e. g. all vertex in component like in project 3
+        # messagebox.showinfo(
+            # title="Info", message=info)
+
+    def SelectDistanceMatrixDigraph(self):
+        print()
+        # TO DO 
+        # FUNCTION TO WRITE DISTANE MATRIX
+        # should return info
+        # e. g. all vertex in component like in project 3
+        # messagebox.showinfo(
+            # title="Info", message=info)
+
+    def AddProject4Widgets(self, root):
+        menuProj4 = Frame(self.tab4, width=1200, height=30)
+
+        # check if generate graph in circle
+        self.checkP4 = IntVar()
+        checkInCircle4 = Checkbutton(
+            menuProj4, text="In circle", variable=self.checkP4)
+
+        # check if generate graph draw with Weights
+        self.checkP4weighted = IntVar()
+        checkShowWeights4 = Checkbutton(
+            menuProj4, text="Weighted graph", variable=self.checkP4weighted)
+
+        # 1
+        label1a = Label(menuProj4, text='- vertices',width=35)
+        label1b = Label(menuProj4, text='- edges',width=35)
+        spinbox1a = Spinbox(menuProj4, from_=0, to=100,
+                            width=35, state="readonly")
+        spinbox1b = Spinbox(menuProj4, from_=0, to=100,
+                            width=35, state="readonly")
+        button1 = tk.Button(
+            menuProj4, width=35,  text="Generate random digraph", command=lambda: self.SelectBasicDigraph(int(spinbox1a.get()), int(spinbox1b.get())), bg="red", fg="white")
+
+        # 2
+        label2 = Label(menuProj4, text='Task 2', foreground="red")
+        button2 = Button(
+            menuProj4, text="Find common components", command=lambda: self.SelectFindCommonComponentDigraph())
+
+        # 3
+        label3 = Label(menuProj4, text='Task 3', foreground="red")
+        button3a = Button(
+            menuProj4, text="Randomize graph's weights", command=lambda: self.SelectAddWeightsDigraph())
+        spinbox3 = Spinbox(menuProj4, from_=1, to=100,
+                           width=8, state="readonly")
+        button3b = Button(
+            menuProj4, text="Find the shortest path (choose vertex first)", command=lambda: self.SelectTheShortestPathDigraph(int(spinbox3.get())))
+
+        # 4
+        label4 = Label(menuProj4, text='Task 4', foreground="red")
+        button4 = Button(
+            menuProj4, text="Generate Distance Matrix", command=self.SelectDistanceMatrixDigraph)
+
+        # row 0
+        spinbox1a.grid(column=0, row=0, sticky="nsew", padx=10, pady=5)
+        label1a.grid(column=1, row=0, sticky="w")
+        checkInCircle4.grid(column=3, row=0, sticky="nsew", padx=10, pady=5)
+
+        # row 1
+        spinbox1b.grid(column=0, row=1, sticky="nsew", padx=10, pady=5)
+        label1b.grid(column=1, row=1, sticky="w")
+        button1.grid(column=2, row=1, sticky="nsew", padx=10, pady=5)
+        checkShowWeights4.grid(column=3, row=1, sticky="nsew", padx=10, pady=5)
+
+        # row 2
+        label2.grid(column=0, row=2)
+        label3.grid(column=1, row=2)
+        label4.grid(column=2, row=2)
+
+        # row 3
+        button2.grid(column=0, row=3, sticky="nsew", padx=10, pady=5)
+        button3a.grid(column=1, row=3, sticky="nsew", padx=10, pady=5)
+        button4.grid(column=2, row=3, sticky="nsew", padx=10, pady=5)
+
+        # row 4/5
+        spinbox3.grid(column=1, row=4, sticky="nsew", padx=10, pady=5)
+        button3b.grid(column=1, row=5, padx=10, pady=5)
+
+        menuProj4.pack(fill=Y)
