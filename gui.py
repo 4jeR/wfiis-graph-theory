@@ -96,6 +96,39 @@ class GUI:
         g.PrintIncidenceMatrix()
         g.PrintAdjacencyList()
 
+    def SelectDAM(self):
+        filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
+            ("Text files", "AM_*.txt"), ("all files", "*.*")))
+        isChecked = bool(self.checkP4.get())
+        g = Graph()
+        g.FillGraphFromAM(filepath, self.canvas, isChecked, directedGraph=True)
+        self.Draw(g, isChecked)
+
+        g.PrintIncidenceMatrix()
+        g.PrintAdjacencyList()
+
+    def SelectDIM(self):
+        filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
+            ("Text files", "IM_*.txt"), ("all files", "*.*")))
+        isChecked = bool(self.checkP4.get())
+        g = Graph()
+        g.FillGraphFromIM(filepath, self.canvas, isChecked, directedGraph=True)
+        self.Draw(g, isChecked)
+
+        g.PrintAdjacencyList()
+        g.PrintAdjacencyMatrix()
+
+    def SelectDAL(self):
+        filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
+            ("Text files", "AL_*.txt"), ("all files", "*.*")))
+        isChecked = bool(self.checkP4.get())
+        g = Graph()
+        g.FillGraphFromAL(filepath, self.canvas, isChecked, directedGraph=True)
+        self.Draw(g, isChecked)
+
+        g.PrintAdjacencyMatrix()
+        g.PrintIncidenceMatrix()
+
     def SelectRandomGraphNL(self, n, l):
         g = Graph()
         isChecked = bool(self.checkP1.get())
@@ -578,6 +611,14 @@ class GUI:
                             width=35, state="readonly")
         spinbox1b = Spinbox(menuProj4, from_=0, to=100,
                             width=35, state="readonly")
+
+        buttonIM = Button(
+            menuProj4, text="Generate digraph - incident matrix", command=self.SelectDIM)
+        buttonNL = Button(
+            menuProj4, text="Generate graph - adjacency list", command=self.SelectDAL)
+        buttonNM = Button(
+            menuProj4, text="Generate graph - adjacency matrix", command=self.SelectDAM)
+
         button1 = tk.Button(
             menuProj4, width=35,  text="Generate random digraph", command=lambda: self.SelectBasicDigraph(int(spinbox1a.get()), int(spinbox1b.get())), bg="red", fg="white")
 
@@ -622,6 +663,11 @@ class GUI:
         button4.grid(column=2, row=3, sticky="nsew", padx=10, pady=5)
 
         # row 4/5
+        buttonIM.grid(column=3, row=2, sticky="nsew", padx=10, pady=5)
+        buttonNL.grid(column=3, row=3, sticky="nsew", padx=10, pady=5)
+        buttonNM.grid(column=3, row=4, sticky="nsew", padx=10, pady=5)
+
+
         spinbox3.grid(column=1, row=4, sticky="nsew", padx=10, pady=5)
         button3b.grid(column=1, row=5, padx=10, pady=5)
 

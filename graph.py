@@ -115,6 +115,7 @@ class Graph:
         else:
             return False
 
+
     def Disconnect(self, node1_idx, node2_idx):
         """
         Removes edge that at the first end has node with index node1_idx and at second edge has node with index node2_idx.
@@ -175,7 +176,7 @@ class Graph:
         return len(self.edges)
 
     # 1_1a
-    def FillGraphFromIM(self, filename, canvas, inCircle=False):
+    def FillGraphFromIM(self, filename, canvas, inCircle=False, directedGraph=False):
         """
         Constructs graph from Incidence Matrix.
         :return: nothing
@@ -214,12 +215,15 @@ class Graph:
                     node2 = i+1
                     counter += 1
                     break
-            self.Connect(node1, node2)
+            if not directedGraph:
+                self.Connect(node1, node2)
+            else:
+                self.Connect(node1, node2, arrow=True)
             
         return True
 
     # 1_1b
-    def FillGraphFromAL(self, filename, canvas, inCircle=False):
+    def FillGraphFromAL(self, filename, canvas, inCircle=False, directedGraph=False):
         """
         Constructs graph from Adjacency List.
         :return: nothing
@@ -249,12 +253,15 @@ class Graph:
                 line = line.rstrip('\n')
                 vect = line.split(" ")
                 for j in range(len(vect)):
-                    self.Connect(i+1, int(vect[j]))
+                    if not directedGraph:
+                        self.Connect(i+1, int(vect[j]))
+                    else:
+                        self.Connect(i+1, int(vect[j]), arrow=True)
                 line = f.readline()
                 i += 1
 
     # 1_1c
-    def FillGraphFromAM(self, filename, canvas, inCircle=False):
+    def FillGraphFromAM(self, filename, canvas, inCircle=False, directedGraph=False):
         """
         Constructs graph from Adjacency Matrix.
         :return: nothing
@@ -278,13 +285,16 @@ class Graph:
                 if i == j:
                     continue
                 elif line[j] == '1' or line[j] == '1\n':
-                    self.Connect(i+1, j+1)
+                    if not directedGraph:
+                        self.Connect(i+1, j+1)
+                    else:
+                        self.Connect(i+1, j+1, arrow=True)
 
         f.close()
         return True
 
     # 1_3a
-    def FillRandomizeGraphGNL(self, canvas, n_nodes, l_edges,  inCircle=False):
+    def FillRandomizeGraphGNL(self, canvas, n_nodes, l_edges,  inCircle=False, directedGraph=False):
         """
         Constructs random graph with given number of nodes and edges.
         :return: nothing
@@ -303,7 +313,11 @@ class Graph:
         while self.EdgesCount() < l_edges:
             idx1 = random.randint(1, n_nodes)
             idx2 = random.randint(1, n_nodes)
-            self.Connect(idx1, idx2)
+            if not directedGraph:
+                self.Connect(idx1, idx2)
+            else:
+                self.Connect(idx1, idx2, arrow=True)
+
 
     # 1_3b
     def FillRandomizeGraphGNP(self, canvas, n_nodes, prob,  inCircle=False):
@@ -879,4 +893,5 @@ class Graph:
                 break 
 
 
-        
+############################# PROJECT4 ################################
+
