@@ -916,7 +916,7 @@ class Graph:
                 break 
 
 
-############################# PROJECT4 ################################
+    ############################# PROJECT4 ################################
 
     def GetConnectionIndexes(self):
         connectionsWithNodesIndexes = list()
@@ -1000,5 +1000,5 @@ class Graph:
                 self.ComponentsR(nr,f.index(v),GT,comp)
         print(comp)
         #Print
-        return self.CommonComponentsToString(comp)
+        return self.CommonComponentsToString(comp), nr
                 

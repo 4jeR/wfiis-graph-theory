@@ -509,7 +509,7 @@ class GUI:
 
         menuProj3.pack(fill=Y)
 
- #################### POJECT 4 #########################
+    #################### POJECT 4 #########################
     
     def SelectBasicDigraph(self, n=0, propability=0):
         isCheckedCircle = bool(self.checkP4.get())
@@ -551,7 +551,6 @@ class GUI:
     def SaveDIMToFile(self):
         simpledialog.askstring("File name", "Enter filename", initialvalue="IM_directed_graph.txt")
 
-
     def SelectDAL(self):
         filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
             ("Text files", "AL_*.txt"), ("all files", "*.*")))
@@ -571,19 +570,19 @@ class GUI:
         isChecked = bool(self.checkP4.get())
         isWeighted = bool(self.checkP4weighted.get())
         self.ClearCanvas()
-        info = self.graph.KosarajuAlgorithm()  # info is string type
+        info = self.graph.KosarajuAlgorithm()[0]  # info is string type
         self.Draw( self.graph, isChecked, weighted=isWeighted)
         messagebox.showinfo(title="Info", message=info)
 
-
     def SelectAddWeightsDigraph(self):
-        print()
-        # TO DO 
-        # Add random weights [-5, 10]
-        # should draw
-        # isCheckedCircle = bool(self.checkP4.get())
-        # isWeighted = bool(self.checkP4weighted.get())
-        #     self.Draw(self.graph, inCircle=isCheckedCircle,   weighted=isWeighted)
+        if(self.graph.KosarajuAlgorithm()[1] == 1):  
+            isChecked = bool(self.checkP4.get())
+            isWeighted = bool(self.checkP4weighted.get())
+            SetRandomWeightsOfEdges(self.graph, -2, 10)
+            self.ClearCanvas()
+            self.Draw( self.graph, isChecked, weighted=isWeighted)
+        else:
+            messagebox.showerror(title="Error", message="[SelectAddWeightsDigraph] Digrahp is not strongly connected, impossible to add weights")
 
     def SelectTheShortestPathDigraph(self, numOfVertex=1):
         print()
