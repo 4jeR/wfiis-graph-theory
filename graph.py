@@ -942,7 +942,6 @@ class Graph:
                 row = str()
                 nodeNeigboursAdjencyRow = node.GetNeighboursInVector()
                 for isNeighbour in nodeNeigboursAdjencyRow:
-                    print("is N {}".format(isNeighbour))
                     row += str(isNeighbour) + " "
                 if node == self.nodes[len(self.nodes) - 1]:
                         targetALFile.write("{}".format(row[:-1]))
