@@ -1,8 +1,7 @@
 from tkinter import *
 from tkinter.ttk import *
 from graph import *
-from tkinter import filedialog
-from tkinter import messagebox
+from tkinter import (filedialog, simpledialog, messagebox)
 import tkinter as tk
 
 
@@ -20,7 +19,6 @@ class GUI:
         self.AddProject2Widgets(root)
         self.AddProject3Widgets(root)
         self.AddProject4Widgets(root)
-
         self.allTabs.pack(expand=1, fill='both')
         self.canvas.pack(fill=X, padx=10, pady=10)
 
@@ -96,6 +94,10 @@ class GUI:
         g.PrintIncidenceMatrix()
         g.PrintAdjacencyList()
 
+    def SaveDAMToFile(self):
+        targetDAMFile = simpledialog.askstring("File name", "Enter filename", initialvalue="AM_directed_graph.txt")
+        self.graph.saveToAMFile(targetDAMFile)
+
     def SelectDAM(self):
         filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
             ("Text files", "AM_*.txt"), ("all files", "*.*")))
@@ -118,6 +120,10 @@ class GUI:
         g.PrintAdjacencyList()
         g.PrintAdjacencyMatrix()
 
+    def SaveDIMToFile(self):
+        simpledialog.askstring("File name", "Enter filename", initialvalue="IM_directed_graph.txt")
+
+
     def SelectDAL(self):
         filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
             ("Text files", "AL_*.txt"), ("all files", "*.*")))
@@ -128,6 +134,11 @@ class GUI:
 
         g.PrintAdjacencyMatrix()
         g.PrintIncidenceMatrix()
+
+    def SaveDALToFile(self):
+        targetALFileName = simpledialog.askstring("File name", "Enter filename", initialvalue="AL_directed_graph.txt")
+        self.graph.saveToALFile(targetALFileName)
+
 
     def SelectRandomGraphNL(self, n, l):
         g = Graph()
@@ -624,11 +635,11 @@ class GUI:
             menuProj4, text="Generate digraph - adjacency matrix", command=self.SelectDAM)        
 
         buttonToIM = Button(
-            menuProj4, text="Save digraph - incident matrix", command=self.SelectDIM)
+            menuProj4, text="Save digraph - incident matrix", command=self.SaveDIMToFile)
         buttonToNL = Button(
-            menuProj4, text="Save digraph - adjacency list", command=self.SelectDAL)
+            menuProj4, text="Save digraph - adjacency list", command=self.SaveDALToFile)
         buttonToNM = Button(
-            menuProj4, text="Save digraph - adjacency matrix", command=self.SelectDAM)
+            menuProj4, text="Save digraph - adjacency matrix", command=self.SaveDAMToFile)
 
         button1 = tk.Button(
             menuProj4, width=35,  text="Generate random digraph", command=lambda: self.SelectBasicDigraph(int(spinbox1a.get()), int(spinbox1b.get())), bg="red", fg="white")

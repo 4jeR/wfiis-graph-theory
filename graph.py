@@ -67,8 +67,10 @@ class Graph:
         :return: nothing
         """
         print("\nAdjacency list:")
+
         for node in self.nodes:
             node.PrintNeighbours()
+
 
     def PrintIncidenceMatrix(self):
         """
@@ -108,11 +110,15 @@ class Graph:
             self.edges.append(
                 Edge(len(self.edges)+1, a, b, arrow, weight))
             self.connections.append((a, b))
-            if b.index not in a.neighbours:
+            if arrow:
                 a.neighbours.append(b.index)
-            if a.index not in b.neighbours:
-                b.neighbours.append(a.index)
-            return True
+                return True
+            else:
+                if b.index not in a.neighbours:
+                    a.neighbours.append(b.index)
+                if a.index not in b.neighbours:
+                    b.neighbours.append(a.index)
+                return True
         else:
             return False
 
@@ -580,6 +586,8 @@ class Graph:
         self.nodes = []
         self.edges = []
         self.connections = []
+        Node.resetNodeCount()
+        Edge.resetEdgesCount()
 
     def IsEulerGraph(self):
         """
@@ -910,3 +918,26 @@ class Graph:
 
 ############################# PROJECT4 ################################
 
+    def GetConnectionIndexes(self):
+        connectionsWithNodesIndexes = list()
+        for (a, b) in self.connections:
+            connectionsWithNodesIndexes.append((a.index, b.index))
+        return connectionsWithNodesIndexes
+
+    def saveToALFile(self, filename, targetDict="./examples"):
+
+        with open("{}/{}".format(targetDict, filename), 'w') as targetALFile:
+            for node in self.nodes:
+                neighbours = str() 
+                for neighbour in node.neighbours:
+                    neighbours += (str(neighbour) + " ")
+                if node == self.nodes[len(self.nodes) - 1]:
+                    targetALFile.write("{}".format(neighbours[:-1]))
+                else:
+                    targetALFile.write("{}\n".format(neighbours[:-1]))
+
+        self.PrintGraph()
+        self.PrintAdjacencyList()
+
+    def saveToAMFile(self, filename, targetDict="./examples"):
+        self.PrintAdjacencyMatrix()

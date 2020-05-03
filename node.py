@@ -18,8 +18,14 @@ class Node:
     def removeNeighbour(self, neighbour):
         self.neighbours.remove(neighbour)
 
-    def PrintNeighbours(self):
-        print("{}: {}".format(self.index, [n for n in self.neighbours]))
+    def resetNodeCount():
+        Node.count = 0
+
+    def PrintNeighbours(self, connections=None):
+        if connections != None:
+            print("{}: {}".format(self.index, [n for n in self.neighbours if ((self.index, n) in connections)]))
+        else: 
+            print("{}: {}".format(self.index, [n for n in self.neighbours]))
 
     def PrintNeighboursInVector(self):
         vect = []

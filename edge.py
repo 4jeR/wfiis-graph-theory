@@ -11,10 +11,11 @@ class Edge:
         self.node1 = node1
         self.node2 = node2
         self.arrow = arrow
-        if(arrow):
-            print("Edge HAS AN ARROW")
         self.weight = weight
         Edge.count += 1
+
+    def resetEdgesCount():
+        Edge.count = 0
 
     def Draw(self, canvas, wages = False):
         s = (str)(self.weight)
