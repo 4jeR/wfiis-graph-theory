@@ -483,7 +483,7 @@ class Graph:
             return False
     
     # 2_3 
-    def CommonComponentsToString(self, canvas, comp):
+    def CommonComponentsToString(self, comp):
         ComponentsList = ""
         for i in range(0, len(comp)):
             if (comp[i] != 0):
@@ -521,7 +521,7 @@ class Graph:
                 nr += 1
                 comp[n.index-1] = nr
                 self.Components_R(nr, n, comp)
-        return self.CommonComponentsToString(canvas, comp)
+        return self.CommonComponentsToString(comp)
 
     def GetCommonComponents(self):
         """
@@ -950,3 +950,55 @@ class Graph:
         self.PrintAdjacencyMatrix()
 
 
+    #4_2
+    def ComponentsR(self, nr, v, GT, comp):
+        for u in GT.nodes[v].neighbours:
+            if (comp[u] == -1):
+                comp[u] = nr
+                self.ComponentsR(nr,u,GT,comp)
+
+    def DFSVisit(self,v,d,f,t):
+        t += 1
+        d[v] = t
+        for u in self.nodes[v].neighbours:
+            if (d[u - 1] == -1):
+                t = self.DFSVisit(u - 1,d,f,t)
+        t += 1
+        f[v] = t
+        return t
+
+    def getTranspose(self): 
+        g = Graph() 
+        for v in range(self.NodesCount()):
+            g.AddNode(Node(v))
+        for v in range( self.NodesCount()):
+            for n in self.nodes[v].neighbours:
+                g.Connect(g.nodes[n-1].index, g.nodes[v].index, arrow = True)
+        return g 
+
+    def KosarajuAlgorithm(self):
+        d = [(-1) for i in range(self.NodesCount())] 
+        f = [(-1) for i in range(self.NodesCount())]
+
+        #First searching
+        t = 0 
+        for v in range(self.NodesCount()):
+            if(d[v] == -1):
+                t = self.DFSVisit(v,d,f,t)
+     
+        #Transposition
+        GT = self.getTranspose()
+        
+        #Second searching
+        nr = 0
+        comp = [(-1) for i in range(GT.NodesCount())]
+
+        for v in range(max(f),0,-1):
+            if (v in f) and (comp[f.index(v)] == -1):
+                nr += 1
+                comp[f.index(v)] = nr
+                self.ComponentsR(nr,f.index(v),GT,comp)
+        print(comp)
+        #Print
+        return self.CommonComponentsToString(comp)
+                
