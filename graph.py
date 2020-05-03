@@ -103,7 +103,8 @@ class Graph:
                 b = n
 
         # prevent from adding already connected nodes
-        if a.index != b.index and (a, b) not in self.connections and (b, a) not in self.connections:
+        if ((a.index != b.index and (a, b) not in self.connections and (b, a) not in self.connections) or 
+            (a.index != b.index and ((a,b) not in self.connections or (b, a) not in self.connections) and arrow)):
             self.edges.append(
                 Edge(len(self.edges)+1, a, b, arrow, weight))
             self.connections.append((a, b))
@@ -193,6 +194,7 @@ class Graph:
                 xx = random.randint(30, canvas.winfo_width() - 30)
                 yy = random.randint(30, canvas.winfo_height() - 30)
                 self.AddNode(Node(i+1, xx, yy))
+
         # find neighbours
         for i in range(rows):
             for j in range(cols):
@@ -208,16 +210,25 @@ class Graph:
         for j in range(cols):
             counter = 0
             for i in range(rows):
-                if matrix[i][j] == 1 and counter == 0:
+                print("[{}][{}] = {}".format(i, j, matrix[i][j]))
+                if matrix[i][j] == -1:
+                    node2 = i+1
+                    print("Node2 = -1")
+                    counter += 1
+                elif matrix[i][j] == 1 and counter == 0 and not directedGraph:
                     node1 = i+1
                     counter += 1
-                elif matrix[i][j] == 1 and counter == 1:
+                elif matrix[i][j] == 1 and counter == 1 and not directedGraph:
                     node2 = i+1
                     counter += 1
                     break
+                elif matrix[i][j] == 1 and directedGraph:
+                    print("Node1 = 1")
+                    node1 = i+1
             if not directedGraph:
                 self.Connect(node1, node2)
             else:
+                print("Conncting {} to {}".format(node1, node2))
                 self.Connect(node1, node2, arrow=True)
             
         return True

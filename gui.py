@@ -615,9 +615,9 @@ class GUI:
         buttonIM = Button(
             menuProj4, text="Generate digraph - incident matrix", command=self.SelectDIM)
         buttonNL = Button(
-            menuProj4, text="Generate graph - adjacency list", command=self.SelectDAL)
+            menuProj4, text="Generate digraph - adjacency list", command=self.SelectDAL)
         buttonNM = Button(
-            menuProj4, text="Generate graph - adjacency matrix", command=self.SelectDAM)
+            menuProj4, text="Generate digraph - adjacency matrix", command=self.SelectDAM)
 
         button1 = tk.Button(
             menuProj4, width=35,  text="Generate random digraph", command=lambda: self.SelectBasicDigraph(int(spinbox1a.get()), int(spinbox1b.get())), bg="red", fg="white")
