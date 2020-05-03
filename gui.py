@@ -546,14 +546,18 @@ class GUI:
 
  #################### POJECT 4 #########################
     
-    def SelectBasicDigraph(self, n=0, l=0):
+    def SelectBasicDigraph(self, n=0, propability=0):
         print()
+        isCheckedCircle = bool(self.checkP4.get())
+
+        propability = propability / 100
+        self.graph.ResetGraph()
+        self.graph.FillRandomizeGraphGNP(self.canvas, n, propability, inCircle=isCheckedCircle, directedGraph=True)
         # TO DO 
         # FUNCTION TO CREATE RANDOM DIGRAPH
         # # DRAW
-        # isCheckedCircle = bool(self.checkP4.get())
-        # isWeighted = bool(self.checkP4weighted.get())
-        #     self.Draw(self.graph, inCircle=isCheckedCircle,   weighted=isWeighted)
+        isWeighted = bool(self.checkP4weighted.get())
+        self.Draw(self.graph, inCircle=isCheckedCircle,   weighted=isWeighted)
 
     def SelectFindCommonComponentDigraph(self):
         print()
@@ -606,7 +610,7 @@ class GUI:
 
         # 1
         label1a = Label(menuProj4, text='- vertices',width=35)
-        label1b = Label(menuProj4, text='- edges',width=35)
+        label1b = Label(menuProj4, text='- propability (%)',width=35)
         spinbox1a = Spinbox(menuProj4, from_=0, to=100,
                             width=35, state="readonly")
         spinbox1b = Spinbox(menuProj4, from_=0, to=100,
@@ -617,7 +621,14 @@ class GUI:
         buttonNL = Button(
             menuProj4, text="Generate digraph - adjacency list", command=self.SelectDAL)
         buttonNM = Button(
-            menuProj4, text="Generate digraph - adjacency matrix", command=self.SelectDAM)
+            menuProj4, text="Generate digraph - adjacency matrix", command=self.SelectDAM)        
+
+        buttonToIM = Button(
+            menuProj4, text="Save digraph - incident matrix", command=self.SelectDIM)
+        buttonToNL = Button(
+            menuProj4, text="Save digraph - adjacency list", command=self.SelectDAL)
+        buttonToNM = Button(
+            menuProj4, text="Save digraph - adjacency matrix", command=self.SelectDAM)
 
         button1 = tk.Button(
             menuProj4, width=35,  text="Generate random digraph", command=lambda: self.SelectBasicDigraph(int(spinbox1a.get()), int(spinbox1b.get())), bg="red", fg="white")
@@ -662,11 +673,13 @@ class GUI:
         button3a.grid(column=1, row=3, sticky="nsew", padx=10, pady=5)
         button4.grid(column=2, row=3, sticky="nsew", padx=10, pady=5)
 
-        # row 4/5
         buttonIM.grid(column=3, row=2, sticky="nsew", padx=10, pady=5)
         buttonNL.grid(column=3, row=3, sticky="nsew", padx=10, pady=5)
         buttonNM.grid(column=3, row=4, sticky="nsew", padx=10, pady=5)
 
+        buttonToIM.grid(column=4, row=2, sticky="nsew", padx=10, pady=5)
+        buttonToNL.grid(column=4, row=3, sticky="nsew", padx=10, pady=5)
+        buttonToNM.grid(column=4, row=4, sticky="nsew", padx=10, pady=5)
 
         spinbox3.grid(column=1, row=4, sticky="nsew", padx=10, pady=5)
         button3b.grid(column=1, row=5, padx=10, pady=5)

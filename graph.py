@@ -331,7 +331,7 @@ class Graph:
 
 
     # 1_3b
-    def FillRandomizeGraphGNP(self, canvas, n_nodes, prob,  inCircle=False):
+    def FillRandomizeGraphGNP(self, canvas, n_nodes, prob,  inCircle=False, directedGraph=False):
         """
         Constructs random graph with given number of nodes and probability
         of that there exists edge between any two nodes. 
@@ -353,7 +353,11 @@ class Graph:
             for i in range(n_nodes):
                 rand_prob = random.uniform(0, 1)
                 if rand_prob <= prob:
-                    self.Connect(node.index, i+1)
+                    if not directedGraph:
+                        self.Connect(node.index, i+1)
+                    else:
+                        self.Connect(node.index, i+1, arrow=True)
+
 
     ############################# PROJECT2 ################################
 
