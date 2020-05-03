@@ -924,8 +924,7 @@ class Graph:
             connectionsWithNodesIndexes.append((a.index, b.index))
         return connectionsWithNodesIndexes
 
-    def saveToALFile(self, filename, targetDict="./examples"):
-
+    def SaveToALFile(self, filename, targetDict="./examples"):
         with open("{}/{}".format(targetDict, filename), 'w') as targetALFile:
             for node in self.nodes:
                 neighbours = str() 
@@ -936,8 +935,19 @@ class Graph:
                 else:
                     targetALFile.write("{}\n".format(neighbours[:-1]))
 
-        self.PrintGraph()
-        self.PrintAdjacencyList()
-
-    def saveToAMFile(self, filename, targetDict="./examples"):
+    def SaveToAMFile(self, filename, targetDict="./examples"):
+        with open("{}/{}".format(targetDict, filename), 'w') as targetALFile:
+            for node in self.nodes:
+                nodeNeigboursAdjencyRow = list()
+                row = str()
+                nodeNeigboursAdjencyRow = node.GetNeighboursInVector()
+                for isNeighbour in nodeNeigboursAdjencyRow:
+                    print("is N {}".format(isNeighbour))
+                    row += str(isNeighbour) + " "
+                if node == self.nodes[len(self.nodes) - 1]:
+                        targetALFile.write("{}".format(row[:-1]))
+                else:
+                    targetALFile.write("{}\n".format(row[:-1]))
         self.PrintAdjacencyMatrix()
+
+

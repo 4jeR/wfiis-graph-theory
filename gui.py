@@ -96,7 +96,7 @@ class GUI:
 
     def SaveDAMToFile(self):
         targetDAMFile = simpledialog.askstring("File name", "Enter filename", initialvalue="AM_directed_graph.txt")
-        self.graph.saveToAMFile(targetDAMFile)
+        self.graph.SaveToAMFile(targetDAMFile)
 
     def SelectDAM(self):
         filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
@@ -137,7 +137,7 @@ class GUI:
 
     def SaveDALToFile(self):
         targetALFileName = simpledialog.askstring("File name", "Enter filename", initialvalue="AL_directed_graph.txt")
-        self.graph.saveToALFile(targetALFileName)
+        self.graph.SaveToALFile(targetALFileName)
 
 
     def SelectRandomGraphNL(self, n, l):

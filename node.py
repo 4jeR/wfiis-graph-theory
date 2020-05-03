@@ -36,6 +36,15 @@ class Node:
             vect[int(self.neighbours[i])-1] = 1
         print(*vect)
 
+    def GetNeighboursInVector(self):
+        vect = []
+        for i in range(0, self.count):
+            vect.append(0)
+
+        for i in range(len(self.neighbours)):
+            vect[int(self.neighbours[i])-1] = 1
+        return vect
+
     def Move(self, dx, dy):
         self.x += dx
         self.y += dy

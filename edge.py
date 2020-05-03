@@ -25,9 +25,10 @@ class Edge:
             edgeLength = abs(math.sqrt(xLength**2 + yLength**2))
             cutXLineRate = xLength / edgeLength 
             cutYLineRate = yLength / edgeLength
+            cutLineBy = 7
             canvas.create_line(
-                self.node1.x, self.node1.y, (self.node2.x - ((self.node2.r / 2) + 7 * cutXLineRate)) if (self.node2.x > self.node1.x) else (self.node2.x + ((self.node2.r / 2) + 7 * cutXLineRate)),
-                (self.node2.y - ((self.node2.r / 2) + 7 * cutYLineRate)) if (self.node2.y > self.node1.y) else (self.node2.y + ((self.node2.r / 2) + 7 * cutYLineRate)), arrow=tk.LAST, dash=(11, 2))
+                self.node1.x, self.node1.y, (self.node2.x - ((self.node2.r / 2) + cutLineBy * cutXLineRate)) if (self.node2.x > self.node1.x) else (self.node2.x + ((self.node2.r / 2) + cutLineBy * cutXLineRate)),
+                (self.node2.y - ((self.node2.r / 2) + cutLineBy * cutYLineRate)) if (self.node2.y > self.node1.y) else (self.node2.y + ((self.node2.r / 2) + cutLineBy * cutYLineRate)), arrow=tk.LAST, dash=(11, 2))
             if wages:
                 canvas.create_text( ( self.node1.x + self.node2.x ) / 2, ( self.node1.y + self.node2.y ) / 2, fill="darkblue",font="Times 20 italic bold",
                     text=s )
