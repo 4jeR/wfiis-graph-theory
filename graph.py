@@ -941,6 +941,11 @@ class Graph:
             connectionsWithNodesIndexes.append((a.index, b.index))
         return connectionsWithNodesIndexes
 
+    def PrintEdgesWithWeights(self):
+        print("Printing edges")
+        for edge in self.edges:
+            print("{}->{} = {}".format(edge.node1.index, edge.node2.index, edge.weight))
+
     def SaveToALFile(self, filename, targetDict="./examples"):
         with open("{}/{}".format(targetDict, filename), 'w') as targetALFile:
             for node in self.nodes:

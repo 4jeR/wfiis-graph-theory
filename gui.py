@@ -385,6 +385,7 @@ class GUI:
         isCheckedCircle = bool(self.checkP3.get())
         isWeighted = bool(self.checkP3weighted.get())
         SetRandomWeightsOfEdges(self.graph, 1, 10)
+        self.graph.PrintEdgesWithWeights()
         self.Draw(self.graph, inCircle=isCheckedCircle,
                   weighted=isWeighted)
 
@@ -585,6 +586,7 @@ class GUI:
             isChecked = bool(self.checkP4.get())
             isWeighted = bool(self.checkP4weighted.get())
             SetRandomWeightsOfEdges(self.graph, -2, 10)
+            self.graph.PrintEdgesWithWeights()
             self.ClearCanvas()
             self.Draw( self.graph, isChecked, weighted=isWeighted)
         else:
