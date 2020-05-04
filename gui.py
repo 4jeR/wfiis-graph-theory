@@ -560,6 +560,7 @@ class GUI:
         filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
             ("Text files", "AL_*.txt"), ("all files", "*.*")))
         isChecked = bool(self.checkP4.get())
+        isWeighted = bool(self.checkP4weighted.get())
         self.graph = Graph()
         self.graph.FillGraphFromAL(filepath, self.canvas, isChecked, directedGraph=True)
         self.Draw(self.graph, inCircle=isChecked, weighted=isWeighted)
@@ -589,14 +590,12 @@ class GUI:
         else:
             messagebox.showerror(title="Error", message="[SelectAddWeightsDigraph] Digrahp is not strongly connected, impossible to add weights")
 
-    def SelectTheShortestPathDigraph(self, numOfVertex=1):
-        print()
-        # TO DO 
-        # FUNCTION TO FIND SHORTEST PATH
-        # should return info
-        # e. g. all vertex in component like in project 3
-        # messagebox.showinfo(
-            # title="Info", message=info)
+    def SelectTheShortestPathDigraph(self, numOfVertex = 1):
+        negativeCycle, iStr, weights, paths = self.graph.BellmanFordAlgorithm(numOfVertex)
+        if( negativeCycle ):
+            messagebox.showerror(title="Error", message="Graph doesnt have negative cycle\n" + iStr)
+        else:
+            messagebox.showerror(title="Error", message="Graph does have negative cycle")
 
     def SelectDistanceMatrixDigraph(self):
         print()

@@ -845,7 +845,7 @@ class Graph:
                     return e
         except Exception:
             print(f"[GetEdgeFromIndexes] There is no connection ({idx1},{idx2}) in this graph.")
-    
+
     def IsGraphConsistent(self):
         visited = [False for _ in range(self.NodesCount())]
         visit_count = 0
@@ -1035,3 +1035,43 @@ class Graph:
         print(comp)
         #Print
         return self.CommonComponentsToString(comp), nr
+
+    def BellmanFordRelaxation(self, edge, d, p):
+        if edge.node2.index not in edge.node1.neighbours:
+            return
+        w = edge.weight
+        if d[edge.node2.index-1] > (d[edge.node1.index-1] + w):
+            d[edge.node2.index-1] = d[edge.node1.index-1] + w
+            p[edge.node2.index-1] = edge.node1.index - 1
+
+    def BellmanFordAlgorithm(self, nodeIdx):
+        if nodeIdx > self.NodesCount():
+            return "Wrong index"
+        p, d = self.DijsktraInit(nodeIdx)
+        for i in range(1, self.NodesCount()):
+            for e in self.edges:
+                self.BellmanFordRelaxation(e, d, p)
+        w = 0
+        for e in self.edges:
+            w = e.weight
+            if d[e.node2.index-1] > (d[e.node1.index-1] + w):
+                return False
+        infoString = "START: s = " + str(nodeIdx)
+        listOfPaths = []
+        for n in range(0, len(self.nodes)):
+            shortestPath = []
+            infoString += "\nd(" + str(n+1) + ") = " + str(d[n]) + " ==> ["
+            counter = 0
+            tempS = []
+            j = n
+            while j > -1:
+                tempS.append(j)
+                counter += 1
+                j = p[j]
+            while( counter > 0):
+                counter -= 1
+                shortestPath.append(tempS[counter]+1)
+                infoString += str(tempS[counter]+1) + " - "
+            infoString = infoString[:-3] + ']'
+            listOfPaths.append(shortestPath)
+        return True, infoString, d, listOfPaths
