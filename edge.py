@@ -30,11 +30,11 @@ class Edge:
                 self.node1.x, self.node1.y, (self.node2.x - ((self.node2.r / 2) + cutLineBy * cutXLineRate)) if (self.node2.x > self.node1.x) else (self.node2.x + ((self.node2.r / 2) + cutLineBy * cutXLineRate)),
                 (self.node2.y - ((self.node2.r / 2) + cutLineBy * cutYLineRate)) if (self.node2.y > self.node1.y) else (self.node2.y + ((self.node2.r / 2) + cutLineBy * cutYLineRate)), arrow=tk.LAST, dash=(11, 2))
             if wages:
-                separateWagesBy = 1.3
+                separateWagesBy = 1.5
                 separateYWageBy = separateWagesBy / abs((cutXLineRate - 1.1)  )
                 separateXWageBy = separateWagesBy / abs((cutYLineRate - 1.1))
-                canvas.create_text( (((( self.node1.x + self.node2.x ) / 2) + separateXWageBy) if self.node1.x < self.node2.x else ((( self.node1.x + self.node2.x ) / 2) - separateXWageBy)), 
-                    (((( self.node1.y + self.node2.y ) / 2) + separateYWageBy) if self.node1.y < self.node2.y else ((( self.node1.y + self.node2.y ) / 2) - separateYWageBy)), fill="darkblue",font="Times 20 italic bold", text=s )
+                canvas.create_text( (((( self.node1.x + self.node2.x ) / 2) - separateXWageBy) if self.node1.x < self.node2.x else ((( self.node1.x + self.node2.x ) / 2) + separateXWageBy)), 
+                    (((( self.node1.y + self.node2.y ) / 2) - separateYWageBy) if self.node1.y < self.node2.y else ((( self.node1.y + self.node2.y ) / 2) + separateYWageBy)), fill="darkblue",font="Times 20 italic bold", text=s )
         else:
             canvas.create_line(
                 self.node1.x, self.node1.y, self.node2.x, self.node2.y, dash=(11, 2))
