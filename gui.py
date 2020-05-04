@@ -560,6 +560,7 @@ class GUI:
         filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
             ("Text files", "AL_*.txt"), ("all files", "*.*")))
         isChecked = bool(self.checkP4.get())
+        isWeighted = bool(self.checkP4weighted.get())
         self.graph = Graph()
         self.graph.FillGraphFromAL(filepath, self.canvas, isChecked, directedGraph=True)
         self.Draw(self.graph, inCircle=isChecked, weighted=isWeighted)
