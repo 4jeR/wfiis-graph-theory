@@ -514,6 +514,7 @@ class GUI:
     def SelectBasicDigraph(self, n=0, propability=0):
         isCheckedCircle = bool(self.checkP4.get())
         propability = propability / 100
+        self.graph = Graph(directed=True)
         self.graph.ResetGraph()
         self.graph.FillRandomizeGraphGNP(self.canvas, n, propability, inCircle=isCheckedCircle, directedGraph=True)
         # TO DO 
@@ -544,7 +545,7 @@ class GUI:
 
         isChecked = bool(self.checkP4.get())
         isWeighted = bool(self.checkP4weighted.get())
-        self.graph = Graph()
+        self.graph = Graph(directed=True)
         self.graph.FillGraphFromIM(filepath, self.canvas, isChecked, directedGraph=True)
         self.Draw(self.graph, inCircle=isChecked, weighted=isWeighted)
 
@@ -552,7 +553,8 @@ class GUI:
         self.graph.PrintAdjacencyMatrix()
 
     def SaveDIMToFile(self):
-        simpledialog.askstring("File name", "Enter filename", initialvalue="IM_directed_graph.txt")
+        targetDIMFile = simpledialog.askstring("File name", "Enter filename", initialvalue="IM_directed_graph.txt")
+        self.graph.SaveToIMFile(targetDIMFile)
 
     def SelectDAL(self):
         filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(

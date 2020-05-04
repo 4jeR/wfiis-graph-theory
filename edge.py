@@ -31,7 +31,7 @@ class Edge:
                 (self.node2.y - ((self.node2.r / 2) + cutLineBy * cutYLineRate)) if (self.node2.y > self.node1.y) else (self.node2.y + ((self.node2.r / 2) + cutLineBy * cutYLineRate)), arrow=tk.LAST, dash=(11, 2))
             if wages:
                 separateWagesBy = 1.3
-                separateYWageBy = separateWagesBy / abs((cutXLineRate - 1.1))
+                separateYWageBy = separateWagesBy / abs((cutXLineRate - 1.1)  )
                 separateXWageBy = separateWagesBy / abs((cutYLineRate - 1.1))
                 canvas.create_text( (((( self.node1.x + self.node2.x ) / 2) + separateXWageBy) if self.node1.x < self.node2.x else ((( self.node1.x + self.node2.x ) / 2) - separateXWageBy)), 
                     (((( self.node1.y + self.node2.y ) / 2) + separateYWageBy) if self.node1.y < self.node2.y else ((( self.node1.y + self.node2.y ) / 2) - separateYWageBy)), fill="darkblue",font="Times 20 italic bold", text=s )

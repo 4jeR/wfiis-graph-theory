@@ -10,7 +10,7 @@ from tkinter import messagebox
 
 
 class Graph:
-    def __init__(self, nodes=[], edges=[], connections=[]):
+    def __init__(self, nodes=[], edges=[], connections=[], directed=False):
         """ 
         Constructor for Graph objects.
         :return: nothing
@@ -20,6 +20,7 @@ class Graph:
         self.nodes = [n for n in nodes]
         self.edges = [e for e in edges]
         self.connections = [(a, b) for (a, b) in connections]
+        self.isDirected = directed
 
     def AddNode(self, node):
         """ 
@@ -71,6 +72,22 @@ class Graph:
         for node in self.nodes:
             node.PrintNeighbours()
 
+    def PrintDirectedIncidenceMatrix(self):
+        Matrix = [[0 for i in range(len(self.edges))]
+                  for y in range(len(self.nodes))]
+
+        for edge in self.edges:
+            Matrix[edge.node1.index-1][edge.index-1] = -1
+            Matrix[edge.node2.index-1][edge.index-1] = 1
+
+        for row in Matrix:
+            rowLine = " "
+            for val in row:
+                if val == -1:
+                    rowLine = rowLine[:-1] + str(val) + "   "
+                else:
+                    rowLine += str(val) + "   "
+            print(rowLine) 
 
     def PrintIncidenceMatrix(self):
         """
@@ -78,6 +95,9 @@ class Graph:
         :return: nothing
         """
         print("\nIncident matrix:")
+        if self.isDirected == True:
+            self.PrintDirectedIncidenceMatrix()
+            return
         Matrix = [[0 for i in range(len(self.edges))]
                   for y in range(len(self.nodes))]
         for edge in self.edges:
@@ -212,26 +232,12 @@ class Graph:
                         else:
                             continue
 
-
-        print("Printing matrix")
-        for i in range(rows):
-            row = " "
-            for j in range(cols):
-                if matrix[i][j] == -1:
-                    row = row[:-1] + str(matrix[i][j]) + "   "
-                else:
-                    row += str(matrix[i][j]) + "   "
-            print(row)            
-
-
         # find edges
         for j in range(cols):
             counter = 0
             for i in range(rows):
-                print("[{}][{}] = {}".format(i, j, matrix[i][j]))
                 if matrix[i][j] == -1:
                     node1 = i+1
-                    print("Node1 = {}".format(matrix[i][j]))
                     counter += 1
                 elif matrix[i][j] == 1 and counter == 0 and not directedGraph:
                     node1 = i+1
@@ -241,12 +247,10 @@ class Graph:
                     counter += 1
                     break
                 elif matrix[i][j] == 1 and directedGraph:
-                    print("Node2 = {}".format(matrix[i][j]))
                     node2 = i+1
             if not directedGraph:
                 self.Connect(node1, node2)
             else:
-                print("Conncting {} to {}".format(node1, node2))
                 self.Connect(node1, node2, arrow=True)
 
         self.PrintGraph()
@@ -962,6 +966,23 @@ class Graph:
                     targetALFile.write("{}\n".format(row[:-1]))
         self.PrintAdjacencyMatrix()
 
+    def SaveToIMFile(self, filename, targetDict="./examples"):
+        with open("{}/{}".format(targetDict, filename), 'w') as targetIMFile:
+            Matrix = [[0 for i in range(len(self.edges))]
+                      for y in range(len(self.nodes))]
+
+            for edge in self.edges:
+                Matrix[edge.node1.index-1][edge.index-1] = -1
+                Matrix[edge.node2.index-1][edge.index-1] = 1
+
+            for row in Matrix:
+                rowLine = ""
+                for val in row:
+                    rowLine += str(val) + " "
+                if row == Matrix[len(Matrix) - 1]:
+                    targetIMFile.write("{}".format(rowLine[:-1]))
+                else:
+                    targetIMFile.write("{}\n".format(rowLine[:-1]))
 
     #4_2
     def ComponentsR(self, nr, v, GT, comp):
@@ -1014,4 +1035,3 @@ class Graph:
         print(comp)
         #Print
         return self.CommonComponentsToString(comp), nr
-                
