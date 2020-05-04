@@ -520,19 +520,20 @@ class GUI:
         # FUNCTION TO CREATE RANDOM DIGRAPH
         # # DRAW
         isWeighted = bool(self.checkP4weighted.get())
-        self.Draw(self.graph, inCircle=isCheckedCircle,   weighted=isWeighted)
+        self.Draw(self.graph, inCircle=isCheckedCircle, weighted=isWeighted)
 
     def SaveDAMToFile(self):
         targetDAMFile = simpledialog.askstring("File name", "Enter filename", initialvalue="AM_directed_graph.txt")
-        self.graph.saveToAMFile(targetDAMFile)
+        self.graph.SaveToAMFile(targetDAMFile)
 
     def SelectDAM(self):
         filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
             ("Text files", "AM_*.txt"), ("all files", "*.*")))
         isChecked = bool(self.checkP4.get())
+        isWeighted = bool(self.checkP4weighted.get())
         self.graph = Graph()
         self.graph.FillGraphFromAM(filepath, self.canvas, isChecked, directedGraph=True)
-        self.Draw(self.graph, isChecked)
+        self.Draw(self.graph, inCircle=isChecked, weighted=isWeighted)
 
         self.graph.PrintIncidenceMatrix()
         self.graph.PrintAdjacencyList()
@@ -540,10 +541,12 @@ class GUI:
     def SelectDIM(self):
         filepath = filedialog.askopenfilename(initialdir='examples', filetypes=(
             ("Text files", "IM_*.txt"), ("all files", "*.*")))
+
         isChecked = bool(self.checkP4.get())
+        isWeighted = bool(self.checkP4weighted.get())
         self.graph = Graph()
         self.graph.FillGraphFromIM(filepath, self.canvas, isChecked, directedGraph=True)
-        self.Draw(self.graph, isChecked)
+        self.Draw(self.graph, inCircle=isChecked, weighted=isWeighted)
 
         self.graph.PrintAdjacencyList()
         self.graph.PrintAdjacencyMatrix()
@@ -557,14 +560,14 @@ class GUI:
         isChecked = bool(self.checkP4.get())
         self.graph = Graph()
         self.graph.FillGraphFromAL(filepath, self.canvas, isChecked, directedGraph=True)
-        self.Draw(self.graph, isChecked)
+        self.Draw(self.graph, inCircle=isChecked, weighted=isWeighted)
 
         self.graph.PrintAdjacencyMatrix()
         self.graph.PrintIncidenceMatrix()
 
     def SaveDALToFile(self):
         targetALFileName = simpledialog.askstring("File name", "Enter filename", initialvalue="AL_directed_graph.txt")
-        self.graph.saveToALFile(targetALFileName)
+        self.graph.SaveToALFile(targetALFileName)
 
     def SelectFindCommonComponentDigraph(self):
         isChecked = bool(self.checkP4.get())

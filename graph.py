@@ -212,14 +212,26 @@ class Graph:
                         else:
                             continue
 
+
+        print("Printing matrix")
+        for i in range(rows):
+            row = " "
+            for j in range(cols):
+                if matrix[i][j] == -1:
+                    row = row[:-1] + str(matrix[i][j]) + "   "
+                else:
+                    row += str(matrix[i][j]) + "   "
+            print(row)            
+
+
         # find edges
         for j in range(cols):
             counter = 0
             for i in range(rows):
                 print("[{}][{}] = {}".format(i, j, matrix[i][j]))
                 if matrix[i][j] == -1:
-                    node2 = i+1
-                    print("Node2 = -1")
+                    node1 = i+1
+                    print("Node1 = {}".format(matrix[i][j]))
                     counter += 1
                 elif matrix[i][j] == 1 and counter == 0 and not directedGraph:
                     node1 = i+1
@@ -229,14 +241,15 @@ class Graph:
                     counter += 1
                     break
                 elif matrix[i][j] == 1 and directedGraph:
-                    print("Node1 = 1")
-                    node1 = i+1
+                    print("Node2 = {}".format(matrix[i][j]))
+                    node2 = i+1
             if not directedGraph:
                 self.Connect(node1, node2)
             else:
                 print("Conncting {} to {}".format(node1, node2))
                 self.Connect(node1, node2, arrow=True)
-            
+
+        self.PrintGraph()
         return True
 
     # 1_1b
@@ -927,7 +940,7 @@ class Graph:
     def SaveToALFile(self, filename, targetDict="./examples"):
         with open("{}/{}".format(targetDict, filename), 'w') as targetALFile:
             for node in self.nodes:
-                neighbours = str() 
+                neighbours = str()
                 for neighbour in node.neighbours:
                     neighbours += (str(neighbour) + " ")
                 if node == self.nodes[len(self.nodes) - 1]:
@@ -944,7 +957,7 @@ class Graph:
                 for isNeighbour in nodeNeigboursAdjencyRow:
                     row += str(isNeighbour) + " "
                 if node == self.nodes[len(self.nodes) - 1]:
-                        targetALFile.write("{}".format(row[:-1]))
+                    targetALFile.write("{}".format(row[:-1]))
                 else:
                     targetALFile.write("{}\n".format(row[:-1]))
         self.PrintAdjacencyMatrix()
