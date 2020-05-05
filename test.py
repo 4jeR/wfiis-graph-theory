@@ -5,7 +5,7 @@ from gui import *
 
 root = Tk()
 gui = GUI(root)
-g = Graph()
+g = Graph(directed=True)
 
 n1 = g.AddNode(Node(1, 300, 300))
 n2 = g.AddNode(Node(2, 500, 300))
