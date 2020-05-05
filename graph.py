@@ -9,6 +9,7 @@ from collections import *
 from tkinter import messagebox
 
 
+
 class Graph:
     def __init__(self, nodes=[], edges=[], connections=[], directed=False):
         """ 
@@ -752,6 +753,8 @@ class Graph:
 
     def Relaxation(self, node1, node2, d, p):
         w = 0
+        if node2.index not in node1.neighbours:
+            return 
         for e in self.edges:
             if ( (e.node1 == node1) and (e.node2 == node2) ) or ( (e.node1 == node2) and (e.node2 == node1) ):
                 w = e.weight
@@ -802,7 +805,24 @@ class Graph:
         distanceMatrix = []
         for idx in range(self.NodesCount()):
             distanceMatrix.append(self.DijkstraShortestPaths(idx + 1)[1])
+
         
+        for i in range(self.NodesCount()):
+            for j in range(self.NodesCount()):
+                infoString += '{:4}'.format(str(distanceMatrix[i][j])) + "  "
+            infoString += "\n"
+        return distanceMatrix, infoString
+
+    def DistanceMatrixDiGraph(self,h):
+        infoString = ""
+        distanceMatrix = []
+        for idx in range(self.NodesCount()):
+            d = self.DijkstraShortestPaths(idx + 1)[1]
+            for i in range(self.NodesCount()):
+                d[i] = d[i] - h[idx] + h[i] 
+
+            distanceMatrix.append(d)
+
         for i in range(self.NodesCount()):
             for j in range(self.NodesCount()):
                 infoString += '{:4}'.format(str(distanceMatrix[i][j])) + "  "
@@ -1060,10 +1080,10 @@ class Graph:
         for e in self.edges:
             w = e.weight
             if d[e.node2.index-1] > (d[e.node1.index-1] + w):
-                return False
+                return False, "False", d, self.nodes
         infoString = "START: s = " + str(nodeIdx)
         listOfPaths = []
-        for n in range(0, len(self.nodes)):
+        for n in range(self.NodesCount()-1):
             shortestPath = []
             infoString += "\nd(" + str(n+1) + ") = " + str(d[n]) + " ==> ["
             counter = 0
@@ -1080,3 +1100,24 @@ class Graph:
             infoString = infoString[:-3] + ']'
             listOfPaths.append(shortestPath)
         return True, infoString, d, listOfPaths
+
+    def JohnsonAlgorithm(self):
+        g_copy = copy.deepcopy(self)
+        g_copy.AddNode(Node(self.NodesCount()+1,100,100))
+        for node_idx in range(g_copy.NodesCount()):
+            g_copy.Connect(g_copy.NodesCount(),node_idx+1,True)
+
+        positive = g_copy.BellmanFordAlgorithm(g_copy.NodesCount())[0]
+        d = g_copy.BellmanFordAlgorithm(g_copy.NodesCount())[2]
+    
+        if not positive:
+            return "Negative cycle"
+        else:
+            for edge in self.edges:
+                edge.weight = edge.weight + d[edge.node1.index - 1] - d[edge.node2.index - 1]
+                
+
+        return self.DistanceMatrixDiGraph(d)[1]
+       
+            
+

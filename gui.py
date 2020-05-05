@@ -600,13 +600,9 @@ class GUI:
             messagebox.showerror(title="Error", message="Graph does have negative cycle")
 
     def SelectDistanceMatrixDigraph(self):
-        print()
-        # TO DO 
-        # FUNCTION TO WRITE DISTANE MATRIX
-        # should return info
-        # e. g. all vertex in component like in project 3
-        # messagebox.showinfo(
-            # title="Info", message=info)
+        info = self.graph.JohnsonAlgorithm()
+        messagebox.showinfo(title="Info", message=info)
+
 
     def AddProject4Widgets(self, root):
         menuProj4 = Frame(self.tab4, width=1200, height=30)
