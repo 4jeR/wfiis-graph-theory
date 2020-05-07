@@ -1088,7 +1088,7 @@ class Graph:
                 return False, "False", d, self.nodes
         infoString = "START: s = " + str(nodeIdx)
         listOfPaths = []
-        for n in range(self.NodesCount()-1):
+        for n in range(self.NodesCount()):
             shortestPath = []
             infoString += "\nd(" + str(n+1) + ") = " + str(d[n]) + " ==> ["
             counter = 0
