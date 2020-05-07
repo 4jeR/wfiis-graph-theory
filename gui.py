@@ -19,6 +19,7 @@ class GUI:
         self.AddProject2Widgets(root)
         self.AddProject3Widgets(root)
         self.AddProject4Widgets(root)
+        self.AddProject5Widgets(root)
         self.allTabs.pack(expand=1, fill='both')
         self.canvas.pack(fill=X, padx=10, pady=10)
 
@@ -694,3 +695,63 @@ class GUI:
         button3b.grid(column=1, row=5, padx=10, pady=5)
 
         menuProj4.pack(fill=Y)
+
+    #################### POJECT 5 #########################
+    
+    def SelectBasicFlowNetowrk(self, numberOfLayers=2):
+        isChecked = bool(self.checkP5.get())
+        isWeighted = bool(self.checkP5weighted.get())
+        self.ClearCanvas()
+        # TO DO - NEW FUNCTION IN GRAPH
+        # self.Draw( self.graph, isChecked, weighted=isWeighted)
+
+    def SelectFindMaximumFlow(self):
+        isChecked = bool(self.checkP5.get())
+        isWeighted = bool(self.checkP5weighted.get())
+        self.ClearCanvas()
+        # TO DO - NEW FUNCTION IN GRAPH RETURN INFO STRING
+        # self.Draw( self.graph, isChecked, weighted=isWeighted)
+        # messagebox.showinfo(title="Info", message=info)
+
+
+
+    def AddProject5Widgets(self, root):
+        menuProj5 = Frame(self.tab5, width=1200, height=30)
+
+        # check if generate graph in circle
+        self.checkP5 = IntVar()
+        checkInCircle5 = Checkbutton(
+            menuProj5, text="In circle", variable=self.checkP5)
+
+        # check if generate graph draw with Weights
+        self.checkP5weighted = IntVar()
+        checkShowWeights5 = Checkbutton(
+            menuProj5, text="Weighted graph", variable=self.checkP5weighted)
+
+        # 1
+        label1 = Label(menuProj5, text='Task 1', foreground="red")
+        label1a = Label(menuProj5, text='- number of layers',width=35)
+        spinbox1a = Spinbox(menuProj5, from_=2, to=100, state="readonly")
+        button1 = tk.Button(
+            menuProj5, width=35,  text="Generate flow network", command=lambda: self.SelectBasicFlowNetowrk(int(spinbox1a.get())))
+
+        # 2
+        label2 = Label(menuProj5, text='Task 2', foreground="red")
+        button2 = Button(
+            menuProj5, width=35, text="Find maximum flow", command=lambda: self.SelectFindMaximumFlow())
+
+        # row 0
+        label1.grid(column=0, row=0, padx=10, pady=5)
+        label2.grid(column=2, row=0, padx=10, pady=5)
+        checkInCircle5.grid(column=3, row=0, sticky="nsew", padx=10, pady=5)
+
+        # row 1
+        spinbox1a.grid(column=0, row=1, sticky="nsew", padx=10, pady=5)
+        label1a.grid(column=1, row=1, sticky="w")
+        button2.grid(column=2, row=1, sticky="nsew", padx=10, pady=5)
+        checkShowWeights5.grid(column=3, row=1, sticky="nsew", padx=10, pady=5)
+
+        # row 2
+        button1.grid(column=0, row=2, sticky="nsew", padx=10, pady=5)
+
+        menuProj5.pack(fill=Y)

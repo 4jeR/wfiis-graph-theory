@@ -756,8 +756,13 @@ class Graph:
         if node2.index not in node1.neighbours:
             return 
         for e in self.edges:
-            if ( (e.node1 == node1) and (e.node2 == node2) ) or ( (e.node1 == node2) and (e.node2 == node1) ):
-                w = e.weight
+            if not (self.isDirected):
+                if ( (e.node1 == node1) and (e.node2 == node2) ) or ( (e.node1 == node2) and (e.node2 == node1) ):
+                    w = e.weight
+            else:
+                if ( (e.node1 == node1) and (e.node2 == node2) ):
+                    w = e.weight
+
         if d[node2.index-1] > (d[node1.index-1] + w):
             d[node2.index-1] = d[node1.index-1] + w
             p[node2.index-1] = node1.index - 1
@@ -1109,7 +1114,6 @@ class Graph:
 
         positive = g_copy.BellmanFordAlgorithm(g_copy.NodesCount())[0]
         d = g_copy.BellmanFordAlgorithm(g_copy.NodesCount())[2]
-    
         if not positive:
             return "Negative cycle"
         else:
