@@ -1118,6 +1118,3 @@ class Graph:
                 
 
         return self.DistanceMatrixDiGraph(d)[1]
-       
-            
-
