@@ -11,7 +11,7 @@ from tkinter import messagebox
 
 
 class Graph:
-    def __init__(self, nodes=[], edges=[], connections=[], directed=False):
+    def __init__(self, nodes=[], edges=[], connections=[], directed=False, isNetwork=False):
         """ 
         Constructor for Graph objects.
         :return: nothing
@@ -22,6 +22,7 @@ class Graph:
         self.edges = [e for e in edges]
         self.connections = [(a, b) for (a, b) in connections]
         self.isDirected = directed
+        self.isNetwork = isNetwork
 
     def AddNode(self, node):
         """ 
@@ -78,7 +79,7 @@ class Graph:
                   for y in range(len(self.nodes))]
 
         for edge in self.edges:
-            Matrix[edge.node1.index-1][edge.index-1] = -1
+            Matrix[edge.node.index-1][edge.index-1] = -1
             Matrix[edge.node2.index-1][edge.index-1] = 1
 
         for row in Matrix:
@@ -110,7 +111,7 @@ class Graph:
             print()
 
 
-    def Connect(self, node1_idx, node2_idx, arrow=False, weight = 0):
+    def Connect(self, node1_idx, node2_idx, arrow=False, weight = 0, capacity = 0, flow = 0):
         """
         Constructs edge between two nodes of given indexes. If they were succesfully connected
         then it returns True, otherwise returns False.
@@ -125,11 +126,17 @@ class Graph:
             elif n.index == node2_idx:
                 b = n
 
+        if self.isNetwork and (a.index != b.index and ((a,b) not in self.connections and (b, a) not in self.connections)):
+            self.edges.append(Edge(len(self.edges)+1, a, b, arrow, weight, capacity, flow, isNetwork=True))
+            self.connections.append((a, b))
+            a.neighbours.append(b.index)
+            return True            
         # prevent from adding already connected nodes
-        if ((a.index != b.index and (a, b) not in self.connections and (b, a) not in self.connections) or 
-            (a.index != b.index and ((a,b) not in self.connections or (b, a) not in self.connections) and arrow)):
-            self.edges.append(
-                Edge(len(self.edges)+1, a, b, arrow, weight))
+        elif ((a.index != b.index and (a, b) not in self.connections and (b, a) not in self.connections) or 
+            (a.index != b.index and ((a,b) not in self.connections or (b, a) not in self.connections) and arrow) 
+            and not self.isNetwork):
+            
+            self.edges.append(Edge(len(self.edges)+1, a, b, arrow, weight))
             self.connections.append((a, b))
             if arrow:
                 a.neighbours.append(b.index)
@@ -1088,7 +1095,7 @@ class Graph:
                 return False, "False", d, self.nodes
         infoString = "START: s = " + str(nodeIdx)
         listOfPaths = []
-        for n in range(self.NodesCount()-1):
+        for n in range(self.NodesCount()):
             shortestPath = []
             infoString += "\nd(" + str(n+1) + ") = " + str(d[n]) + " ==> ["
             counter = 0
@@ -1120,5 +1127,97 @@ class Graph:
             for edge in self.edges:
                 edge.weight = edge.weight + d[edge.node1.index - 1] - d[edge.node2.index - 1]
                 
+<<<<<<< HEAD
 
         return self.DistanceMatrixDiGraph(d)[1]
+=======
+        return self.DistanceMatrixDiGraph(d)[1]
+            
+    ############################# PROJECT5 ################################
+    def NodesInLayer(self, N):  
+        nodeList = []
+        for node in self.nodes:
+            if node.inLayer == N:
+                nodeList.append(node)
+        return nodeList
+    
+    def IndexesOfNodesInLayer(self, N):
+        indexes = []
+        for node in self.NodesInLayer(N):
+            indexes.append(node.index)
+        return indexes
+
+    def PrintNetworkConnections(self):
+        print("Printing Connections")
+        for edge in self.edges:
+            if(edge.node1.index == 1):
+                print("S->{}\t Capacity = {}\t Flow = {}".format(edge.node2.index, edge.capacity, edge.flow))
+            elif (edge.node2.index == self.NodesCount()):
+                print("{}->T\t Capacity = {}\t Flow = {}".format(edge.node1.index, edge.capacity, edge.flow))
+            else:
+                print("{}->{}\t Capacity = {}\t Flow = {}".format(edge.node1.index, edge.node2.index, edge.capacity, edge.flow))
+
+    def HasInput(self, node):
+        for nodeBefour in self.NodesInLayer(node.inLayer-1):
+            if (node.index in nodeBefour.neighbours):
+                return True
+        return False       
+    
+
+    def FillFlowNetwork(self, canvas, N=2):
+        if not self.isNetwork :
+            print("[FillFlowNetwork]: Cannot generate Flow Network if self.isNetwork == False")
+            return
+        
+        widthOneLayer = canvas.winfo_width()/(N + 2)
+        heightCanvas = canvas.winfo_height()
+        #Step 1
+        self.AddNode(Node(index=1,x = widthOneLayer/2, y = heightCanvas/2, inLayer=0))  #source node
+        currentNodeIndex = 2
+        for i in range(1, N + 1):    
+            k = random.randint(2, N)  
+            for j in range(k):
+                self.AddNode(Node(index=currentNodeIndex, x = widthOneLayer*i + widthOneLayer/2, y = (heightCanvas/k)/2 + j*heightCanvas/k ,  inLayer=i))  # N * [2,N] 
+                currentNodeIndex += 1
+        self.AddNode(Node(index=currentNodeIndex, x = widthOneLayer*(N+1) + widthOneLayer/2, y = heightCanvas/2, inLayer=(N+1)))  #target node
+
+        for node in self. nodes:
+            print("Node {} in layer {}".format(node.index, node.inLayer))
+        
+        #Step 2
+        # source node
+        for node in self.NodesInLayer(1):  
+            self.Connect(1, node.index, arrow=True) 
+        # regural node
+        for layer in range(1, N + 1):
+            for node in self.NodesInLayer(layer):
+                for i in range(random.randint(1, len(self.NodesInLayer(layer + 1)))):
+                    # layerBefourIndexes = self.IndexesOfNodesInLayer(layer)
+                    layerIndexes = self.IndexesOfNodesInLayer(layer + 1)
+                    self.Connect(node.index, random.choice(layerIndexes), arrow=True)
+            # check that all nodes have input
+            for node in self.NodesInLayer(layer):
+                while not self.HasInput(node):
+                    layerBefourIndexes = self.IndexesOfNodesInLayer(layer - 1)
+                    self.Connect(random.choice(layerBefourIndexes), node.index, arrow=True)
+        #target node
+        targetIndex = self.NodesCount()
+        for node in self.NodesInLayer(N):  
+            self.Connect(node.index, self.nodes[targetIndex - 1].index, arrow=True)
+
+        #Step 3
+        numberOfNewEdges = 0
+        while numberOfNewEdges < (2*N - 1):
+            idx1 = random.randint(2, self.NodesCount() - 1)
+            idx2 = random.randint(2, self.NodesCount() - 1)
+            if self.Connect(idx1, idx2, arrow=True):
+                numberOfNewEdges += 1
+
+        #Step 4
+        for edge in self.edges:
+            edge.capacity = random.randint(1, 10)
+
+        self.PrintNetworkConnections()
+
+        return True
+>>>>>>> 4b5f8a590e18bdbf4bef3cd245a01d75e8ac6b33
