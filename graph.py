@@ -1127,10 +1127,6 @@ class Graph:
             for edge in self.edges:
                 edge.weight = edge.weight + d[edge.node1.index - 1] - d[edge.node2.index - 1]
                 
-<<<<<<< HEAD
-
-        return self.DistanceMatrixDiGraph(d)[1]
-=======
         return self.DistanceMatrixDiGraph(d)[1]
             
     ############################# PROJECT5 ################################
@@ -1158,8 +1154,8 @@ class Graph:
                 print("{}->{}\t Capacity = {}\t Flow = {}".format(edge.node1.index, edge.node2.index, edge.capacity, edge.flow))
 
     def HasInput(self, node):
-        for nodeBefour in self.NodesInLayer(node.inLayer-1):
-            if (node.index in nodeBefour.neighbours):
+        for nodeBefore in self.NodesInLayer(node.inLayer-1):
+            if (node.index in nodeBefore.neighbours):
                 return True
         return False       
     
@@ -1220,4 +1216,3 @@ class Graph:
         self.PrintNetworkConnections()
 
         return True
->>>>>>> 4b5f8a590e18bdbf4bef3cd245a01d75e8ac6b33
