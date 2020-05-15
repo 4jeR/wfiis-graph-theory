@@ -721,10 +721,9 @@ class GUI:
         isFlow= bool(self.checkP5flow.get())
 
         self.ClearCanvas()
-        self.graph = Graph(isNetwork=True)
-        # TO DO - NEW FUNCTION IN GRAPH RETURN INFO STRING
-        # self.Draw( self.graph, isChecked, weighted=isWeighted)
-        # messagebox.showinfo(title="Info", message=info)
+        residualNet = self.graph.FordFulkersonAlgorithm()
+        numberOfLayers = GetNumberOfLayers(self.graph) - 1
+        self.Draw(residualNet, isNetwork=True, isCapacity=isCapacity, isFlow=isFlow, numberOfLayers=numberOfLayers)
 
 
     def AddProject5Widgets(self, root):

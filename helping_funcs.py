@@ -77,3 +77,11 @@ def SetRandomWeightsOfEdges(graph, min, max):
     else:
         pass
         #todo print info in alert
+
+def GetNumberOfLayers(graph):
+    return graph.nodes[graph.NodesCount()-1].inLayer
+
+def FindEdgeInNetwork(graph, node1_idx, node2_idx):
+    for e in graph.edges:
+        if ( (e.node1.index == node1_idx) and (e.node2.index == node2_idx) ):
+            return e

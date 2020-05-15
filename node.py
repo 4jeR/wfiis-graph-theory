@@ -19,7 +19,7 @@ class Node:
     def removeNeighbour(self, neighbour):
         self.neighbours.remove(neighbour)
 
-    def resetNodeCount():
+    def resetNodeCount(self):
         Node.count = 0
 
     def PrintNeighbours(self, connections=None):

@@ -111,7 +111,7 @@ class Graph:
             print()
 
 
-    def Connect(self, node1_idx, node2_idx, arrow=False, weight = 0, capacity = 0, flow = 0):
+    def Connect(self, node1_idx, node2_idx, arrow=False, weight = 0, capacity = -1, flow = 0):
         """
         Constructs edge between two nodes of given indexes. If they were succesfully connected
         then it returns True, otherwise returns False.
@@ -1177,7 +1177,7 @@ class Graph:
                 currentNodeIndex += 1
         self.AddNode(Node(index=currentNodeIndex, x = widthOneLayer*(N+1) + widthOneLayer/2, y = heightCanvas/2, inLayer=(N+1)))  #target node
 
-        for node in self. nodes:
+        for node in self.nodes:
             print("Node {} in layer {}".format(node.index, node.inLayer))
         
         #Step 2
@@ -1203,7 +1203,9 @@ class Graph:
 
         #Step 3
         numberOfNewEdges = 0
-        while numberOfNewEdges < (2*N - 1):
+        wartownik = 0
+        while numberOfNewEdges < (2*N) and wartownik > 100:
+            wartownik+=1
             idx1 = random.randint(2, self.NodesCount() - 1)
             idx2 = random.randint(2, self.NodesCount() - 1)
             if self.Connect(idx1, idx2, arrow=True):
@@ -1216,3 +1218,88 @@ class Graph:
         self.PrintNetworkConnections()
 
         return True
+
+    def DisconnectByEdgeInNetwork(self, edge):
+        """
+        Removes edge from graph and updates status of all properties.
+        :return: nothing
+        """
+        try:
+            self.connections.remove((edge.node1, edge.node2))
+            edge.node1.removeNeighbour(edge.node2.index)
+        except Exception as exc:
+            print("Exception {} occured when trying to disconnect the edge".format(exc))
+
+    def FordFulkersonInit(self):
+        p = []
+        d = []
+        for n in self.nodes:
+            d.append(float("inf"))
+            p.append(None)
+        d[0] = 0
+        return p, d
+
+    def BreadthFirstSearch(self):
+        p, d = self.FordFulkersonInit()
+        Q = []
+        Q.append(self.nodes[0])
+        while len(Q) > 0:
+            v = Q.pop(0)
+            for u in v.neighbours:
+                if d[u-1] == float("inf"):
+                    d[u-1] = d[v.index-1] + 1
+                    p[u-1] = v.index
+                    Q.append(self.nodes[u-1])
+                if u == self.NodesCount():
+                    return True, p, d
+        return False, p, d
+        
+
+    def FordFulkersonAlgorithm(self):
+        residualNetwork = copy.deepcopy(self)
+        for e in residualNetwork.edges:
+            e.flow = 0
+        maxNetworkFlow = 0
+        d = []
+        p = []
+        while residualNetwork.BreadthFirstSearch()[0]:
+            p = residualNetwork.BreadthFirstSearch()[1]
+            d = residualNetwork.BreadthFirstSearch()[2]
+            previous = residualNetwork.NodesCount()
+            lowestCf = float("inf")
+            path = []
+
+            while len(path) < d[residualNetwork.NodesCount()-1]:
+                previous = p[previous-1]
+                path.append(previous)
+            print("Path = {}\n".format(path))
+
+            for uP in range(len(path)-1, 0, -1):
+                edge = FindEdgeInNetwork(residualNetwork, path[uP], path[uP-1])
+                if edge.capacity < lowestCf:
+                    lowestCf = edge.capacity
+            edge = FindEdgeInNetwork(residualNetwork, path[0], residualNetwork.NodesCount())
+            if edge.capacity < lowestCf:
+                lowestCf = edge.capacity
+            maxNetworkFlow += lowestCf
+
+            for uP in range(len(path)-1, 0, -1):
+                edge = FindEdgeInNetwork(residualNetwork, path[uP], path[uP-1])
+                edge.capacity -= lowestCf
+                edge.flow += lowestCf
+                if edge.capacity <= 0:
+                    residualNetwork.DisconnectByEdgeInNetwork(edge)
+
+            edge = FindEdgeInNetwork(residualNetwork, path[0], residualNetwork.NodesCount())
+            edge.capacity -= lowestCf
+            edge.flow += lowestCf
+            if edge.capacity <= 0:
+                residualNetwork.DisconnectByEdgeInNetwork(edge)
+            residualNetwork.PrintNetworkConnections()
+
+        for egde_idx in range(len(residualNetwork.edges)):
+            residualNetwork.edges[egde_idx-1].capacity = self.edges[egde_idx-1].capacity
+        print("\nBack to previous capacity")
+        residualNetwork.PrintNetworkConnections()
+        print("Max networks flow = {}".format(maxNetworkFlow))
+        return residualNetwork

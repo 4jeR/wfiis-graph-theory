@@ -6,7 +6,7 @@ import math
 class Edge:
     count = 0
 
-    def __init__(self, index, node1, node2, arrow=False, weight = 0, capacity = 0, flow = 0, isNetwork=False):
+    def __init__(self, index, node1, node2, arrow=False, weight = 0, capacity = -1, flow = 0, isNetwork=False):
         self.index = index
         self.node1 = node1
         self.node2 = node2
@@ -17,7 +17,7 @@ class Edge:
         self.flow = flow
         Edge.count += 1
 
-    def resetEdgesCount():
+    def resetEdgesCount(self):
         Edge.count = 0
 
     def Draw(self, canvas, wages = False,  isCapacity = False, isFlow = False):
