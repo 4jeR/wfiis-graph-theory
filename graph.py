@@ -79,7 +79,7 @@ class Graph:
                   for y in range(len(self.nodes))]
 
         for edge in self.edges:
-            Matrix[edge.node.index-1][edge.index-1] = -1
+            Matrix[edge.node1.index-1][edge.index-1] = -1
             Matrix[edge.node2.index-1][edge.index-1] = 1
 
         for row in Matrix:
@@ -1188,7 +1188,6 @@ class Graph:
         for layer in range(1, N + 1):
             for node in self.NodesInLayer(layer):
                 for i in range(random.randint(1, len(self.NodesInLayer(layer + 1)))):
-                    # layerBefourIndexes = self.IndexesOfNodesInLayer(layer)
                     layerIndexes = self.IndexesOfNodesInLayer(layer + 1)
                     self.Connect(node.index, random.choice(layerIndexes), arrow=True)
             # check that all nodes have input
@@ -1204,12 +1203,12 @@ class Graph:
         #Step 3
         numberOfNewEdges = 0
         wartownik = 0
-        while numberOfNewEdges < (2*N) and wartownik > 100:
-            wartownik+=1
+        while numberOfNewEdges < (2*N) and wartownik < 500:
             idx1 = random.randint(2, self.NodesCount() - 1)
             idx2 = random.randint(2, self.NodesCount() - 1)
             if self.Connect(idx1, idx2, arrow=True):
                 numberOfNewEdges += 1
+            wartownik+=1
 
         #Step 4
         for edge in self.edges:
@@ -1299,7 +1298,7 @@ class Graph:
 
         for egde_idx in range(len(residualNetwork.edges)):
             residualNetwork.edges[egde_idx-1].capacity = self.edges[egde_idx-1].capacity
-        print("\nBack to previous capacity")
+
         residualNetwork.PrintNetworkConnections()
         print("Max networks flow = {}".format(maxNetworkFlow))
         return residualNetwork
