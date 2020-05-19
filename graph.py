@@ -1302,3 +1302,25 @@ class Graph:
         residualNetwork.PrintNetworkConnections()
         print("Max networks flow = {}".format(maxNetworkFlow))
         return residualNetwork
+        
+           ############################# PROJECT6 ################################
+    def PageRankV1(self, nodeIDX=1):
+        self.PrintGraph()
+        #probability
+        d = 0.15
+        N = 100000
+        frequencyTab = [ 0 for i in range(self.NodesCount())]
+        i=0
+        while i < N:
+            t = random.randint(1,100)
+            if t <= 85:
+                nodeIDX = random.choice(self.nodes[1].neighbours)
+                frequencyTab[nodeIDX-1]+=1
+            else:
+                nodeIDX = (random.choice(self.nodes)).index
+                frequencyTab[nodeIDX-1]+=1
+            i+=1
+
+        for i,pr in enumerate(frequencyTab):
+            print(i+1,"==> PageRank = ",pr/N)
+            
