@@ -1303,18 +1303,18 @@ class Graph:
         print("Max networks flow = {}".format(maxNetworkFlow))
         return residualNetwork
         
-           ############################# PROJECT6 ################################
+############################# PROJECT6 ################################
+
     def PageRankV1(self, nodeIDX=1):
-        self.PrintGraph()
         #probability
         d = 0.15
-        N = 100000
+        N = 1000000
         frequencyTab = [ 0 for i in range(self.NodesCount())]
         i=0
         while i < N:
             t = random.randint(1,100)
-            if t <= 85:
-                nodeIDX = random.choice(self.nodes[1].neighbours)
+            if t < 85:
+                nodeIDX = random.choice(self.nodes[nodeIDX-1].neighbours)
                 frequencyTab[nodeIDX-1]+=1
             else:
                 nodeIDX = (random.choice(self.nodes)).index
@@ -1324,3 +1324,38 @@ class Graph:
         for i,pr in enumerate(frequencyTab):
             print(i+1,"==> PageRank = ",pr/N)
             
+
+            
+    def PageRankV2(self):
+        d = 0.15
+        sumPrev = 10
+        sumCur = 0
+        eps = 0.0000000001
+        AdjacencyMatrix = []
+        for node in self.nodes:
+            AdjacencyMatrix.append(node.GetNeighboursInVector())
+
+        StochasticMatrix = []
+        const = d/self.NodesCount()
+
+        p_vector = [ 1/(self.NodesCount()) for i in range(self.NodesCount())]
+
+        for i in range(self.NodesCount()):
+            StochasticMatrix.append([])
+            neighboursCount = len(self.nodes[i].neighbours)
+
+            for j in range(self.NodesCount()):
+                elem = (1-d)*(AdjacencyMatrix[i][j]/neighboursCount) + const
+                StochasticMatrix[i].append(elem)
+
+        i = 0
+        while abs(sumPrev-sumCur)> eps:
+            i+=1
+            sumPrev = QSumOfVector(p_vector)
+            p_vector = MatrixVectorMultipication(StochasticMatrix,p_vector)
+            sumCur =  QSumOfVector(p_vector)
+
+        print("Zakonczenie po iteracjach = ",i)
+
+        for i in range(len(p_vector)):
+            print(i+1,"==> PageRank = ",p_vector[i])

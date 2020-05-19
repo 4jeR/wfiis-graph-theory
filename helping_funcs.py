@@ -85,3 +85,21 @@ def FindEdgeInNetwork(graph, node1_idx, node2_idx):
     for e in graph.edges:
         if ( (e.node1.index == node1_idx) and (e.node2.index == node2_idx) ):
             return e
+
+
+def MatrixVectorMultipication(matrix,vector):
+    result = []
+    
+    for i in range(len(vector)):
+        resultList=[]
+        resultList = [matrix[j][i]*vector[j] for j in  range(len(vector))]
+        result.append(sum(resultList))
+
+    return result
+
+# XDDDD
+def QSumOfVector(vector):
+    total = 0
+    for elem in vector:
+        total+=elem**2
+    return total

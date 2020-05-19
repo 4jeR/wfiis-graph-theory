@@ -13,5 +13,6 @@ g = Graph(directed=True)
 #Projekt 6-1##########
 g.FillGraphFromAL("examples/AL_directed_PR.txt",gui.canvas,inCircle=True,directedGraph=True)
 g.PageRankV1(1)
+g.PageRankV2()
 root.update()
 root.mainloop()
