@@ -799,12 +799,17 @@ class GUI:
         button3 = Button(
             menuProj6, width=35, text="Find Cycle", command=lambda: self.CallAnnealingAlgorithm())
 
-        label1.grid(column=0, row=1, padx=10, pady=5)
-        label2.grid(column=1, row=1, padx=10, pady=5)
-        label3.grid(column=2, row=1, padx=10, pady=5)
+        buttonNL = Button(
+            menuProj6, text="Generate digraph - adjacency list", command=self.SelectDAL)
 
-        button1.grid(column=0, row=2, sticky="nsew", padx=10, pady=5)
-        button2.grid(column=1, row=2, sticky="nsew", padx=10, pady=5)
-        button3.grid(column=2, row=2, sticky="nsew", padx=10, pady=5)
+        label1.grid(column=0, row=2, padx=10, pady=5)
+        label2.grid(column=1, row=2, padx=10, pady=5)
+        label3.grid(column=2, row=2, padx=10, pady=5)
+
+
+        buttonNL.grid(column=1, row=1, sticky="nsew", padx=10, pady=5)
+        button1.grid(column=0, row=3, sticky="nsew", padx=10, pady=5)
+        button2.grid(column=1, row=3, sticky="nsew", padx=10, pady=5)
+        button3.grid(column=2, row=3, sticky="nsew", padx=10, pady=5)
 
         menuProj6.pack(fill=Y)
