@@ -42,14 +42,22 @@ class GUI:
     def ClearCanvas(self):
         self.canvas.delete("all")
 
-    def Draw(self, graph, inCircle=False, color="#aaa", weighted=False):
+    def Draw(self, graph, inCircle=False, color="#aaa", weighted=False, isNetwork=False,  isCapacity=False, isFlow=False, numberOfLayers=-1):
         self.ClearCanvas()
+        if isNetwork:
+            self.DrawLayersRectangle(numberOfLayers)
         if inCircle:
             self.DrawCircleTrace(graph)
         for e in graph.edges:
-            e.Draw(self.canvas, weighted)
+            e.Draw(self.canvas, weighted, isCapacity, isFlow)
         for n in graph.nodes:
-            n.Draw(self.canvas, color)
+            n.Draw(self.canvas, color, numberOfLayers)
+
+    def DrawLayersRectangle(self, number):
+        width = self.canvas.winfo_width()/(number + 2)
+        height = self.canvas.winfo_height()
+        for i in range(1, number + 2):
+            self.canvas.create_line(width*i, 0, width*i, height,  dash=(15, 20), width = 1)
 
     def DrawCircleTrace(self, graph):
         xmin = min([n.x for n in graph.nodes])
@@ -699,34 +707,35 @@ class GUI:
     #################### POJECT 5 #########################
     
     def SelectBasicFlowNetowrk(self, numberOfLayers=2):
-        isChecked = bool(self.checkP5.get())
-        isWeighted = bool(self.checkP5weighted.get())
+        isCapacity= bool(self.checkP5capacity.get())
+        isFlow= bool(self.checkP5flow.get())
+
         self.ClearCanvas()
-        # TO DO - NEW FUNCTION IN GRAPH
-        # self.Draw( self.graph, isChecked, weighted=isWeighted)
+        self.graph = Graph(directed=True, isNetwork=True)
+        if(self.graph.FillFlowNetwork(self.canvas, numberOfLayers)):
+            self.Draw(self.graph, isNetwork=True, isCapacity=isCapacity, isFlow=isFlow, numberOfLayers=numberOfLayers)
+        
 
     def SelectFindMaximumFlow(self):
-        isChecked = bool(self.checkP5.get())
-        isWeighted = bool(self.checkP5weighted.get())
-        self.ClearCanvas()
-        # TO DO - NEW FUNCTION IN GRAPH RETURN INFO STRING
-        # self.Draw( self.graph, isChecked, weighted=isWeighted)
-        # messagebox.showinfo(title="Info", message=info)
+        isCapacity = bool(self.checkP5capacity.get())
+        isFlow= bool(self.checkP5flow.get())
 
+        self.ClearCanvas()
+        residualNet = self.graph.FordFulkersonAlgorithm()
+        numberOfLayers = GetNumberOfLayers(self.graph) - 1
+        self.Draw(residualNet, isNetwork=True, isCapacity=isCapacity, isFlow=isFlow, numberOfLayers=numberOfLayers)
 
 
     def AddProject5Widgets(self, root):
         menuProj5 = Frame(self.tab5, width=1200, height=30)
 
-        # check if generate graph in circle
-        self.checkP5 = IntVar()
-        checkInCircle5 = Checkbutton(
-            menuProj5, text="In circle", variable=self.checkP5)
+        self.checkP5capacity = IntVar()
+        checkShowCapacity5 = Checkbutton(
+            menuProj5, text="Capacity on graph", variable=self.checkP5capacity)
 
-        # check if generate graph draw with Weights
-        self.checkP5weighted = IntVar()
-        checkShowWeights5 = Checkbutton(
-            menuProj5, text="Weighted graph", variable=self.checkP5weighted)
+        self.checkP5flow= IntVar()
+        checkShowFlow5 = Checkbutton(
+            menuProj5, text="Flow on graph", variable=self.checkP5flow)
 
         # 1
         label1 = Label(menuProj5, text='Task 1', foreground="red")
@@ -743,15 +752,15 @@ class GUI:
         # row 0
         label1.grid(column=0, row=0, padx=10, pady=5)
         label2.grid(column=2, row=0, padx=10, pady=5)
-        checkInCircle5.grid(column=3, row=0, sticky="nsew", padx=10, pady=5)
 
         # row 1
         spinbox1a.grid(column=0, row=1, sticky="nsew", padx=10, pady=5)
         label1a.grid(column=1, row=1, sticky="w")
         button2.grid(column=2, row=1, sticky="nsew", padx=10, pady=5)
-        checkShowWeights5.grid(column=3, row=1, sticky="nsew", padx=10, pady=5)
+        checkShowCapacity5.grid(column=3, row=1, sticky="nsew", padx=10, pady=5)
 
         # row 2
         button1.grid(column=0, row=2, sticky="nsew", padx=10, pady=5)
+        checkShowFlow5.grid(column=3, row=2, sticky="nsew", padx=10, pady=5)
 
         menuProj5.pack(fill=Y)

@@ -11,7 +11,7 @@ from tkinter import messagebox
 
 
 class Graph:
-    def __init__(self, nodes=[], edges=[], connections=[], directed=False):
+    def __init__(self, nodes=[], edges=[], connections=[], directed=False, isNetwork=False):
         """ 
         Constructor for Graph objects.
         :return: nothing
@@ -22,6 +22,7 @@ class Graph:
         self.edges = [e for e in edges]
         self.connections = [(a, b) for (a, b) in connections]
         self.isDirected = directed
+        self.isNetwork = isNetwork
 
     def AddNode(self, node):
         """ 
@@ -110,7 +111,7 @@ class Graph:
             print()
 
 
-    def Connect(self, node1_idx, node2_idx, arrow=False, weight = 0):
+    def Connect(self, node1_idx, node2_idx, arrow=False, weight = 0, capacity = -1, flow = 0):
         """
         Constructs edge between two nodes of given indexes. If they were succesfully connected
         then it returns True, otherwise returns False.
@@ -125,11 +126,17 @@ class Graph:
             elif n.index == node2_idx:
                 b = n
 
+        if self.isNetwork and (a.index != b.index and ((a,b) not in self.connections and (b, a) not in self.connections)):
+            self.edges.append(Edge(len(self.edges)+1, a, b, arrow, weight, capacity, flow, isNetwork=True))
+            self.connections.append((a, b))
+            a.neighbours.append(b.index)
+            return True            
         # prevent from adding already connected nodes
-        if ((a.index != b.index and (a, b) not in self.connections and (b, a) not in self.connections) or 
-            (a.index != b.index and ((a,b) not in self.connections or (b, a) not in self.connections) and arrow)):
-            self.edges.append(
-                Edge(len(self.edges)+1, a, b, arrow, weight))
+        elif ((a.index != b.index and (a, b) not in self.connections and (b, a) not in self.connections) or 
+            (a.index != b.index and ((a,b) not in self.connections or (b, a) not in self.connections) and arrow) 
+            and not self.isNetwork):
+            
+            self.edges.append(Edge(len(self.edges)+1, a, b, arrow, weight))
             self.connections.append((a, b))
             if arrow:
                 a.neighbours.append(b.index)
@@ -1121,6 +1128,234 @@ class Graph:
                 edge.weight = edge.weight + d[edge.node1.index - 1] - d[edge.node2.index - 1]
                 
         return self.DistanceMatrixDiGraph(d)[1]
-       
+            
+    ############################# PROJECT5 ################################
+    def NodesInLayer(self, N):  
+        nodeList = []
+        for node in self.nodes:
+            if node.inLayer == N:
+                nodeList.append(node)
+        return nodeList
+    
+    def IndexesOfNodesInLayer(self, N):
+        indexes = []
+        for node in self.NodesInLayer(N):
+            indexes.append(node.index)
+        return indexes
+
+    def PrintNetworkConnections(self):
+        print("Printing Connections")
+        for edge in self.edges:
+            if(edge.node1.index == 1):
+                print("S->{}\t Capacity = {}\t Flow = {}".format(edge.node2.index, edge.capacity, edge.flow))
+            elif (edge.node2.index == self.NodesCount()):
+                print("{}->T\t Capacity = {}\t Flow = {}".format(edge.node1.index, edge.capacity, edge.flow))
+            else:
+                print("{}->{}\t Capacity = {}\t Flow = {}".format(edge.node1.index, edge.node2.index, edge.capacity, edge.flow))
+
+    def HasInput(self, node):
+        for nodeBefore in self.NodesInLayer(node.inLayer-1):
+            if (node.index in nodeBefore.neighbours):
+                return True
+        return False       
+    
+
+    def FillFlowNetwork(self, canvas, N=2):
+        if not self.isNetwork :
+            print("[FillFlowNetwork]: Cannot generate Flow Network if self.isNetwork == False")
+            return
+        
+        widthOneLayer = canvas.winfo_width()/(N + 2)
+        heightCanvas = canvas.winfo_height()
+        #Step 1
+        self.AddNode(Node(index=1,x = widthOneLayer/2, y = heightCanvas/2, inLayer=0))  #source node
+        currentNodeIndex = 2
+        for i in range(1, N + 1):    
+            k = random.randint(2, N)  
+            for j in range(k):
+                self.AddNode(Node(index=currentNodeIndex, x = widthOneLayer*i + widthOneLayer/2, y = (heightCanvas/k)/2 + j*heightCanvas/k ,  inLayer=i))  # N * [2,N] 
+                currentNodeIndex += 1
+        self.AddNode(Node(index=currentNodeIndex, x = widthOneLayer*(N+1) + widthOneLayer/2, y = heightCanvas/2, inLayer=(N+1)))  #target node
+
+        for node in self.nodes:
+            print("Node {} in layer {}".format(node.index, node.inLayer))
+        
+        #Step 2
+        # source node
+        for node in self.NodesInLayer(1):  
+            self.Connect(1, node.index, arrow=True) 
+        # regural node
+        for layer in range(1, N + 1):
+            for node in self.NodesInLayer(layer):
+                for i in range(random.randint(1, len(self.NodesInLayer(layer + 1)))):
+                    layerIndexes = self.IndexesOfNodesInLayer(layer + 1)
+                    self.Connect(node.index, random.choice(layerIndexes), arrow=True)
+            # check that all nodes have input
+            for node in self.NodesInLayer(layer):
+                while not self.HasInput(node):
+                    layerBefourIndexes = self.IndexesOfNodesInLayer(layer - 1)
+                    self.Connect(random.choice(layerBefourIndexes), node.index, arrow=True)
+        #target node
+        targetIndex = self.NodesCount()
+        for node in self.NodesInLayer(N):  
+            self.Connect(node.index, self.nodes[targetIndex - 1].index, arrow=True)
+
+        #Step 3
+        numberOfNewEdges = 0
+        wartownik = 0
+        while numberOfNewEdges < (2*N) and wartownik < 500:
+            idx1 = random.randint(2, self.NodesCount() - 1)
+            idx2 = random.randint(2, self.NodesCount() - 1)
+            if self.Connect(idx1, idx2, arrow=True):
+                numberOfNewEdges += 1
+            wartownik+=1
+
+        #Step 4
+        for edge in self.edges:
+            edge.capacity = random.randint(1, 10)
+
+        self.PrintNetworkConnections()
+
+        return True
+
+    def DisconnectByEdgeInNetwork(self, edge):
+        """
+        Removes edge from graph and updates status of all properties.
+        :return: nothing
+        """
+        try:
+            self.connections.remove((edge.node1, edge.node2))
+            edge.node1.removeNeighbour(edge.node2.index)
+        except Exception as exc:
+            print("Exception {} occured when trying to disconnect the edge".format(exc))
+
+    def FordFulkersonInit(self):
+        p = []
+        d = []
+        for n in self.nodes:
+            d.append(float("inf"))
+            p.append(None)
+        d[0] = 0
+        return p, d
+
+    def BreadthFirstSearch(self):
+        p, d = self.FordFulkersonInit()
+        Q = []
+        Q.append(self.nodes[0])
+        while len(Q) > 0:
+            v = Q.pop(0)
+            for u in v.neighbours:
+                if d[u-1] == float("inf"):
+                    d[u-1] = d[v.index-1] + 1
+                    p[u-1] = v.index
+                    Q.append(self.nodes[u-1])
+                if u == self.NodesCount():
+                    return True, p, d
+        return False, p, d
+        
+
+    def FordFulkersonAlgorithm(self):
+        residualNetwork = copy.deepcopy(self)
+        for e in residualNetwork.edges:
+            e.flow = 0
+        maxNetworkFlow = 0
+        d = []
+        p = []
+        while residualNetwork.BreadthFirstSearch()[0]:
+            p = residualNetwork.BreadthFirstSearch()[1]
+            d = residualNetwork.BreadthFirstSearch()[2]
+            previous = residualNetwork.NodesCount()
+            lowestCf = float("inf")
+            path = []
+
+            while len(path) < d[residualNetwork.NodesCount()-1]:
+                previous = p[previous-1]
+                path.append(previous)
+            print("Path = {}\n".format(path))
+
+            for uP in range(len(path)-1, 0, -1):
+                edge = FindEdgeInNetwork(residualNetwork, path[uP], path[uP-1])
+                if edge.capacity < lowestCf:
+                    lowestCf = edge.capacity
+            edge = FindEdgeInNetwork(residualNetwork, path[0], residualNetwork.NodesCount())
+            if edge.capacity < lowestCf:
+                lowestCf = edge.capacity
+            maxNetworkFlow += lowestCf
+
+            for uP in range(len(path)-1, 0, -1):
+                edge = FindEdgeInNetwork(residualNetwork, path[uP], path[uP-1])
+                edge.capacity -= lowestCf
+                edge.flow += lowestCf
+                if edge.capacity <= 0:
+                    residualNetwork.DisconnectByEdgeInNetwork(edge)
+
+            edge = FindEdgeInNetwork(residualNetwork, path[0], residualNetwork.NodesCount())
+            edge.capacity -= lowestCf
+            edge.flow += lowestCf
+            if edge.capacity <= 0:
+                residualNetwork.DisconnectByEdgeInNetwork(edge)
+            residualNetwork.PrintNetworkConnections()
+
+        for egde_idx in range(len(residualNetwork.edges)):
+            residualNetwork.edges[egde_idx-1].capacity = self.edges[egde_idx-1].capacity
+
+        residualNetwork.PrintNetworkConnections()
+        print("Max networks flow = {}".format(maxNetworkFlow))
+        return residualNetwork
+        
+############################# PROJECT6 ################################
+
+    def PageRankV1(self, nodeIDX=1):
+        #probability
+        d = 0.15
+        N = 1000000
+        frequencyTab = [ 0 for i in range(self.NodesCount())]
+        i=0
+        while i < N:
+            t = random.randint(1,100)
+            if t < 85:
+                nodeIDX = random.choice(self.nodes[nodeIDX-1].neighbours)
+                frequencyTab[nodeIDX-1]+=1
+            else:
+                nodeIDX = (random.choice(self.nodes)).index
+                frequencyTab[nodeIDX-1]+=1
+            i+=1
+
+        for i,pr in enumerate(frequencyTab):
+            print(i+1,"==> PageRank = ",pr/N)
             
 
+            
+    def PageRankV2(self):
+        d = 0.15
+        sumPrev = 10
+        sumCur = 0
+        eps = 0.0000000001
+        AdjacencyMatrix = []
+        for node in self.nodes:
+            AdjacencyMatrix.append(node.GetNeighboursInVector())
+
+        StochasticMatrix = []
+        const = d/self.NodesCount()
+
+        p_vector = [ 1/(self.NodesCount()) for i in range(self.NodesCount())]
+
+        for i in range(self.NodesCount()):
+            StochasticMatrix.append([])
+            neighboursCount = len(self.nodes[i].neighbours)
+
+            for j in range(self.NodesCount()):
+                elem = (1-d)*(AdjacencyMatrix[i][j]/neighboursCount) + const
+                StochasticMatrix[i].append(elem)
+
+        i = 0
+        while abs(sumPrev-sumCur)> eps:
+            i+=1
+            sumPrev = QSumOfVector(p_vector)
+            p_vector = MatrixVectorMultipication(StochasticMatrix,p_vector)
+            sumCur =  QSumOfVector(p_vector)
+
+        print("Zakonczenie po iteracjach = ",i)
+
+        for i in range(len(p_vector)):
+            print(i+1,"==> PageRank = ",p_vector[i])
