@@ -43,17 +43,20 @@ class Graph:
         Prints graph info and stats to the console.
         :return: nothing
         """
-        print("Graph has {} nodes and {} edges.".format(Node.count, Edge.count))
-        print("Unique connected nodes:")
-        for (a, b) in self.connections:
-            print("{},{}".format(a.index, b.index))
+        # print("Graph has {} nodes and {} edges.".format(Node.count, Edge.count))
+        # print("Unique connected nodes:")
+        # for (a, b) in self.connections:
+        #     print("{},{}".format(a.index, b.index))
 
-        print(f"\nAll edges : {[e.index for e in self.edges]}")
+        # print(f"\nAll edges : {[e.index for e in self.edges]}")
 
-        print("\nDegree of nodes")
+        # print("\nDegree of nodes")
+
+        # for node in self.nodes:
+        #     print(f"D of {node.index} = {len(node.neighbours)}")
 
         for node in self.nodes:
-            print(f"D of {node.index} = {len(node.neighbours)}")
+            print("{}. ({}, {})".format(node.index, node.x, node.y))
 
     def PrintAdjacencyMatrix(self):
         """
@@ -1324,8 +1327,6 @@ class Graph:
         for i,pr in enumerate(frequencyTab):
             print(i+1,"==> PageRank = ",pr/N)
             
-
-            
     def PageRankV2(self):
         d = 0.15
         sumPrev = 10
@@ -1359,3 +1360,73 @@ class Graph:
 
         for i in range(len(p_vector)):
             print(i+1,"==> PageRank = ",p_vector[i])
+
+    def FillFromCoordinatesFile(self, targetDict, filename):
+        coordinates = ReadCoordinatesFile(targetDict, filename)
+        i = 1
+
+        for coorinate in coordinates:
+            self.AddNode(Node(i, coorinate[0], coorinate[1]))
+            i += 1
+
+        for sourceNode in self.nodes:
+                for targetNode in self.nodes:
+                    if sourceNode == targetNode:
+                        continue
+                    distance = GetDistance(sourceNode.x, sourceNode.y, targetNode.x, targetNode.y)
+                    self.Connect(sourceNode.index, targetNode.index, weight=distance)
+
+
+    def RandTwoNotNeighbouringEdges(self, startingIndexRange, endingIndexRange):
+        while(True):
+            edge_index_1 = random.randint(startingIndexRange, endingIndexRange)
+            edge_index_2 = random.randint(startingIndexRange, endingIndexRange)
+            if ((edge_index_1 != edge_index_2) and 
+                (self.edges[edge_index_1 - 1].node1.index != self.edges[edge_index_2 - 1].node1.index) and 
+                (self.edges[edge_index_1 - 1].node1.index != self.edges[edge_index_2 - 1].node2.index) and 
+                (self.edges[edge_index_1 - 1].node2.index != self.edges[edge_index_2 - 1].node1.index) and
+                (self.edges[edge_index_1 - 1].node2.index != self.edges[edge_index_2 - 1].node2.index)):
+                randomConnections = ((self.edges[edge_index_1 - 1].node1.index, self.edges[edge_index_1 - 1].node2.index), 
+                                    (self.edges[edge_index_2 - 1].node1.index, self.edges[edge_index_2 - 1].node2.index))
+                break
+        return randomConnections
+
+    def ChangeListValues(self, sourceValue, targetValue, listToModify):
+        targetValueIndex = int()
+        sourceValueIndex = int()
+        for i in range (0, len(listToModify)):
+            if listToModify[i] == targetValue:
+                targetValueIndex = i
+            if listToModify[i] == sourceValue:
+                sourceValueIndex = i
+        listToModify[sourceValueIndex] = sourceValue
+        listToModify[targetValueIndex] = targetValue
+        return listToModify
+          
+    def CheckCycleDistance(self, cycle):
+        distance = 0
+        for connection in cycle:
+            edge = self.GetEdgeFromIndexes(connection[0], connection[1])
+            distance += edge.weight
+        return distance
+
+    def AnnealingAlgorithm(self):
+        self.FillFromCoordinatesFile('./examples', 'input.dat')
+        cycle = [(connection[0].index, connection[1].index) for connection in self.connections]
+        rand = int()
+        MAX_IT = 100
+        for i in range(100, 0, -1):
+            T = 0.001 * (i * i)
+            for it in range(0, MAX_IT):
+                randomConnections = self.RandTwoNotNeighbouringEdges(1, 201)
+                newCycle = [connection for connection in cycle]
+                newCycle = self.ChangeListValues(randomConnections[0], randomConnections[1], newCycle)
+                newCycleDistance = self.CheckCycleDistance(newCycle)
+                oldCycleDistance = self.CheckCycleDistance(cycle)
+                if  oldCycleDistance < newCycleDistance:
+                    cycle = [connection for connection in newCycle]
+                else:
+                    rand =  random.randint(0, 1)
+                    if rand < math.exp(- (newCycleDistance - oldCycleDistance) / T):
+                        cycle = [connection for connection in newCycle]
+        return cycle;

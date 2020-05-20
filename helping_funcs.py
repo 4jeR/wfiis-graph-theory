@@ -3,6 +3,7 @@
 # neighbour_matrix | rows,cols = node count
 # incidence_matrix | rows,cols = node count, connections count
 import random
+import math
 
 
 def GetFileRowsCols(self, filename):
@@ -103,3 +104,14 @@ def QSumOfVector(vector):
     for elem in vector:
         total+=elem**2
     return total
+
+def ReadCoordinatesFile(targetDict, filename):
+    coordinates = list()
+    with open("{}/{}".format(targetDict, filename), 'r') as coordinatesFile:
+        for line in coordinatesFile:
+            coordinates.append(tuple(map(int, line.split(' '))))
+        print(coordinates)
+    return coordinates
+
+def GetDistance(x1, y1, x2, y2):
+    return math.sqrt(math.pow(x2 - x1, 2) + math.pow(y2 - y1, 2))

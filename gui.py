@@ -20,6 +20,7 @@ class GUI:
         self.AddProject3Widgets(root)
         self.AddProject4Widgets(root)
         self.AddProject5Widgets(root)
+        self.AddProject6Widgets(root)
         self.allTabs.pack(expand=1, fill='both')
         self.canvas.pack(fill=X, padx=10, pady=10)
 
@@ -764,3 +765,46 @@ class GUI:
         checkShowFlow5.grid(column=3, row=2, sticky="nsew", padx=10, pady=5)
 
         menuProj5.pack(fill=Y)
+
+    #################### POJECT 6 #########################
+
+    def CallPageRankV1(self):
+        self.ClearCanvas()
+        self.graph.PageRankV1()
+
+    def CallPageRankV2(self):
+        self.ClearCanvas()
+        self.graph.PageRankV2()
+
+    def CallAnnealingAlgorithm(self):
+        self.ClearCanvas()
+        self.graph.AnnealingAlgorithm()
+
+    def AddProject6Widgets(self, root):
+        menuProj6 = Frame(self.tab6, width=1200, height=30)
+
+        # 1
+        label1 = Label(menuProj6, text='Task 1', foreground="red")
+        button1 = Button(
+            menuProj6, width=35,  text="Page Rank V1", command=lambda: self.CallPageRankV1())
+
+        # 2
+        label2 = Label(menuProj6, text='Task 2', foreground="red")
+        button2 = Button(
+            menuProj6, width=35, text="Page Rank V2", command=lambda: self.CallPageRankV2())
+
+        #3 
+
+        label3 = Label(menuProj6, text='Task 3', foreground="red")
+        button3 = Button(
+            menuProj6, width=35, text="Find Cycle", command=lambda: self.CallAnnealingAlgorithm())
+
+        label1.grid(column=0, row=1, padx=10, pady=5)
+        label2.grid(column=1, row=1, padx=10, pady=5)
+        label3.grid(column=2, row=1, padx=10, pady=5)
+
+        button1.grid(column=0, row=2, sticky="nsew", padx=10, pady=5)
+        button2.grid(column=1, row=2, sticky="nsew", padx=10, pady=5)
+        button3.grid(column=2, row=2, sticky="nsew", padx=10, pady=5)
+
+        menuProj6.pack(fill=Y)
