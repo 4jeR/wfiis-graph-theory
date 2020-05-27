@@ -1352,81 +1352,78 @@ class Graph:
         i = 0
         while abs(sumPrev-sumCur)> eps:
             i+=1
-            sumPrev = QSumOfVector(p_vector)
+            sumPrev = QSumOfVector(p_vector)          
             p_vector = MatrixVectorMultipication(StochasticMatrix,p_vector)
             sumCur =  QSumOfVector(p_vector)
 
-        print("Zakonczenie po iteracjach = ",i)
+        print("Zakonczenie po iteracjach = ", i)
 
         for i in range(len(p_vector)):
-            print(i+1,"==> PageRank = ",p_vector[i])
+            print(i+1,"==> PageRank = ", p_vector[i])
 
     def FillFromCoordinatesFile(self, targetDict, filename):
         coordinates = ReadCoordinatesFile(targetDict, filename)
         i = 1
-
         for coorinate in coordinates:
             self.AddNode(Node(i, coorinate[0], coorinate[1]))
             i += 1
 
-        for sourceNode in self.nodes:
-                for targetNode in self.nodes:
-                    if sourceNode == targetNode:
-                        continue
-                    distance = GetDistance(sourceNode.x, sourceNode.y, targetNode.x, targetNode.y)
-                    self.Connect(sourceNode.index, targetNode.index, weight=distance)
-
-
-    def RandTwoNotNeighbouringEdges(self, startingIndexRange, endingIndexRange):
+    def RandTwoNotNeighbouringConnectionsFromCycle(self, cycle):
         while(True):
-            edge_index_1 = random.randint(startingIndexRange, endingIndexRange)
-            edge_index_2 = random.randint(startingIndexRange, endingIndexRange)
-            if ((edge_index_1 != edge_index_2) and 
-                (self.edges[edge_index_1 - 1].node1.index != self.edges[edge_index_2 - 1].node1.index) and 
-                (self.edges[edge_index_1 - 1].node1.index != self.edges[edge_index_2 - 1].node2.index) and 
-                (self.edges[edge_index_1 - 1].node2.index != self.edges[edge_index_2 - 1].node1.index) and
-                (self.edges[edge_index_1 - 1].node2.index != self.edges[edge_index_2 - 1].node2.index)):
-                randomConnections = ((self.edges[edge_index_1 - 1].node1.index, self.edges[edge_index_1 - 1].node2.index), 
-                                    (self.edges[edge_index_2 - 1].node1.index, self.edges[edge_index_2 - 1].node2.index))
+            connection_1 = random.randint(0, len(cycle) - 1)
+            connection_2 = random.randint(0, len(cycle) - 1)
+            if((connection_1 != connection_2) and
+                (cycle[connection_1][0] != cycle[connection_2][0]) and 
+                (cycle[connection_1][0] != cycle[connection_2][1]) and
+                (cycle[connection_1][1] != cycle[connection_2][0]) and
+                (cycle[connection_1][1] != cycle[connection_2][1])):
                 break
-        return randomConnections
+        return (connection_1, connection_2)
 
-    def ChangeListValues(self, sourceValue, targetValue, listToModify):
-        targetValueIndex = int()
-        sourceValueIndex = int()
-        for i in range (0, len(listToModify)):
-            if listToModify[i] == targetValue:
-                targetValueIndex = i
-            if listToModify[i] == sourceValue:
-                sourceValueIndex = i
-        listToModify[sourceValueIndex] = sourceValue
-        listToModify[targetValueIndex] = targetValue
-        return listToModify
+    def ChangeListValues(self, sourceValueIndex, targetValueIndex, listToModify):
+        newConnection_1 = (listToModify[sourceValueIndex][0], listToModify[targetValueIndex][0])
+        newConnection_2 = (listToModify[sourceValueIndex][1], listToModify[targetValueIndex][1])
+
+        newList = [connection for connection in listToModify]
+
+        newList[sourceValueIndex] = newConnection_1
+        newList[targetValueIndex] = newConnection_2
+
+        return newList
           
     def CheckCycleDistance(self, cycle):
         distance = 0
-        for connection in cycle:
-            edge = self.GetEdgeFromIndexes(connection[0], connection[1])
-            distance += edge.weight
+        for i in range(0, len(cycle)):
+            distance += GetDistance(self.nodes[cycle[i][0] - 1].x, self.nodes[cycle[i][0] - 1].y, self.nodes[cycle[i][1] - 1].x, self.nodes[cycle[i][1] - 1].y)            
         return distance
 
-    def AnnealingAlgorithm(self):
+    def AnnealingAlgorithm(self, initCycle=None):
         self.FillFromCoordinatesFile('./examples', 'input.dat')
-        cycle = [(connection[0].index, connection[1].index) for connection in self.connections]
+        self.PrintGraph()
+        if initCycle is None:
+            cycle = [(i, i + 1) for i in range(1, 200)]
+        else:
+            cycle=initCycle
+        print("Init cycle = {} \n Distance = {}".format(cycle, self.CheckCycleDistance(cycle)))
         rand = int()
-        MAX_IT = 100
+        MAX_IT = 1000
         for i in range(100, 0, -1):
             T = 0.001 * (i * i)
             for it in range(0, MAX_IT):
-                randomConnections = self.RandTwoNotNeighbouringEdges(1, 201)
+                randomConnections = self.RandTwoNotNeighbouringConnectionsFromCycle(cycle)
                 newCycle = [connection for connection in cycle]
                 newCycle = self.ChangeListValues(randomConnections[0], randomConnections[1], newCycle)
                 newCycleDistance = self.CheckCycleDistance(newCycle)
                 oldCycleDistance = self.CheckCycleDistance(cycle)
-                if  oldCycleDistance < newCycleDistance:
+                if  oldCycleDistance > newCycleDistance:
                     cycle = [connection for connection in newCycle]
                 else:
                     rand =  random.randint(0, 1)
-                    if rand < math.exp(- (newCycleDistance - oldCycleDistance) / T):
+                    try:
+                        val = math.exp(- (newCycleDistance - oldCycleDistance) / T)
+                    except OverflowError:
+                        val = float('inf')
+                    if rand < val:
                         cycle = [connection for connection in newCycle]
+        print("Random generated cycle = {} \n Distance = {}".format(cycle, self.CheckCycleDistance(cycle)))
         return cycle;

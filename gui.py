@@ -769,16 +769,14 @@ class GUI:
     #################### POJECT 6 #########################
 
     def CallPageRankV1(self):
-        self.ClearCanvas()
         self.graph.PageRankV1()
 
     def CallPageRankV2(self):
-        self.ClearCanvas()
         self.graph.PageRankV2()
 
-    def CallAnnealingAlgorithm(self):
+    def CallAnnealingAlgorithm(self, initPath):
         self.ClearCanvas()
-        self.graph.AnnealingAlgorithm()
+        self.graph.AnnealingAlgorithm(initPath)
 
     def AddProject6Widgets(self, root):
         menuProj6 = Frame(self.tab6, width=1200, height=30)
@@ -796,20 +794,27 @@ class GUI:
         #3 
 
         label3 = Label(menuProj6, text='Task 3', foreground="red")
+        initCycleLabel = Label(menuProj6, text='Init Cycle', foreground="black")
+        initCycle = tk.Entry(menuProj6)
+
         button3 = Button(
-            menuProj6, width=35, text="Find Cycle", command=lambda: self.CallAnnealingAlgorithm())
+            menuProj6, width=35, text="Find Cycle", command=lambda: self.CallAnnealingAlgorithm(initCycle.get()))
 
         buttonNL = Button(
             menuProj6, text="Generate digraph - adjacency list", command=self.SelectDAL)
 
+
         label1.grid(column=0, row=2, padx=10, pady=5)
         label2.grid(column=1, row=2, padx=10, pady=5)
         label3.grid(column=2, row=2, padx=10, pady=5)
+        initCycleLabel.grid(column=2, row=4, padx=10, pady=5)
+
 
 
         buttonNL.grid(column=1, row=1, sticky="nsew", padx=10, pady=5)
         button1.grid(column=0, row=3, sticky="nsew", padx=10, pady=5)
         button2.grid(column=1, row=3, sticky="nsew", padx=10, pady=5)
         button3.grid(column=2, row=3, sticky="nsew", padx=10, pady=5)
+        initCycle.grid(column=2, row=5, sticky="nsew", padx=10, pady=5)
 
         menuProj6.pack(fill=Y)
